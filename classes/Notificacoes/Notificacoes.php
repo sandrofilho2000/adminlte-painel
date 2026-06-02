@@ -37,7 +37,7 @@ class Notificacoes extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLNotificacoes',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",
@@ -132,8 +132,8 @@ class Notificacoes extends ClasseBase
     public function contarNaoLidas()
     {
         $this->queryCorrente = "SELECT *
-        FROM confef1.TBLNotificacoes n
-        INNER JOIN confef1.TBLNotificacoesUsuarios nu ON n.id = nu.id_notificacao
+        FROM TBLNotificacoes n
+        INNER JOIN TBLNotificacoesUsuarios nu ON n.id = nu.id_notificacao
         WHERE 1=1 ";
         $this->filtrar("nu.id_usuario", ID_USER);
         $this->filtrar("nu.lida", 0);
@@ -169,8 +169,8 @@ class Notificacoes extends ClasseBase
             nu.id_usuario,
             nu.lida,
             nu.lida_em
-        FROM confef1.TBLNotificacoes n
-        INNER JOIN confef1.TBLNotificacoesUsuarios nu ON n.id = nu.id_notificacao
+        FROM TBLNotificacoes n
+        INNER JOIN TBLNotificacoesUsuarios nu ON n.id = nu.id_notificacao
         WHERE 1=1 ";
         $this->filtrar("nu.id_usuario", ID_USER);
         $this->ordenar("n.criado_em", 'desc');
@@ -206,8 +206,8 @@ class Notificacoes extends ClasseBase
             nu.id_usuario,
             nu.lida,
             nu.lida_em
-        FROM confef1.TBLNotificacoes n
-        INNER JOIN confef1.TBLNotificacoesUsuarios nu ON n.id = nu.id_notificacao
+        FROM TBLNotificacoes n
+        INNER JOIN TBLNotificacoesUsuarios nu ON n.id = nu.id_notificacao
         WHERE 1=1  ";
         $this->filtrar("nu.id_usuario", ID_USER);
         if ($this->normalizarBooleano($this->ver_notificacoes_nao_lidas)) {
@@ -244,8 +244,8 @@ class Notificacoes extends ClasseBase
             nu.id_usuario,
             nu.lida,
             nu.lida_em
-        FROM confef1.TBLNotificacoes n
-        INNER JOIN confef1.TBLNotificacoesUsuarios nu ON n.id = nu.id_notificacao
+        FROM TBLNotificacoes n
+        INNER JOIN TBLNotificacoesUsuarios nu ON n.id = nu.id_notificacao
         WHERE 1=1 ";
         $this->filtrar("nu.id_usuario", ID_USER);
         $this->filtrar("nu.lida", 0);

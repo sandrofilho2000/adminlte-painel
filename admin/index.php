@@ -58,10 +58,10 @@ if (!$renderizarIndex) {
   exit;
 }
 
-$pageTitle = Controller::getPageTitle() ?? 'CONFEF';
+$pageTitle = Controller::getPageTitle() ?? 'Painel';
 $renderizarHeader = $renderizarHeader ?? true;
 $renderizarFooter = $renderizarFooter ?? true;
-$pageDescription = $pageDescription ?? 'O Conselho Federal de Educação Física oferece cursos e informações para profissionais da Educação Física.';
+$pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações para profissionais da Educação Física.';
 
 ?>
 
@@ -81,7 +81,7 @@ $pageDescription = $pageDescription ?? 'O Conselho Federal de Educação Física
   <!-- Metatags Open Graph (para compartilhamento em redes sociais) -->
   <meta property="og:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
   <meta property="og:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
-  <meta property="og:url" content="https://www.confef.org.br/">
+  <meta property="og:url" content="/">
   <meta property="og:image" content="/src/assets/images/cabecalho.jpg">
   <meta property="og:type" content="website">
 

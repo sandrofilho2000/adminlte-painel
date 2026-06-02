@@ -5,7 +5,7 @@ require_once ADMIN_PATH . '/includes/functions.php';
 
 $tem_permissao = verificaPermissao('00108');
 if (!$tem_permissao || $_SESSION['estado_conselho'] != 'BR') {
-  header("location: /webconfef/admin/");
+  header("location: /adminlte-painel/admin/");
   exit;
 }
 
@@ -17,25 +17,25 @@ if (!$tem_permissao || $_SESSION['estado_conselho'] != 'BR') {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CONFEF - Logs</title>
-  <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/jquery/jquery.min.js"></script>
+  <title>Painel - Logs</title>
+  <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/jquery/jquery.min.js"></script>
 
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
-  <!-- <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css"> -->
+  <!-- <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css"> -->
 
-  <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css">
 
 
-  <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/dist/css/adminlte.min.css">
 
-  <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/plugins/summernote/summernote-bs4.min.css">
+  <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/summernote/summernote-bs4.min.css">
 
-  <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/plugins/datatables_news/datatables.min.css">
+  <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/datatables_news/datatables.min.css">
 
-  <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/plugins/jquery-confirm/jquery-confirm.min.css">
-  <link rel="stylesheet" href="/webconfef/admin/content/logs/css/styles.css">
+  <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/jquery-confirm/jquery-confirm.min.css">
+  <link rel="stylesheet" href="/adminlte-painel/admin/content/logs/css/styles.css">
 
 </head>
 
@@ -43,10 +43,10 @@ if (!$tem_permissao || $_SESSION['estado_conselho'] != 'BR') {
   <div class="wrapper">
 
     <!-- Navbar -->
-    <?php require($_SERVER['DOCUMENT_ROOT'] . "/webconfef/admin/includes/navbar.php"); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'] . "/adminlte-painel/admin/includes/navbar.php"); ?>
 
     <!-- Sidebar -->
-    <?php require($_SERVER['DOCUMENT_ROOT'] . "/webconfef/admin/includes/sidebar.php"); ?>
+    <?php require($_SERVER['DOCUMENT_ROOT'] . "/adminlte-painel/admin/includes/sidebar.php"); ?>
 
     <!-- Content Wrapper -->
 
@@ -174,7 +174,7 @@ if (!$tem_permissao || $_SESSION['estado_conselho'] != 'BR') {
     </div>
   </div>
 
-  <?php require($_SERVER['DOCUMENT_ROOT'] . "/webconfef/admin/includes/footer.php"); ?>
+  <?php require($_SERVER['DOCUMENT_ROOT'] . "/adminlte-painel/admin/includes/footer.php"); ?>
   <aside class="control-sidebar control-sidebar-dark"></aside>
   </div>
   <input type="hidden" id="logged_id_user" name="logged_id_user" value="<?= $_SESSION['id'] ?>" />
@@ -183,22 +183,22 @@ if (!$tem_permissao || $_SESSION['estado_conselho'] != 'BR') {
 
 
   <!-- Scripts -->
-  <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/datatables_news/datatables.min.js"></script>
-  <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/webconfef/templates/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
-  <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/summernote/summernote-bs4.min.js"></script>
-  <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/jquery-validation/jquery.validate.min.js"></script>
-  <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/jquery-validation/additional-methods.min.js"></script>
+  <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/datatables_news/datatables.min.js"></script>
+  <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/adminlte-painel/templates/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
+  <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/summernote/summernote-bs4.min.js"></script>
+  <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/jquery-validation/jquery.validate.min.js"></script>
+  <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/jquery-validation/additional-methods.min.js"></script>
   <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
-  <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/jquery-confirm/jquery-confirm.min.js"></script>
+  <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/jquery-confirm/jquery-confirm.min.js"></script>
   <script src="https://adminlte.io/themes/v3/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
 
-  <script src="/webconfef/src/functions.js?v=<?= $v ?>"></script>
-  <script src="/webconfef/admin/content/logs/js/main.js"></script>
+  <script src="/adminlte-painel/src/functions.js?v=<?= $v ?>"></script>
+  <script src="/adminlte-painel/admin/content/logs/js/main.js"></script>
 </body>
 
 </html>

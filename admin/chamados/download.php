@@ -561,7 +561,7 @@ try {
     $nomeSeguro = preg_replace('/[\r\n\x00]+/', '', (string)($arquivo->nome ?? 'arquivo'));
     $nomeSeguro = basename(trim($nomeSeguro)) ?: 'arquivo';
     $nomeCabecalho = str_replace(array('"', '\\'), '_', $nomeSeguro);
-    $downloadUrl = '/webconfef/admin/content/chamados/download.php?id=' . urlencode((string) $id);
+    $downloadUrl = '/adminlte-painel/admin/content/chamados/download.php?id=' . urlencode((string) $id);
     $extensao = chamadosObterExtensaoArquivo($nomeSeguro, $tipoArmazenado);
 
     if ($isPreview) {

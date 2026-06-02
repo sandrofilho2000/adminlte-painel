@@ -53,7 +53,7 @@ class Logs extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'logs_erros',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",
@@ -96,7 +96,7 @@ class Logs extends ClasseBase
                 return null;
             }
 
-            $sql = "INSERT INTO confef1.logs_erros
+            $sql = "INSERT INTO logs_erros
                     (`timestamp`, `id_usuario`, `tipo`, `mensagem`, `codigo`, `objeto_metodo`,`payload`, `linha`, `trace`, `erro`)
                     VALUES
                     (:timestamp, :id_usuario, :tipo, :mensagem, :codigo, :objeto_metodo, :payload, :linha, :trace, :erro)";
@@ -561,8 +561,8 @@ class Logs extends ClasseBase
                 l.linha,
                 l.erro,
                 l.criado_em
-            FROM confef1.logs_erros l 
-            LEFT JOIN confef1.TBLUsuarios u ON l.id_usuario = u.id
+            FROM logs_erros l 
+            LEFT JOIN TBLUsuarios u ON l.id_usuario = u.id
             WHERE 1=1 
         ";
 
@@ -588,8 +588,8 @@ class Logs extends ClasseBase
         });
 
         $this->queryCorrente = "SELECT count(*) as total
-            FROM confef1.logs_erros l 
-            LEFT JOIN confef1.TBLUsuarios u ON l.id_usuario = u.id 
+            FROM logs_erros l 
+            LEFT JOIN TBLUsuarios u ON l.id_usuario = u.id 
             WHERE 1=1
         ";
 

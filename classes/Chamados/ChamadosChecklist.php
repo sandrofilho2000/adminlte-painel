@@ -19,7 +19,7 @@ class ChamadosChecklist extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLChamados_Checklist',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             'id',
@@ -91,7 +91,7 @@ class ChamadosChecklist extends ClasseBase
             return 1;
         }
 
-        $this->queryCorrente = "SELECT COALESCE(MAX(c.ordem), 0) AS maior_ordem FROM confef1.TBLChamados_Checklist c WHERE 1=1 ";
+        $this->queryCorrente = "SELECT COALESCE(MAX(c.ordem), 0) AS maior_ordem FROM TBLChamados_Checklist c WHERE 1=1 ";
         $this->filtrar('c.id_chamado', $id_chamado);
         $this->retornarComoArray = true;
         $resultado = $this->buscar();
@@ -109,8 +109,8 @@ class ChamadosChecklist extends ClasseBase
         }
 
         $this->queryCorrente = "SELECT c.*, u.apresentacao
-            FROM confef1.TBLChamados_Checklist c
-            LEFT JOIN confef1.TBLUsuarios u ON c.criado_por_id = u.id
+            FROM TBLChamados_Checklist c
+            LEFT JOIN TBLUsuarios u ON c.criado_por_id = u.id
             WHERE 1=1 ";
         $this->filtrar('c.id_chamado', $id_chamado);
         $this->ordenar('c.ordem', 'ASC');

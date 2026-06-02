@@ -185,7 +185,7 @@ function carregarPermissoesSessao(): bool
   }
 
   try {
-    $stmt = $pdo->prepare('SELECT Rotina, Consulta, Incluir, Excluir, Alterar FROM confef1.TBLPersistemas WHERE Usuario = :id');
+    $stmt = $pdo->prepare('SELECT Rotina, Consulta, Incluir, Excluir, Alterar FROM TBLPersistemas WHERE Usuario = :id');
     $stmt->execute(['id' => (int) $_SESSION['id']]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $_SESSION['Permissoes'] = array_values($rows ?: []);
@@ -299,9 +299,7 @@ class EmailService
     // container principal
     $html .= '<table class="container" width="100%" cellpadding="0" cellspacing="0">';
     // header com logo
-    $html .= '  <tr><td class="header">';
-    $html .= '    <img src="https://sistemas.confef.org.br/webconfef/img/logo-confef-novo.png"'
-      . ' alt="CONFEF" width="200" style="display:block;max-width:100%;height:auto;">';
+    $html .= '  <tr><td class="header" style="font-family:Arial,sans-serif;font-size:24px;font-weight:bold;color:#0055A2;">Sistema';
     $html .= '  </td></tr>';
     // conteúdo
     $html .= '  <tr><td class="content">';
@@ -309,14 +307,14 @@ class EmailService
     // botão bulletproof
     $html .= '<table class="btn" cellpadding="0" cellspacing="0" align="center" style="margin:30px auto;"><tr>';
     $html .= '<td>';
-    $html .= '  <a href="https://sistemas.confef.org.br">Acessar Sistema</a>';
+    $html .= '  <a href="/adminlte-painel">Acessar Sistema</a>';
     $html .= '</td></tr></table>';
     $html .= '  </td></tr>';
     // footer
     $html .= '  <tr><td class="footer">';
-    $html .= '    <p>Este é um e-mail automático do Conselho Federal de Educação Física.</p>';
-    $html .= '    <p><a href="https://www.confef.org.br" style="color:#0055A2;text-decoration:none;">'
-      . 'www.confef.org.br</a></p>';
+    $html .= '    <p>Este é um e-mail automático do Sistema.</p>';
+    $html .= '    <p><a href="/" style="color:#0055A2;text-decoration:none;">'
+      . 'Sistema</a></p>';
     $html .= '  </td></tr>';
     $html .= '</table>';        // fecha container
     $html .= '</td></tr></table>'; // fecha wrapper externo
@@ -348,7 +346,7 @@ class EmailService
     $fullHtml = $this->buildTemplate($subject, $bodyPlain);
 
     // prepara inserção
-    $sql  = "INSERT INTO confef1.EmailQueue (to_email, subject, body, sistema) ";
+    $sql  = "INSERT INTO EmailQueue (to_email, subject, body, sistema) ";
     $sql .= "VALUES (:to_email, :subject, :body, :sistema)";
     $stmt = $this->pdo->prepare($sql);
 
@@ -369,7 +367,7 @@ if (!function_exists('getCREF')) {
   function getCREF(string $estadoConselho): string
   {
     static $mapa = [
-      'BR' => 'CONFEF',
+      'BR' => 'Painel',
       'RJ' => 'CREF1/RJ',
       'RS' => 'CREF2/RS',
       'SC' => 'CREF3/SC',
@@ -401,7 +399,7 @@ if (!function_exists('getCREF')) {
 function sqlCaseCref(string $field): string
 {
   return "CASE {$field}
-    WHEN 'BR' THEN 'CONFEF'
+    WHEN 'BR' THEN 'Painel'
     WHEN 'RJ' THEN 'CREF1/RJ'
     WHEN 'RS' THEN 'CREF2/RS'
     WHEN 'SC' THEN 'CREF3/SC'
@@ -661,7 +659,7 @@ if (!function_exists('getEstadoConselhoNomeExibicao')) {
   function getEstadoConselhoNomeExibicao($estadoConselho)
   {
     $mapaEstadoConselho = [
-      'BR' => 'CONFEF',
+      'BR' => 'Painel',
       'RJ' => 'CREF1/RJ',
       'RS' => 'CREF2/RS',
       'SC' => 'CREF3/SC',

@@ -10,7 +10,7 @@ use Classes\Persistemas;
 
 //Check if the user is logged in, if not then redirect him to login page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || (search($_SESSION["Permissoes"][search($_SESSION["Permissoes"], '00072', 'Rotina')], '1', 'Consulta') == -1)) {
-    header("location: /webconfef/admin/");
+    header("location: /adminlte-painel/admin/");
     exit;
 }
 
@@ -43,14 +43,14 @@ $sou_de_informatica = trim((string) ($_SESSION['setor'] ?? '')) === 'Coordenador
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/solid.min.css">
+    <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/solid.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet" />
     <!-- Theme style -->
-    <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/dist/css/adminlte.min.css">
 
     <!-- summernote -->
-    <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/plugins/summernote/summernote-bs4.min.css">
+    <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/summernote/summernote-bs4.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 
@@ -59,10 +59,10 @@ $sou_de_informatica = trim((string) ($_SESSION['setor'] ?? '')) === 'Coordenador
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css" />
-    <link rel="stylesheet" href="/webconfef/templates/AdminLTE-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css" integrity="sha512-nNlU0WK2QfKsuEmdcTwkeh+lhGs6uyOxuUs+n+0oXSYDok5qy0EI0lt01ZynHq6+p/tbgpZ7P+yUb+r71wqdXg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <link rel="stylesheet" href="/webconfef/admin/content/chamados/css/styles.css">
+    <link rel="stylesheet" href="/adminlte-painel/admin/content/chamados/css/styles.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -609,18 +609,18 @@ $sou_de_informatica = trim((string) ($_SESSION['setor'] ?? '')) === 'Coordenador
     <!-- Incluindo jQuery Validate -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="/webconfef/templates/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
+    <script src="/adminlte-painel/templates/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
     <!-- Bootstrap 4 -->
-    <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Summernote -->
-    <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/summernote/summernote-bs4.min.js"></script>
-    <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/summernote/summernote-bs4.min.js"></script>
+    <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/select2/js/select2.full.min.js"></script>
     <!-- Redirect JQUery Plugin -->
     <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
     <script src="https://cdn.es.gov.br/scripts/jquery/jquery-maskedinput/1.4.1/jquery.maskedinput-1.4.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
-    <script src="/webconfef/templates/AdminLTE-3.2.0/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <script src="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -645,8 +645,8 @@ $sou_de_informatica = trim((string) ($_SESSION['setor'] ?? '')) === 'Coordenador
         const ATRIBUTOS_EDITAVEIS = <?= json_encode($atributos_editaveis) ?>;
         const MEUS_MODULOS = <?= json_encode($atributos_editaveis) ?>;
     </script>
-    <script src="/webconfef/src/functions.js?v=<?= $v ?>"></script>
-    <script src="/webconfef/admin/content/chamados/js/main.js?v=<?= $v ?>"></script>
+    <script src="/adminlte-painel/src/functions.js?v=<?= $v ?>"></script>
+    <script src="/adminlte-painel/admin/content/chamados/js/main.js?v=<?= $v ?>"></script>
 </body>
 
 </html>

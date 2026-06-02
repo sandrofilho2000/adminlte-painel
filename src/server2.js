@@ -14,15 +14,15 @@ const ENV_DEFAULTS = {
     useTls: false,                      // TLS termina no Apache/Nginx
     port: 8081,
     host: '127.0.0.1',
-    certPath: '/etc/letsencrypt/live/sistemas.confef.org.br-0001/fullchain.pem',
-    keyPath: '/etc/letsencrypt/live/sistemas.confef.org.br-0001/privkey.pem',
+    certPath: '',
+    keyPath: '',
   },
   development: {
     useTls: false,                      // idem: TLS na frente reversa
     port: 8082,
     host: '127.0.0.1',
-    certPath: '/etc/letsencrypt/live/sistemas.confef.org.br-0001/fullchain.pem',
-    keyPath: '/etc/letsencrypt/live/sistemas.confef.org.br-0001/privkey.pem',
+    certPath: '',
+    keyPath: '',
   }
 };
 

@@ -68,7 +68,7 @@ class ChamadosArquivos extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLChamados_Arquivos',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",
@@ -220,7 +220,7 @@ class ChamadosArquivos extends ClasseBase
         $id_chamado = $id_chamado ?? $this->id_chamado;
         $temp_id_chamado = $temp_id_chamado ?? $this->temp_id_chamado;
 
-        $this->queryCorrente = "SELECT id, id_chamado, nome, tipo, OCTET_LENGTH(arquivo) as tamanho, temp_id_chamado, criado_em, criado_por_id FROM confef1.TBLChamados_Arquivos WHERE 1=1 ";
+        $this->queryCorrente = "SELECT id, id_chamado, nome, tipo, OCTET_LENGTH(arquivo) as tamanho, temp_id_chamado, criado_em, criado_por_id FROM TBLChamados_Arquivos WHERE 1=1 ";
 
         if (!empty($id_chamado)) {
             $this->filtrar("id_chamado", $id_chamado);

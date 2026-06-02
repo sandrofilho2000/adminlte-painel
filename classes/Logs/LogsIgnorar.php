@@ -21,7 +21,7 @@ class LogsIgnorar extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'logs_erros_ignorar',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",
@@ -87,8 +87,8 @@ class LogsIgnorar extends ClasseBase
             l.ativo,
             l.criado_em,
             l.atualizado_em
-        FROM confef1.logs_erros_ignorar l
-        LEFT JOIN confef1.TBLUsuarios u 
+        FROM logs_erros_ignorar l
+        LEFT JOIN TBLUsuarios u 
             ON l.id_usuario = u.id
         WHERE 1=1
     ";

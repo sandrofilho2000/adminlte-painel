@@ -1,7 +1,7 @@
 <?php
 
-Controller::setPageTitle('CONFEF - Conselho Federal de Educação Física');
-$pageDescription = 'Página inicial do CONFEF com notícias, clipping, publicações e informações do Conselho Federal de Educação Física.';
+Controller::setPageTitle('Painel - Sistema');
+$pageDescription = 'Página inicial do Painel com notícias, clipping, publicações e informações do Sistema.';
 
 $Banner = new Classes\Banner();
 $banners = $Banner->getBannersAtivos();
@@ -78,7 +78,7 @@ $videos = $videos->getVideosPrimeirosAtivos();
         <?php foreach ($noticias as $noticia): ?>
           <a href="/comunicacao/noticias/<?= $noticia->id ?>" class="swiper-slide">
             <div class="swiper-slide card-noticias mx-auto rounded overflow-hidden shadow-lg border-2">
-              <img class="w-full object-cover object-center lg:h-auto" src="/confef/img/noticias/<?= $noticia->nm_imagem ?>" alt="Notícia">
+              <img class="w-full object-cover object-center lg:h-auto" src="/adminlte-painel/img/noticias/<?= $noticia->nm_imagem ?>" alt="Notícia">
               <div class="card-content px-3 lg:px-[1.8rem] py-3 lg:py-[1.2rem]">
                 <span class="inline-block mb-2 lg:mb-4 bg-[#419837] text-[0.7rem] text-white p-[0.25rem] rounded-sm font-bold"><?= $noticia->nm_tags ?></span>
                 <div class="font-extrabold text-xs lg:text-base mb-1 lg:mb-2"><?= $noticia->nm_titulo ?></div>
@@ -115,7 +115,7 @@ $videos = $videos->getVideosPrimeirosAtivos();
 <!--SEÇÃO VIDEOS---------->
 <section class="flex flex-col items-center py-[40px] bg-[#ECECEC]">
   <div class="section_titulo">
-    <h2>Assista e baixe aqui os principais vídeos do CONFEF</h2>
+    <h2>Assista e baixe aqui os principais vídeos do Painel</h2>
   </div>
   <div class="grid grid-cols-2 grid-rows-2 lg:grid-cols-3 gap-x-4 gap-y-4 w-[100vw] h-[550px] mx-auto container mt-8 px-4">
 
@@ -141,7 +141,7 @@ $videos = $videos->getVideosPrimeirosAtivos();
       <iframe class="rounded-lg" width="100%" height="100%" src="https://www.youtube.com/embed/QfANPxN8eHI?si=hKBlbdUyPRANcRPp"> </iframe>
     </div> -->
   </div>
-  <a href="https://www.youtube.com/@SistemaCONFEFCREFs" target="_blank"><button class="secao_botao mt-[60px]">Outros Vídeos</button></a>
+  <a href="#" target="_blank"><button class="secao_botao mt-[60px]">Outros Vídeos</button></a>
 </section>
 
 <!--CLIPPING SECTION-->
@@ -163,7 +163,7 @@ $videos = $videos->getVideosPrimeirosAtivos();
           ?>
           <a href="/comunicacao/clipping/<?php echo htmlspecialchars((string) $noticia->id, ENT_QUOTES, 'UTF-8'); ?>" class="swiper-slide">
             <div class="card-clipping rounded-t-[4px] rounded-b-[16px] mx-auto overflow-hidden shadow-lg border-2 text-center">
-              <img class="w-full object-cover" style="height: 220px; min-height: 220px; max-height: 220px; overflow: hidden;" src="/confef/img/noticias/<?php echo htmlspecialchars((string) $noticia->nm_imagem, ENT_QUOTES, 'UTF-8'); ?>" alt="Clipping">
+              <img class="w-full object-cover" style="height: 220px; min-height: 220px; max-height: 220px; overflow: hidden;" src="/adminlte-painel/img/noticias/<?php echo htmlspecialchars((string) $noticia->nm_imagem, ENT_QUOTES, 'UTF-8'); ?>" alt="Clipping">
               <div class="card-content px-3 py-3 lg:px-2 lg:py-3 pb-12 flex flex-col justify-between h-full">
 
                 <div>

@@ -69,6 +69,32 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+function animarValorPainel(elemento, inicio, fim, duracao, intervaloBase) {
+    if (!elemento) {
+        return
+    }
+
+    const valorInicial = Number(inicio) || 0
+    const valorFinal = Number(fim) || 0
+    const tempoInicio = performance.now()
+    const intervalo = Math.max(1, Number(intervaloBase) || 1)
+
+    function atualizar(tempoAtual) {
+        const progresso = Math.min((tempoAtual - tempoInicio) / duracao, 1)
+        const valor = Math.floor(valorInicial + (valorFinal - valorInicial) * progresso)
+
+        elemento.textContent = valor.toLocaleString('pt-BR')
+
+        if (progresso < 1) {
+            window.setTimeout(function () {
+                requestAnimationFrame(atualizar)
+            }, intervalo / 1000)
+        }
+    }
+
+    requestAnimationFrame(atualizar)
+}
+
 $(document).ready(function () {
 
 
@@ -89,8 +115,8 @@ $(document).ready(function () {
                 let elementoPosicao = elemento.getBoundingClientRect().top;
 
                 if (elementoPosicao < window.innerHeight && !elemento.dataset.visivel) {
-                    animarValorCONFEF(document.getElementById('quantos-somos-fisica'), 0, data.quantos_somos_pf, 2000, 10000);
-                    animarValorCONFEF(document.getElementById('quantos-somos-juridica'), 0, data.quantos_somos_pj, 2000, 5000);
+                    animarValorPainel(document.getElementById('quantos-somos-fisica'), 0, data.quantos_somos_pf, 2000, 10000);
+                    animarValorPainel(document.getElementById('quantos-somos-juridica'), 0, data.quantos_somos_pj, 2000, 5000);
                     elemento.dataset.visivel = true;
                 }
             });

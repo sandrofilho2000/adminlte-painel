@@ -23,7 +23,7 @@ class NotificacoesUsuarios extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLNotificacoesUsuarios',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",

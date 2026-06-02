@@ -31,13 +31,13 @@ if (typeof csrfToken !== 'undefined') {
     console.warn('csrfToken não definido. Requisições AJAX seguirão sem X-CSRF-Token.');
 }
 
-const controle = "/webconfef/controle/controle_default.php"
+const controle = "/adminlte-painel/controle/controle_default.php"
 const campos_alterados = []
 
-const WEBCONFEF_COLUMN_ORDER_STORAGE_PREFIX = "webconfef:datatable:colorder"
-const WEBCONFEF_COLUMN_ORDER_PERSISTENCE_FLAG = "__webconfefColumnOrderPersistenceInstalled"
+const SISTEMA_COLUMN_ORDER_STORAGE_PREFIX = "painel:datatable:colorder"
+const SISTEMA_COLUMN_ORDER_PERSISTENCE_FLAG = "__sistemaColumnOrderPersistenceInstalled"
 
-function getWebconfefColumnOrderStorageKey(settings) {
+function getSistemaColumnOrderStorageKey(settings) {
     const tableNode = settings && settings.nTable ? settings.nTable : null
     const tableId = tableNode && tableNode.id ? String(tableNode.id).trim() : ""
 
@@ -45,10 +45,10 @@ function getWebconfefColumnOrderStorageKey(settings) {
         return null
     }
 
-    return `${WEBCONFEF_COLUMN_ORDER_STORAGE_PREFIX}:${window.location.pathname}:${tableId}`
+    return `${SISTEMA_COLUMN_ORDER_STORAGE_PREFIX}:${window.location.pathname}:${tableId}`
 }
 
-function normalizeWebconfefColumnOrder(rawOrder, columnCount) {
+function normalizeSistemaColumnOrder(rawOrder, columnCount) {
     if (!Array.isArray(rawOrder) || rawOrder.length !== columnCount) {
         return null
     }
@@ -71,18 +71,18 @@ function normalizeWebconfefColumnOrder(rawOrder, columnCount) {
     return order
 }
 
-function saveWebconfefColumnOrder(tableApi) {
+function saveSistemaColumnOrder(tableApi) {
     if (!tableApi || !tableApi.colReorder || typeof tableApi.colReorder.order !== "function") {
         return
     }
 
     const settings = tableApi.settings()[0]
-    const storageKey = getWebconfefColumnOrderStorageKey(settings)
+    const storageKey = getSistemaColumnOrderStorageKey(settings)
     if (!storageKey) {
         return
     }
 
-    const order = normalizeWebconfefColumnOrder(tableApi.colReorder.order(), tableApi.columns().count())
+    const order = normalizeSistemaColumnOrder(tableApi.colReorder.order(), tableApi.columns().count())
     if (!order) {
         return
     }
@@ -93,7 +93,7 @@ function saveWebconfefColumnOrder(tableApi) {
     }
 }
 
-function loadWebconfefColumnOrder(storageKey, columnCount) {
+function loadSistemaColumnOrder(storageKey, columnCount) {
     if (!storageKey) {
         return null
     }
@@ -105,30 +105,30 @@ function loadWebconfefColumnOrder(storageKey, columnCount) {
         }
 
         const parsed = JSON.parse(raw)
-        return normalizeWebconfefColumnOrder(parsed, columnCount)
+        return normalizeSistemaColumnOrder(parsed, columnCount)
     } catch (erro) {
         return null
     }
 }
 
-function applyWebconfefColumnOrderPersistence(tableApi) {
+function applySistemaColumnOrderPersistence(tableApi) {
     if (!tableApi || !tableApi.colReorder || typeof tableApi.colReorder.order !== "function") {
         return
     }
 
     const settings = tableApi.settings()[0]
-    if (!settings || settings._webconfefColumnOrderPersistenceBound) {
+    if (!settings || settings._sistemaColumnOrderPersistenceBound) {
         return
     }
 
-    const storageKey = getWebconfefColumnOrderStorageKey(settings)
+    const storageKey = getSistemaColumnOrderStorageKey(settings)
     if (!storageKey) {
         return
     }
 
-    const savedOrder = loadWebconfefColumnOrder(storageKey, tableApi.columns().count())
+    const savedOrder = loadSistemaColumnOrder(storageKey, tableApi.columns().count())
     if (savedOrder) {
-        const currentOrder = normalizeWebconfefColumnOrder(tableApi.colReorder.order(), tableApi.columns().count())
+        const currentOrder = normalizeSistemaColumnOrder(tableApi.colReorder.order(), tableApi.columns().count())
         const sameOrder = currentOrder && currentOrder.length === savedOrder.length && currentOrder.every(function (value, index) {
             return value === savedOrder[index]
         })
@@ -141,15 +141,15 @@ function applyWebconfefColumnOrderPersistence(tableApi) {
         }
     }
 
-    settings._webconfefColumnOrderPersistenceBound = true
-    tableApi.off("column-reorder.webconfefColumnOrder")
-    tableApi.on("column-reorder.webconfefColumnOrder", function () {
-        saveWebconfefColumnOrder(tableApi)
+    settings._sistemaColumnOrderPersistenceBound = true
+    tableApi.off("column-reorder.sistemaColumnOrder")
+    tableApi.on("column-reorder.sistemaColumnOrder", function () {
+        saveSistemaColumnOrder(tableApi)
     })
 }
 
-function installWebconfefColumnOrderPersistence() {
-    if (window[WEBCONFEF_COLUMN_ORDER_PERSISTENCE_FLAG]) {
+function installSistemaColumnOrderPersistence() {
+    if (window[SISTEMA_COLUMN_ORDER_PERSISTENCE_FLAG]) {
         return
     }
 
@@ -157,19 +157,19 @@ function installWebconfefColumnOrderPersistence() {
         return
     }
 
-    window[WEBCONFEF_COLUMN_ORDER_PERSISTENCE_FLAG] = true
+    window[SISTEMA_COLUMN_ORDER_PERSISTENCE_FLAG] = true
     $.fn.dataTable.defaults.colReorder = true
 
     $(document)
-        .off("init.dt.webconfefColumnOrderPersistence")
-        .on("init.dt.webconfefColumnOrderPersistence", function (event, settings) {
+        .off("init.dt.sistemaColumnOrderPersistence")
+        .on("init.dt.sistemaColumnOrderPersistence", function (event, settings) {
             if (!settings || !settings.nTable || !settings.nTable.id) {
                 return
             }
 
             window.setTimeout(function () {
                 try {
-                    applyWebconfefColumnOrderPersistence(new $.fn.dataTable.Api(settings))
+                    applySistemaColumnOrderPersistence(new $.fn.dataTable.Api(settings))
                 } catch (erro) {
                 }
             }, 0)
@@ -177,13 +177,13 @@ function installWebconfefColumnOrderPersistence() {
 
     try {
         $.fn.dataTable.tables({ api: true }).every(function () {
-            applyWebconfefColumnOrderPersistence(this)
+            applySistemaColumnOrderPersistence(this)
         })
     } catch (erro) {
     }
 }
 
-installWebconfefColumnOrderPersistence()
+installSistemaColumnOrderPersistence()
 
 function ensureOverlay() {
     let overlay = document.getElementById("global-overlay")
@@ -1222,8 +1222,8 @@ const NOTIFICATION_START_DELAY_MS = 2 * SECOND_MS
 const NOTIFICATION_POLL_INTERVAL_MS = 45 * SECOND_MS
 const NOTIFICATION_TITLE_BLINK_DURATION_MS = 1 * SECOND_MS
 const NOTIFICATION_TITLE_BLINK_INTERVAL_MS = 1000
-const NOTIFICATION_SOUND_URL = "/webconfef/src/notification.mp3"
-const NOTIFICATION_HIGHLIGHT_SOUND_URL = "/webconfef/src/notificacao_destaque.mp3"
+const NOTIFICATION_SOUND_URL = "/adminlte-painel/src/notification.mp3"
+const NOTIFICATION_HIGHLIGHT_SOUND_URL = "/adminlte-painel/src/notificacao_destaque.mp3"
 const NOTIFICATION_SOUND_VOLUME = 0.2
 const TOAST_TITLE_MAX_LENGTH = 90
 const TOAST_MESSAGE_MAX_LENGTH = 320

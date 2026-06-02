@@ -39,7 +39,7 @@ class Chamados extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLChamados',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",
@@ -233,7 +233,7 @@ class Chamados extends ClasseBase
                 $NovaNotificacao->cor = "warning";
                 $NovaNotificacao->botao_label = "Ver chamado";
                 $NovaNotificacao->destinatarios = $destinatarios;
-                $NovaNotificacao->botao_url = "https://sistemas.confef.org.br/webconfef/admin/content/chamados/index.php?id_chamado=" . ($chamado['id'] ?? '');
+                $NovaNotificacao->botao_url = "/adminlte-painel/admin/content/chamados/index.php?id_chamado=" . ($chamado['id'] ?? '');
                 $NovaNotificacao->envia_email = false;
                 $NovaNotificacao->toast_total_exibicoes = 3;
                 $NovaNotificacao->toast_intervalo_minutos = 30;
@@ -248,7 +248,7 @@ class Chamados extends ClasseBase
             $NovaNotificacao = $NovaNotificacao->criaNotificacao();
 
             $NotificacaoProgramada = new NotificacoesProgramadas();
-            $NotificacaoProgramada->esquema = 'confef1';
+            $NotificacaoProgramada->esquema = '';
             $NotificacaoProgramada->tabela = 'TBLChamados';
             $NotificacaoProgramada->nome_coluna_pk = 'id';
             $NotificacaoProgramada->valor_pk = $chamado['id'] ?? null;
@@ -317,7 +317,7 @@ class Chamados extends ClasseBase
                 );
                 $Notificacao->cor = "info";
                 $Notificacao->botao_label = "Ver chamado";
-                $Notificacao->botao_url = "https://sistemas.confef.org.br/webconfef/admin/content/chamados/index.php?id_chamado=" . ($chamado['id'] ?? '');
+                $Notificacao->botao_url = "/adminlte-painel/admin/content/chamados/index.php?id_chamado=" . ($chamado['id'] ?? '');
                 $Notificacao->envia_email = true;
                 break;
 
@@ -341,7 +341,7 @@ class Chamados extends ClasseBase
                 );
                 $Notificacao->cor = "info";
                 $Notificacao->botao_label = "Ver chamado";
-                $Notificacao->botao_url = "https://sistemas.confef.org.br/webconfef/admin/content/chamados/index.php?id_chamado=" . ($chamado['id'] ?? '');
+                $Notificacao->botao_url = "/adminlte-painel/admin/content/chamados/index.php?id_chamado=" . ($chamado['id'] ?? '');
                 $Notificacao->envia_email = true;
                 break;
 
@@ -497,7 +497,7 @@ class Chamados extends ClasseBase
         }
 
         $Notificacao->botao_label = "Ver chamado";
-        $Notificacao->botao_url = "https://sistemas.confef.org.br/webconfef/admin/content/chamados/index.php?id_chamado=" . ($chamado['id'] ?? '');
+        $Notificacao->botao_url = "/adminlte-painel/admin/content/chamados/index.php?id_chamado=" . ($chamado['id'] ?? '');
         $Notificacao->envia_email = true;
 
         if (!empty($Notificacao->destinatarios)) {
@@ -521,7 +521,7 @@ class Chamados extends ClasseBase
                 OR $alias.responsavel_id = $id_usuario
                 OR EXISTS (
                     SELECT 1
-                    FROM confef1.TBLChamados_Observadores o
+                    FROM TBLChamados_Observadores o
                     WHERE o.id_chamado = $alias.id
                     AND o.id_usuario = $id_usuario
                 )
@@ -822,9 +822,9 @@ class Chamados extends ClasseBase
 
     public function getChamados()
     {
-        $this->queryCorrente = "SELECT c.*, ur.apresentacao as responsavel, uc.apresentacao as criado_por FROM confef1.TBLChamados c 
-        LEFT JOIN confef1.TBLUsuarios ur ON c.responsavel_id = ur.id 
-        LEFT JOIN confef1.TBLUsuarios uc ON c.criado_por_id = uc.id 
+        $this->queryCorrente = "SELECT c.*, ur.apresentacao as responsavel, uc.apresentacao as criado_por FROM TBLChamados c 
+        LEFT JOIN TBLUsuarios ur ON c.responsavel_id = ur.id 
+        LEFT JOIN TBLUsuarios uc ON c.criado_por_id = uc.id 
         WHERE 1=1    ";
         $this->aplicarFiltroVisualizacaoChamados('c');
         $this->retornarComoArray = true;
@@ -846,9 +846,9 @@ class Chamados extends ClasseBase
     public function getChamado($id)
     {
         $id = $id ?? $this->id;
-        $this->queryCorrente = "SELECT c.*, ur.apresentacao as responsavel, uc.apresentacao as criado_por FROM confef1.TBLChamados c 
-        LEFT JOIN confef1.TBLUsuarios ur ON c.responsavel_id = ur.id 
-        LEFT JOIN confef1.TBLUsuarios uc ON c.criado_por_id = uc.id 
+        $this->queryCorrente = "SELECT c.*, ur.apresentacao as responsavel, uc.apresentacao as criado_por FROM TBLChamados c 
+        LEFT JOIN TBLUsuarios ur ON c.responsavel_id = ur.id 
+        LEFT JOIN TBLUsuarios uc ON c.criado_por_id = uc.id 
         WHERE 1=1    ";
         $this->aplicarFiltroVisualizacaoChamados('c');
         $this->filtrar("c.id", $id);

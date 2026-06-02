@@ -22,7 +22,7 @@ class NotificacoesProgramadas extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLNotificacoesProgramadas',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",

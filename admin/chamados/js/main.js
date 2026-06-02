@@ -60,8 +60,8 @@ const classesBgCabecalhoModalPorColuna = {
     arquivados: "bg-secondary"
 }
 
-const CHAMADOS_COLUMN_ORDER_STORAGE_KEY = "webconfef:chamados:kanban-column-order"
-const CHAMADOS_COLUMN_COLLAPSED_STORAGE_KEY = "webconfef:chamados:kanban-column-collapsed"
+const CHAMADOS_COLUMN_ORDER_STORAGE_KEY = "painel:chamados:kanban-column-order"
+const CHAMADOS_COLUMN_COLLAPSED_STORAGE_KEY = "painel:chamados:kanban-column-collapsed"
 
 const indiceCards = {}
 const indiceObservadoresPorNome = {}
@@ -1547,7 +1547,7 @@ function obterUrlAnexoChamado(anexo, preview = false) {
         return ""
     }
 
-    const urlBase = `/webconfef/admin/content/chamados/download.php?id=${encodeURIComponent(id)}`
+    const urlBase = `/adminlte-painel/admin/content/chamados/download.php?id=${encodeURIComponent(id)}`
     return preview ? `${urlBase}&preview=1` : urlBase
 }
 

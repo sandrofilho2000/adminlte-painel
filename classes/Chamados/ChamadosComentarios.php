@@ -19,7 +19,7 @@ class ChamadosComentarios extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLChamados_Comentarios',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",
@@ -204,7 +204,7 @@ class ChamadosComentarios extends ClasseBase
     public function getComentarios($id_chamado = null)
     {
         $id_chamado = $id_chamado ?? $this->id_chamado;
-        $this->queryCorrente = "SELECT c.*, u.apresentacao FROM confef1.TBLChamados_Comentarios c LEFT JOIN confef1.TBLUsuarios u ON c.criado_por_id = u.id WHERE 1=1 ";
+        $this->queryCorrente = "SELECT c.*, u.apresentacao FROM TBLChamados_Comentarios c LEFT JOIN TBLUsuarios u ON c.criado_por_id = u.id WHERE 1=1 ";
         $this->filtrar("c.id_chamado", $id_chamado);
         $this->ordenar("c.criado_em");
         $atualizacoes = $this->buscar();

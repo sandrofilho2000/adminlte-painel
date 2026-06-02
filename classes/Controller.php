@@ -3,7 +3,7 @@
 class Controller
 {
     private static $_instance;
-    private static $_page_title = 'CONFEF';
+    private static $_page_title = 'Painel';
 
     private $_meta_tags = [];
 
@@ -130,7 +130,7 @@ class Controller
 
     public static function getPageTitle()
     {
-        $_page_title = self::$_page_title ?? 'CONFEF';
+        $_page_title = self::$_page_title ?? 'Painel';
         return $_page_title;
     }
 

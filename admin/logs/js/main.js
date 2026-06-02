@@ -1,4 +1,4 @@
-const language_url = "/webconfef/templates/AdminLTE-3.2.0/dist/js/pt-BR.json"
+const language_url = "/adminlte-painel/templates/AdminLTE-3.2.0/dist/js/pt-BR.json"
 var tabelaLogs = $("#tabelaLogs")
 var tabelaLogsIgnorar = $("#tabelaLogsIgnorar")
 var verLogsIgnorados = false
@@ -114,7 +114,7 @@ function renderTabelaLogs(page = 1) {
             order: [[1, "desc"]],
             displayStart: (page - 1) * 20,
             ajax: {
-                "url": "/webconfef/controle/controle_default.php",
+                "url": "/adminlte-painel/controle/controle_default.php",
                 "type": "POST",
                 "data": function (d) {
                     d.objeto = 'Logs';
@@ -210,7 +210,7 @@ function renderTabelaLogsIgnorar(page = 1) {
             order: [[4, "desc"]],
             displayStart: (page - 1) * 10,
             ajax: {
-                url: "/webconfef/controle/controle_default.php",
+                url: "/adminlte-painel/controle/controle_default.php",
                 type: "POST",
                 data: function (d) {
                     d.objeto = 'LogsIgnorar';

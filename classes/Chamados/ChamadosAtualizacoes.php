@@ -19,7 +19,7 @@ class ChamadosAtualizacoes extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLChamados_Atualizacoes',
-        'schema' => 'confef1',
+        'schema' => null,
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",
@@ -61,7 +61,7 @@ class ChamadosAtualizacoes extends ClasseBase
     public function getAtualizacoes($id_chamado = null)
     {
         $id_chamado = $id_chamado ?? $this->id_chamado;
-        $this->queryCorrente = "SELECT a.*, u.apresentacao FROM confef1.TBLChamados_Atualizacoes a LEFT JOIN confef1.TBLUsuarios u ON a.criado_por_id = u.id WHERE 1=1 ";
+        $this->queryCorrente = "SELECT a.*, u.apresentacao FROM TBLChamados_Atualizacoes a LEFT JOIN TBLUsuarios u ON a.criado_por_id = u.id WHERE 1=1 ";
         $this->filtrar("a.id_chamado", $id_chamado);
         $this->ordenar("a.criado_em", "DESC");
         $atualizacoes = $this->buscar();
