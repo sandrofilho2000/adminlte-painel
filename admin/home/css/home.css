@@ -1,0 +1,98 @@
+/* Fundo escuro do popup */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* Estilo da imagem no popup */
+.popup-image {
+    max-width: 90vw;
+    /* Ajusta a largura para 90% da tela */
+    max-height: 90vh;
+    /* Ajusta a altura para 90% da tela */
+    border-radius: 8px;
+    position: relative;
+}
+
+/* Ícone de fechar */
+.close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px;
+    border-radius: 50%;
+}
+
+.close-icon:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.card-noticias,
+.card-clipping {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.card-noticias,
+.card-clipping {
+    height: 100%;
+}
+
+
+.card-noticias img,
+.card-clipping img {
+    flex-shrink: 0;
+}
+
+.card-noticias .card-content,
+.card-clipping .card-content {
+    flex-grow: 1;
+}
+
+.card-noticias .card-footer,
+.card-clipping .card-footer {
+    flex-shrink: 0;
+}
+
+.doc_secao p {
+    text-align: justify;
+}
+
+.swiper-container {
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    /* Ajuste conforme necess�rio */
+}
+
+.swiper-pagination-bullet {
+    background: #000;
+    /* Ajuste a cor dos bullets da pagina��o */
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #000;
+    /* Ajuste a cor dos bot�es de navega��o */
+}

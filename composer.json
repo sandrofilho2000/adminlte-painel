@@ -1,0 +1,34 @@
+{
+    "require": {
+        "spatie/pdf-to-image": "*",
+        "smalot/pdfparser": "*",
+        "dompdf/dompdf": "*",
+        "mpdf/mpdf": "^8.2",
+        "endroid/qr-code": "^4.8",
+        "tecnickcom/tcpdf": "^6.7",
+        "setasign/fpdi": "^2.6",
+        "phpoffice/phpspreadsheet": "^2.1",
+        "setasign/fpdf": "^1.8",
+        "firebase/php-jwt": "^6.10",
+        "cboden/ratchet": "^0.4.4",
+        "goat1000/svggraph": "^3.20",
+        "vlucas/phpdotenv": "*",
+        "phpmailer/phpmailer": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Classes\\": "classes/",
+            "App\\": "classes/"
+        },
+        "classmap": [
+            "classes/Agendamentos/",
+            "classes/Chamados/",
+            "classes/FundoDesenv/",
+            "classes/FundoDesenv/PrestaContas",
+            "classes/Protocolos/",
+            "classes/Logs/",
+            "classes/Usuarios/",
+            "classes/Notificacoes/"
+        ]
+    }
+}
