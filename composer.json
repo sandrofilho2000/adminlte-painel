@@ -21,13 +21,8 @@
             "App\\": "classes/"
         },
         "classmap": [
-            "classes/Agendamentos/",
             "classes/Chamados/",
-            "classes/FundoDesenv/",
-            "classes/FundoDesenv/PrestaContas",
-            "classes/Protocolos/",
             "classes/Logs/",
-            "classes/Usuarios/",
             "classes/Notificacoes/"
         ]
     }
