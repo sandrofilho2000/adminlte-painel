@@ -198,6 +198,7 @@ if (!$tem_permissao || $_SESSION['estado_conselho'] != 'BR') {
   <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
 
   <script src="/adminlte-painel/src/functions.js?v=<?= $v ?>"></script>
+  <script src="/adminlte-painel/src/theme-toggle.js"></script>
   <script src="/adminlte-painel/admin/content/logs/js/main.js"></script>
 </body>
 

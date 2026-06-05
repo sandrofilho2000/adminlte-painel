@@ -646,6 +646,7 @@ $sou_de_informatica = trim((string) ($_SESSION['setor'] ?? '')) === 'Coordenador
         const MEUS_MODULOS = <?= json_encode($atributos_editaveis) ?>;
     </script>
     <script src="/adminlte-painel/src/functions.js?v=<?= $v ?>"></script>
+    <script src="/adminlte-painel/src/theme-toggle.js"></script>
     <script src="/adminlte-painel/admin/content/chamados/js/main.js?v=<?= $v ?>"></script>
 </body>
 

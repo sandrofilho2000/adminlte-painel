@@ -23,17 +23,27 @@
     array(
       "title" => 'User Registrations',
       "value" => "44",
-      "icon" => "fas fa-user",
+      "icon" => "fas fa-user-plus",
       "color" => 'warning'
     ),
     array(
       "title" => 'Unique Visitors',
-      "value" => "44",
-      "icon" => "fas fa-user",
+      "value" => "65",
+      "icon" => "fas fa-chart-line",
       "color" => 'danger'
     ),
+  ];
 
-  ]
+  $members = [
+    ['name' => 'Alexander Pierce', 'date' => 'Today', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user1-128x128.jpg'],
+    ['name' => 'Norman Stanley', 'date' => 'Yesterday', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user8-128x128.jpg'],
+    ['name' => 'Jane Doe', 'date' => '12 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user7-128x128.jpg'],
+    ['name' => 'John Doe', 'date' => '12 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user6-128x128.jpg'],
+    ['name' => 'Robert Doe', 'date' => '13 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user2-160x160.jpg'],
+    ['name' => 'Mike Doe', 'date' => '14 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user5-128x128.jpg'],
+    ['name' => 'Sarah Bullock', 'date' => '15 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user4-128x128.jpg'],
+    ['name' => 'Mina Lee', 'date' => '15 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user3-128x128.jpg'],
+  ];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,36 +53,262 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css">
+  <title>Dashboard</title>
+  <style>
+    #world-map-markers {
+      height: 360px;
+    }
+
+    .direct-chat-messages {
+      height: 282px;
+    }
+
+    .members-list .list-inline-item {
+      width: 24%;
+      margin-right: 0;
+      margin-bottom: 1rem;
+      vertical-align: top;
+    }
+
+    .members-list img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+    }
+  </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
-    <?php
-      include_once '../includes/header.php';
-    ?>
-    <?php
-      include_once '../includes/sidebar.php';
-    ?>
+    <?php include_once '../includes/header.php'; ?>
+    <?php include_once '../includes/sidebar.php'; ?>
 
-    <!-- O content-wrapper contém o conteúdo da página -->
     <div class="content-wrapper">
-      <!-- Cabeçalho da página (Opcional) -->
       <div class="content-header">
         <div class="container-fluid">
-          <h1 class="m-0">Dashboard</h1>
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0">Dashboard</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+              </ol>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Conteúdo principal -->
       <section class="content">
         <div class="container-fluid">
           <div class="row">
-            <?php foreach($mock_numbers as $mock_number):?>
+            <?php foreach($mock_numbers as $mock_number): ?>
               <div class="col-lg-3 col-6">
-              <?= $ui_helper::smallBox($mock_number['title'], $mock_number['value'], $mock_number['icon'], $mock_number['color']); ?>
-            </div>
+                <?= $ui_helper::smallBox($mock_number['title'], $mock_number['value'], $mock_number['icon'], $mock_number['color']); ?>
+              </div>
             <?php endforeach ?>
+          </div>
+
+          <div class="row">
+            <section class="col-lg-7 connectedSortable">
+              <div class="card">
+                <div class="card-header border-0">
+                  <h3 class="card-title">
+                    <i class="fas fa-chart-line mr-1"></i>
+                    Sales
+                  </h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="chart">
+                    <canvas id="sales-chart" height="280"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card card-success">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <i class="fas fa-map-marker-alt mr-1"></i>
+                    Visitors Map
+                  </h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div id="world-map-markers"></div>
+                </div>
+                <div class="card-footer bg-transparent">
+                  <div class="row text-center">
+                    <div class="col-4">
+                      <div class="text-bold text-lg">8390</div>
+                      <span class="text-muted">Visits</span>
+                    </div>
+                    <div class="col-4">
+                      <div class="text-bold text-lg">30%</div>
+                      <span class="text-muted">Referrals</span>
+                    </div>
+                    <div class="col-4">
+                      <div class="text-bold text-lg">70%</div>
+                      <span class="text-muted">Organic</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="col-lg-5 connectedSortable">
+              <div class="card card-primary card-outline direct-chat direct-chat-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Direct Chat</h3>
+                  <div class="card-tools">
+                    <span title="3 New Messages" class="badge bg-primary">3</span>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-widget="chat-pane-toggle">
+                      <i class="fas fa-comments"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="direct-chat-messages">
+                    <div class="direct-chat-msg">
+                      <div class="direct-chat-infos clearfix">
+                        <span class="direct-chat-name float-left">Alexander Pierce</span>
+                        <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
+                      </div>
+                      <img class="direct-chat-img" src="https://adminlte.io/themes/v3/dist/img/user1-128x128.jpg" alt="message user image">
+                      <div class="direct-chat-text">
+                        Is this dashboard ready for the weekly report?
+                      </div>
+                    </div>
+
+                    <div class="direct-chat-msg right">
+                      <div class="direct-chat-infos clearfix">
+                        <span class="direct-chat-name float-right">Sarah Bullock</span>
+                        <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
+                      </div>
+                      <img class="direct-chat-img" src="https://adminlte.io/themes/v3/dist/img/user3-128x128.jpg" alt="message user image">
+                      <div class="direct-chat-text">
+                        Yes. Charts and the visitor map are using fake data.
+                      </div>
+                    </div>
+
+                    <div class="direct-chat-msg">
+                      <div class="direct-chat-infos clearfix">
+                        <span class="direct-chat-name float-left">Alexander Pierce</span>
+                        <span class="direct-chat-timestamp float-right">23 Jan 2:08 pm</span>
+                      </div>
+                      <img class="direct-chat-img" src="https://adminlte.io/themes/v3/dist/img/user1-128x128.jpg" alt="message user image">
+                      <div class="direct-chat-text">
+                        Great. Add a few members and traffic markers too.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="direct-chat-contacts">
+                    <ul class="contacts-list">
+                      <li>
+                        <a href="#">
+                          <img class="contacts-list-img" src="https://adminlte.io/themes/v3/dist/img/user2-160x160.jpg" alt="contact user image">
+                          <div class="contacts-list-info">
+                            <span class="contacts-list-name">
+                              Count Dracula
+                              <small class="contacts-list-date float-right">2/28/2026</small>
+                            </span>
+                            <span class="contacts-list-msg">How is the dashboard going?</span>
+                          </div>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <img class="contacts-list-img" src="https://adminlte.io/themes/v3/dist/img/user7-128x128.jpg" alt="contact user image">
+                          <div class="contacts-list-info">
+                            <span class="contacts-list-name">
+                              Jane Doe
+                              <small class="contacts-list-date float-right">2/23/2026</small>
+                            </span>
+                            <span class="contacts-list-msg">Send me the latest report.</span>
+                          </div>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <form action="#" method="post">
+                    <div class="input-group">
+                      <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                      <span class="input-group-append">
+                        <button type="button" class="btn btn-primary">Send</button>
+                      </span>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <i class="fas fa-users mr-1"></i>
+                    Latest Members
+                  </h3>
+                  <div class="card-tools">
+                    <span class="badge badge-danger">8 New Members</span>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <ul class="users-list clearfix members-list">
+                    <?php foreach($members as $member): ?>
+                      <li>
+                        <img src="<?= htmlspecialchars($member['avatar']) ?>" alt="<?= htmlspecialchars($member['name']) ?>">
+                        <a class="users-list-name" href="#"><?= htmlspecialchars($member['name']) ?></a>
+                        <span class="users-list-date"><?= htmlspecialchars($member['date']) ?></span>
+                      </li>
+                    <?php endforeach ?>
+                  </ul>
+                </div>
+                <div class="card-footer text-center">
+                  <a href="#">View All Users</a>
+                </div>
+              </div>
+
+              <div class="card card-danger">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <i class="fas fa-chart-pie mr-1"></i>
+                    Browser Usage
+                  </h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <canvas id="browser-chart" height="220"></canvas>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </section>
@@ -82,6 +318,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.world.js"></script>
+  <script src="../src/theme-toggle.js"></script>
+  <script src="js/dashboard-demo.js"></script>
+  <script src="../src/functions.js"></script>
+  <script src="js/main.js"></script>
 </body>
 
 </html>
