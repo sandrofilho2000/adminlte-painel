@@ -53,11 +53,17 @@
     applyTheme(nextTheme);
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
+  function initThemeToggle() {
     applyTheme(getStoredTheme());
 
     document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
       button.addEventListener('click', toggleTheme);
     });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeToggle);
+  } else {
+    initThemeToggle();
+  }
 })();

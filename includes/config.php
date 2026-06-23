@@ -4,6 +4,10 @@ if (!defined('BASE_PATH')) {
     define('BASE_PATH', dirname(__DIR__));
 }
 
+if (!defined('ADMIN_PATH')) {
+    define('ADMIN_PATH', BASE_PATH . '/admin');
+}
+
 require_once BASE_PATH . '/vendor/autoload.php';
 
 function loadEnvFile(string $path): void

@@ -37,7 +37,7 @@ class ComposerStaticInit961bb97cb74046925cbec385e90d2368
         'Classes\\ChamadosObservadores' => __DIR__ . '/../..' . '/classes/Chamados/ChamadosObservadores.php',
         'Classes\\Logs' => __DIR__ . '/../..' . '/classes/Logs/Logs.php',
         'Classes\\LogsIgnorar' => __DIR__ . '/../..' . '/classes/Logs/LogsIgnorar.php',
-        'Classes\\Notificacoes' => __DIR__ . '/../..' . '/classes/Notificacoes/Notificacoes.php',
+        'Classes\\Notificacoes' => __DIR__ . '/../..' . '/classes/Notificacoes/Notificacoes copy.php',
         'Classes\\NotificacoesProgramadas' => __DIR__ . '/../..' . '/classes/Notificacoes/NotificacoesProgramadas.php',
         'Classes\\NotificacoesProgramadasCondicoes' => __DIR__ . '/../..' . '/classes/Notificacoes/NotificacoesProgramadasCondicoes.php',
         'Classes\\NotificacoesUsuarios' => __DIR__ . '/../..' . '/classes/Notificacoes/NotificacoesUsuarios.php',

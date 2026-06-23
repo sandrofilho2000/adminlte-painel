@@ -2674,26 +2674,26 @@ function lerNotificacao(url, id) {
 }
 
 
-; (function (global) {
-    if (global.AppToast) {
-        return
-    }
+// ; (function (global) {
+//     if (global.AppToast) {
+//         return
+//     }
 
-    global.AppToast = {
-        show,
-        burst,
-        randomPayload,
-        buscarNotificacoesRecentes,
-        iniciarPollingNotificacoes,
-        notificacoesEstaoMutadas,
-        definirMuteNotificacoes
-    }
+//     global.AppToast = {
+//         show,
+//         burst,
+//         randomPayload,
+//         buscarNotificacoesRecentes,
+//         iniciarPollingNotificacoes,
+//         notificacoesEstaoMutadas,
+//         definirMuteNotificacoes
+//     }
 
-    iniciarPollingNotificacoesQuandoDomEstiverPronto()
+//     iniciarPollingNotificacoesQuandoDomEstiverPronto()
 
-    const bellDropdown = document.getElementById('bell-dropdown');
-    if (bellDropdown) {
-        renderBellNotifications();
-    }
+//     const bellDropdown = document.getElementById('bell-dropdown');
+//     if (bellDropdown) {
+//         renderBellNotifications();
+//     }
 
-})(window)
+// })(window)

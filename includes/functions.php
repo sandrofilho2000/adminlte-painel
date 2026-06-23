@@ -240,6 +240,10 @@ function verificaPermissao($codigoRotina, $tipo_operacao = "Consulta")
   $logado = isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true;
   if (!$logado) return false;
 
+  if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
+    return true;
+  }
+
   if (!carregarPermissoesSessao()) {
     return false;
   }

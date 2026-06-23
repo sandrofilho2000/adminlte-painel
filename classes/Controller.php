@@ -84,7 +84,7 @@ class Controller
 
         foreach ($files as $filename) {
             if (self::assetExists($filename)) {
-                echo '<script src="' . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . '"></script>' . PHP_EOL;
+                echo '<script src="' . htmlspecialchars(self::assetUrl($filename), ENT_QUOTES, 'UTF-8') . '"></script>' . PHP_EOL;
             }
         }
     }
@@ -99,7 +99,7 @@ class Controller
 
         foreach ($files as $filename) {
             if (self::assetExists($filename)) {
-                echo '<script src="' . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . '"></script>' . PHP_EOL;
+                echo '<script src="' . htmlspecialchars(self::assetUrl($filename), ENT_QUOTES, 'UTF-8') . '"></script>' . PHP_EOL;
             }
         }
     }
@@ -123,7 +123,7 @@ class Controller
 
         foreach ($files as $filename) {
             if (self::assetExists($filename)) {
-                echo '<link rel="stylesheet" href="' . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . '">' . PHP_EOL;
+                echo '<link rel="stylesheet" href="' . htmlspecialchars(self::assetUrl($filename), ENT_QUOTES, 'UTF-8') . '">' . PHP_EOL;
             }
         }
     }
@@ -144,5 +144,16 @@ class Controller
 
         return file_exists(BASE_PATH . DIRECTORY_SEPARATOR . $relativeFilename)
             || file_exists(BASE_PATH . DIRECTORY_SEPARATOR . 'paginas' . DIRECTORY_SEPARATOR . $relativeFilename);
+    }
+
+    private static function assetUrl($filename)
+    {
+        if (preg_match('/^https?:\/\//', $filename)) {
+            return $filename;
+        }
+
+        $baseUrl = defined('BASE_URL') ? rtrim(BASE_URL, '/') : '/adminlte-painel';
+
+        return $baseUrl . '/' . ltrim($filename, '/');
     }
 }

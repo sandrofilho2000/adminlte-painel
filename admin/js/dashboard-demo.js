@@ -79,10 +79,60 @@
     });
   }
 
-  const $map = $('#world-map-markers');
-  if ($map.length && $.fn.vectorMap) {
+  const stateVisits = {
+    'br-01': 820,
+    'br-02': 940,
+    'br-03': 610,
+    'br-04': 1180,
+    'br-05': 3480,
+    'br-06': 2210,
+    'br-07': 1970,
+    'br-08': 1360,
+    'br-09': 2640,
+    'br-10': 1290,
+    'br-11': 1530,
+    'br-12': 1120,
+    'br-13': 5120,
+    'br-14': 1720,
+    'br-15': 980,
+    'br-16': 2870,
+    'br-17': 2360,
+    'br-18': 760,
+    'br-19': 4310,
+    'br-20': 890,
+    'br-21': 3010,
+    'br-22': 690,
+    'br-23': 420,
+    'br-24': 2420,
+    'br-25': 8390,
+    'br-26': 640,
+    'br-27': 570
+  };
+
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
+
+  function ensureBrazilMap() {
+    const pluginUrl = 'https://cdn.jsdelivr.net/npm/jqvmap@1.5.1/dist/jquery.vmap.min.js';
+    const brazilMapUrl = 'https://cdn.jsdelivr.net/npm/jqvmap@1.5.1/dist/maps/jquery.vmap.brazil.js';
+    const pluginReady = $.fn.vectorMap ? Promise.resolve() : loadScript(pluginUrl);
+
+    return pluginReady.then(function () {
+      return loadScript(brazilMapUrl);
+    });
+  }
+
+  function drawBrazilMap($map) {
+    $map.empty();
     $map.vectorMap({
-      map: 'world_en',
+      map: 'brazil_br',
       backgroundColor: 'transparent',
       borderColor: '#f4f4f4',
       borderOpacity: 0.8,
@@ -94,29 +144,49 @@
       normalizeFunction: 'polynomial',
       selectedColor: '#007bff',
       showTooltip: true,
-      values: {
-        us: 8390,
-        br: 5120,
-        gb: 2910,
-        de: 2460,
-        in: 1980,
-        au: 940
-      },
+      values: stateVisits,
       scaleColors: ['#c8e6c9', '#28a745'],
       onLabelShow: function (event, label, code) {
-        const values = {
-          us: '8,390 visits',
-          br: '5,120 visits',
-          gb: '2,910 visits',
-          de: '2,460 visits',
-          in: '1,980 visits',
-          au: '940 visits'
-        };
-
-        if (values[code]) {
-          label.text(label.text() + ': ' + values[code]);
+        if (stateVisits[code]) {
+          label.text(label.text() + ': ' + stateVisits[code].toLocaleString('pt-BR') + ' visitas');
         }
       }
+    });
+  }
+
+  function renderBrazilVisitorsMap(attempt) {
+    const $map = $('#world-map-markers');
+
+    if (!$map.length) {
+      return;
+    }
+
+    if (!$map.width() && attempt < 10) {
+      setTimeout(function () {
+        renderBrazilVisitorsMap(attempt + 1);
+      }, 150);
+      return;
+    }
+
+    if ($.fn.vectorMap) {
+      try {
+        drawBrazilMap($map);
+        return;
+      } catch (error) {
+        $map.empty();
+      }
+    }
+
+    ensureBrazilMap().then(function () {
+      drawBrazilMap($map);
+    });
+  }
+
+  if (document.readyState === 'complete') {
+    renderBrazilVisitorsMap(0);
+  } else {
+    $(window).on('load', function () {
+      renderBrazilVisitorsMap(0);
     });
   }
 })(jQuery);

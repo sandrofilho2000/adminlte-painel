@@ -14,7 +14,7 @@ return array(
     'Classes\\ChamadosObservadores' => $baseDir . '/classes/Chamados/ChamadosObservadores.php',
     'Classes\\Logs' => $baseDir . '/classes/Logs/Logs.php',
     'Classes\\LogsIgnorar' => $baseDir . '/classes/Logs/LogsIgnorar.php',
-    'Classes\\Notificacoes' => $baseDir . '/classes/Notificacoes/Notificacoes.php',
+    'Classes\\Notificacoes' => $baseDir . '/classes/Notificacoes/Notificacoes copy.php',
     'Classes\\NotificacoesProgramadas' => $baseDir . '/classes/Notificacoes/NotificacoesProgramadas.php',
     'Classes\\NotificacoesProgramadasCondicoes' => $baseDir . '/classes/Notificacoes/NotificacoesProgramadasCondicoes.php',
     'Classes\\NotificacoesUsuarios' => $baseDir . '/classes/Notificacoes/NotificacoesUsuarios.php',

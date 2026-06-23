@@ -1,3 +1,1 @@
-<main>
   teste
-</main>

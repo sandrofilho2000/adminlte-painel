@@ -1,11 +1,12 @@
 <?php
 if (!defined('BASE_PATH')) {
-  define('BASE_PATH', $_SERVER['DOCUMENT_ROOT']);
+  define('BASE_PATH', $_SERVER['DOCUMENT_ROOT'] . "/adminlte-painel");
 }
 
 require_once BASE_PATH . '/vendor/autoload.php';
-require_once BASE_PATH . '/includes/conexao.php';
 require_once BASE_PATH . '/includes/config.php';
+require_once BASE_PATH . '/classes/Controller.php';
+require_once BASE_PATH . '/admin/includes/session_manager.php';
 require_once BASE_PATH . '/includes/functions.php';
 
 function getIdFromUrl(): ?string
@@ -82,7 +83,7 @@ $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações
   <meta property="og:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
   <meta property="og:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
   <meta property="og:url" content="/">
-  <meta property="og:image" content="/src/assets/images/cabecalho.jpg">
+  <meta property="og:image" content="/adminlte-painel/src/assets/images/cabecalho.jpg">
   <meta property="og:type" content="website">
 
   <!-- Metatags para Twitter (compartilhamento em redes sociais) -->
@@ -90,12 +91,12 @@ $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações
   <meta name="twitter:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
   <meta name="twitter:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
 
-  <link rel="stylesheet" href="/src/css/style.css">
+  <link rel="stylesheet" href="/adminlte-painel/src/css/style.css">
 
 
   <?php Controller::getFilesStyles(); ?>
   <?php Controller::getFilesJavascriptHeader(); ?>
-  <script src="/src/js/main.js" defer></script>
+  <script src="/adminlte-painel/src/js/main.js" defer></script>
 
 </head>
 
@@ -104,7 +105,7 @@ $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações
     <?php if ($renderizarHeader): ?>
       <header>
         <?php
-        require($_SERVER['DOCUMENT_ROOT'] . "/includes/header.php");
+        require BASE_PATH . "/includes/header.php";
         ?>
       </header>
     <?php endif; ?>
@@ -117,16 +118,16 @@ $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações
     <?php if ($renderizarFooter): ?>
       <footer>
         <?php
-        require($_SERVER['DOCUMENT_ROOT'] . "/includes/footer.php");
+        require BASE_PATH . "/includes/footer.php";
         ?>
       </footer>
     <?php endif; ?>
   </div>
 
   <?php Controller::getFilesJavascript(); ?>
-  <script src="/src/js/carrousel.js"></script>
+  <script src="/adminlte-painel/src/js/carrousel.js"></script>
 </body>
 
 </html>
 
-<?php require($_SERVER['DOCUMENT_ROOT'] . "/includes/vlibras.php") ?>
+<?php require BASE_PATH . "/includes/vlibras.php" ?>

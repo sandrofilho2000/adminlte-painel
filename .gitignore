@@ -1,0 +1,44 @@
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+
+# Composer dependencies
+/vendor/
+
+# Node dependencies
+/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local databases and generated data
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs and temporary files
+*.log
+/logs/
+/tmp/
+/temp/
+.cache/
+
+# Build and coverage output
+/dist/
+/build/
+/coverage/
+
+# Tooling artifacts
+.playwright-mcp/
+admin-dashboard.png
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo

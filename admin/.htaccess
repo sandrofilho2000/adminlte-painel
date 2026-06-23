@@ -1,0 +1,18 @@
+Options -MultiViews
+
+DirectoryIndex layout.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /adminlte-painel/admin/
+
+  # Preserva arquivos reais: CSS, JS, imagens, downloads e endpoints diretos.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # /adminlte-painel/admin -> admin/layout.php com a pagina padrao.
+  RewriteRule ^$ layout.php [L,QSA]
+
+  # /adminlte-painel/admin/chamados -> admin/layout.php?pagina=chamados
+  RewriteRule ^(.+?)/?$ layout.php?pagina=$1 [L,QSA]
+</IfModule>

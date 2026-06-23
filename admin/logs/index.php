@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../includes/config.php';
 require_once BASE_PATH . '/vendor/autoload.php';
+include_once ADMIN_PATH . '/includes/session_manager.php';
 require_once ADMIN_PATH . '/includes/functions.php';
 
 $tem_permissao = verificaPermissao('00108');

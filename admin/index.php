@@ -4,30 +4,31 @@
   }
 
   require_once BASE_PATH . '/vendor/autoload.php';
+  require_once BASE_PATH . '/admin/includes/session_manager.php';
   require_once BASE_PATH . '/includes/functions.php';
 
   $ui_helper = new Classes\UIHelper();
   $mock_numbers = [
     array(
-      "title" => 'New Orders',
+      "title" => 'Novos pedidos',
       "value" => 150,
       "icon" => 'fas fa-shopping-cart',
       "color" => 'primary'
     ),
     array(
-      "title" => 'Bounce Rate',
+      "title" => 'Taxa de rejeição',
       "value" => "53%",
       "icon" => "fas fa-chart-pie",
       "color" => 'success'
     ),
     array(
-      "title" => 'User Registrations',
+      "title" => 'Cadastros de usuários',
       "value" => "44",
       "icon" => "fas fa-user-plus",
       "color" => 'warning'
     ),
     array(
-      "title" => 'Unique Visitors',
+      "title" => 'Visitantes únicos',
       "value" => "65",
       "icon" => "fas fa-chart-line",
       "color" => 'danger'
@@ -35,8 +36,8 @@
   ];
 
   $members = [
-    ['name' => 'Alexander Pierce', 'date' => 'Today', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user1-128x128.jpg'],
-    ['name' => 'Norman Stanley', 'date' => 'Yesterday', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user8-128x128.jpg'],
+    ['name' => 'Alexander Pierce', 'date' => 'Hoje', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user1-128x128.jpg'],
+    ['name' => 'Norman Stanley', 'date' => 'Ontem', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user8-128x128.jpg'],
     ['name' => 'Jane Doe', 'date' => '12 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user7-128x128.jpg'],
     ['name' => 'John Doe', 'date' => '12 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user6-128x128.jpg'],
     ['name' => 'Robert Doe', 'date' => '13 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user2-160x160.jpg'],
@@ -46,7 +47,7 @@
   ];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
@@ -54,7 +55,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css">
-  <title>Dashboard</title>
+  <title>Painel</title>
   <style>
     #world-map-markers {
       height: 360px;
@@ -89,12 +90,12 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1 class="m-0">Dashboard</h1>
+              <h1 class="m-0">Painel</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="/admin">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard</li>
+                <li class="breadcrumb-item"><a href="/admin">Início</a></li>
+                <li class="breadcrumb-item active">Painel</li>
               </ol>
             </div>
           </div>
@@ -117,7 +118,7 @@
                 <div class="card-header border-0">
                   <h3 class="card-title">
                     <i class="fas fa-chart-line mr-1"></i>
-                    Sales
+                    Vendas
                   </h3>
                   <div class="card-tools">
                     <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
@@ -139,7 +140,7 @@
                 <div class="card-header">
                   <h3 class="card-title">
                     <i class="fas fa-map-marker-alt mr-1"></i>
-                    Visitors Map
+                    Mapa de visitantes
                   </h3>
                   <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -153,16 +154,16 @@
                 <div class="card-footer bg-transparent">
                   <div class="row text-center">
                     <div class="col-4">
-                      <div class="text-bold text-lg">8390</div>
-                      <span class="text-muted">Visits</span>
+                      <div class="text-bold text-lg">54.300</div>
+                      <span class="text-muted">Visitas</span>
                     </div>
                     <div class="col-4">
                       <div class="text-bold text-lg">30%</div>
-                      <span class="text-muted">Referrals</span>
+                      <span class="text-muted">Indicações</span>
                     </div>
                     <div class="col-4">
                       <div class="text-bold text-lg">70%</div>
-                      <span class="text-muted">Organic</span>
+                      <span class="text-muted">Orgânico</span>
                     </div>
                   </div>
                 </div>
@@ -172,9 +173,9 @@
             <section class="col-lg-5 connectedSortable">
               <div class="card card-primary card-outline direct-chat direct-chat-primary">
                 <div class="card-header">
-                  <h3 class="card-title">Direct Chat</h3>
+                  <h3 class="card-title">Chat direto</h3>
                   <div class="card-tools">
-                    <span title="3 New Messages" class="badge bg-primary">3</span>
+                    <span title="3 novas mensagens" class="badge bg-primary">3</span>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                       <i class="fas fa-minus"></i>
                     </button>
@@ -193,9 +194,9 @@
                         <span class="direct-chat-name float-left">Alexander Pierce</span>
                         <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
                       </div>
-                      <img class="direct-chat-img" src="https://adminlte.io/themes/v3/dist/img/user1-128x128.jpg" alt="message user image">
+                      <img class="direct-chat-img" src="https://adminlte.io/themes/v3/dist/img/user1-128x128.jpg" alt="Imagem do usuário da mensagem">
                       <div class="direct-chat-text">
-                        Is this dashboard ready for the weekly report?
+                        Este painel está pronto para o relatório semanal?
                       </div>
                     </div>
 
@@ -204,9 +205,9 @@
                         <span class="direct-chat-name float-right">Sarah Bullock</span>
                         <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
                       </div>
-                      <img class="direct-chat-img" src="https://adminlte.io/themes/v3/dist/img/user3-128x128.jpg" alt="message user image">
+                      <img class="direct-chat-img" src="https://adminlte.io/themes/v3/dist/img/user3-128x128.jpg" alt="Imagem do usuário da mensagem">
                       <div class="direct-chat-text">
-                        Yes. Charts and the visitor map are using fake data.
+                        Sim. Os gráficos e o mapa de visitantes usam dados fictícios.
                       </div>
                     </div>
 
@@ -215,9 +216,9 @@
                         <span class="direct-chat-name float-left">Alexander Pierce</span>
                         <span class="direct-chat-timestamp float-right">23 Jan 2:08 pm</span>
                       </div>
-                      <img class="direct-chat-img" src="https://adminlte.io/themes/v3/dist/img/user1-128x128.jpg" alt="message user image">
+                      <img class="direct-chat-img" src="https://adminlte.io/themes/v3/dist/img/user1-128x128.jpg" alt="Imagem do usuário da mensagem">
                       <div class="direct-chat-text">
-                        Great. Add a few members and traffic markers too.
+                        Ótimo. Adicione também alguns membros e marcadores de tráfego.
                       </div>
                     </div>
                   </div>
@@ -232,7 +233,7 @@
                               Count Dracula
                               <small class="contacts-list-date float-right">2/28/2026</small>
                             </span>
-                            <span class="contacts-list-msg">How is the dashboard going?</span>
+                            <span class="contacts-list-msg">Como está o painel?</span>
                           </div>
                         </a>
                       </li>
@@ -244,7 +245,7 @@
                               Jane Doe
                               <small class="contacts-list-date float-right">2/23/2026</small>
                             </span>
-                            <span class="contacts-list-msg">Send me the latest report.</span>
+                            <span class="contacts-list-msg">Envie o relatório mais recente.</span>
                           </div>
                         </a>
                       </li>
@@ -254,9 +255,9 @@
                 <div class="card-footer">
                   <form action="#" method="post">
                     <div class="input-group">
-                      <input type="text" name="message" placeholder="Type Message ..." class="form-control">
+                      <input type="text" name="message" placeholder="Digite uma mensagem..." class="form-control">
                       <span class="input-group-append">
-                        <button type="button" class="btn btn-primary">Send</button>
+                        <button type="button" class="btn btn-primary">Enviar</button>
                       </span>
                     </div>
                   </form>
@@ -267,10 +268,10 @@
                 <div class="card-header">
                   <h3 class="card-title">
                     <i class="fas fa-users mr-1"></i>
-                    Latest Members
+                    Membros recentes
                   </h3>
                   <div class="card-tools">
-                    <span class="badge badge-danger">8 New Members</span>
+                    <span class="badge badge-danger">8 novos membros</span>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                       <i class="fas fa-minus"></i>
                     </button>
@@ -288,7 +289,7 @@
                   </ul>
                 </div>
                 <div class="card-footer text-center">
-                  <a href="#">View All Users</a>
+                  <a href="#">Ver todos os usuários</a>
                 </div>
               </div>
 
@@ -296,7 +297,7 @@
                 <div class="card-header">
                   <h3 class="card-title">
                     <i class="fas fa-chart-pie mr-1"></i>
-                    Browser Usage
+                    Uso por navegador
                   </h3>
                   <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -320,7 +321,7 @@
   <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.world.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.brazil.js"></script>
   <script src="../src/theme-toggle.js"></script>
   <script src="js/dashboard-demo.js"></script>
   <script src="../src/functions.js"></script>
