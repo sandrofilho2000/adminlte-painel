@@ -11,7 +11,7 @@
             </a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="/admin" class="nav-link">Início</a>
+            <a href="/adminlte-painel/admin/" class="nav-link">Início</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="#" class="nav-link">Contato</a>
@@ -158,8 +158,8 @@
                     </div>
                 </li>
                 <li class="user-footer">
-                    <a href="/perfil.php" class="btn btn-default btn-flat">Perfil</a>
-                    <a href="../logout.php" class="btn btn-default btn-flat float-right">Sair</a>
+                    <a href="/adminlte-painel/perfil.php" class="btn btn-default btn-flat">Perfil</a>
+                    <a href="/adminlte-painel/logout.php" class="btn btn-default btn-flat float-right">Sair</a>
                 </li>
             </ul>
         </li>

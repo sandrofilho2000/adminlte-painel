@@ -1,3 +1,8 @@
+<?php 
+    Controller::setPageTitle("Usuários")
+?>
+
+
 <div class="card">
     <h1>
         Olá, Mundo!

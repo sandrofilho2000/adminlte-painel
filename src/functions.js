@@ -437,19 +437,12 @@ function tableReajustarColunas(table, time) {
  */
 
 
-function gravarFrm(frmId, instanceTable, callback, acaoName) {
+function gravarFrm(frmId, instanceTable, callback) {
     const form = (typeof frmId === 'undefined') ? $('#frmDefault') : $('#' + frmId);
     var id_objeto = form.find('[name=id_objeto]').val();
-    var acao = form.find('[name=acao]').val();
-    if (typeof acaoName !== 'undefined') {
-        acao = acaoName;
-    }
-    if (form.find('input[name=acao]').val() === 'execute') {
-        acao = 'execute';
-    }
+
     //console.log('id_objeto: '+ form.find('input[name=id_objeto]').val());
     //return false;
-    form.find('input[name=acao]').val(acao);
     form.find('button[type=submit]').attr('disabled', 'disabled');
     form.find('img.loading').fadeIn();
     form.find('div.msg').html('');

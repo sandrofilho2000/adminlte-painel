@@ -1,6 +1,6 @@
 <?php
 if (!defined('BASE_PATH')) {
-  define('BASE_PATH', $_SERVER['DOCUMENT_ROOT'] . "/adminlte-painel");
+  define('BASE_PATH', dirname(__DIR__));
 }
 
 require_once BASE_PATH . '/vendor/autoload.php';
@@ -37,6 +37,8 @@ if (substr($paginaSolicitada, -4) !== '.php') {
 $paginasRoot = realpath(__DIR__);
 $conteudoPaginaPath = realpath(__DIR__ . DIRECTORY_SEPARATOR . $paginaSolicitada);
 $indexAtualPath = realpath(__FILE__);
+
+$pageTitle = Controller::getPageTitle();
 
 if (
   !$conteudoPaginaPath ||
@@ -91,43 +93,60 @@ $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações
   <meta name="twitter:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
   <meta name="twitter:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
 
-  <link rel="stylesheet" href="/adminlte-painel/src/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
 
 
   <?php Controller::getFilesStyles(); ?>
   <?php Controller::getFilesJavascriptHeader(); ?>
-  <script src="/adminlte-painel/src/js/main.js" defer></script>
+  <script src="/adminlte-painel/src/theme-toggle.js" defer></script>
 
 </head>
 
-<body>
-  <div class="body-container">
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
     <?php if ($renderizarHeader): ?>
-      <header>
-        <?php
-        require BASE_PATH . "/includes/header.php";
-        ?>
-      </header>
+      <?php require BASE_PATH . "/includes/header.php"; ?>
+      <?php require BASE_PATH . "/includes/sidebar.php"; ?>
     <?php endif; ?>
 
-    <main>
+    
+    <main class="content-wrapper">
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0"><?= $pageTitle ?></h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="/admin">Início</a></li>
+                <li class="breadcrumb-item active"><?= $pageTitle ?></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
       <?php echo $pageContent; ?>
     </main>
 
     <!--FOOTER-->
     <?php if ($renderizarFooter): ?>
-      <footer>
-        <?php
-        require BASE_PATH . "/includes/footer.php";
-        ?>
-      </footer>
+      <?php require BASE_PATH . "/admin/includes/footer.php"; ?>
     <?php endif; ?>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
   <?php Controller::getFilesJavascript(); ?>
-  <script src="/adminlte-painel/src/js/carrousel.js"></script>
 </body>
 
 </html>
 
-<?php require BASE_PATH . "/includes/vlibras.php" ?>
+<?php
+$vlibrasPath = BASE_PATH . "/includes/vlibras.php";
+if (is_file($vlibrasPath)) {
+  require $vlibrasPath;
+}
+?>

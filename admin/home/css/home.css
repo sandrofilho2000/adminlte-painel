@@ -96,3 +96,24 @@
     color: #000;
     /* Ajuste a cor dos bot�es de navega��o */
 }
+
+#world-map-markers {
+    height: 360px;
+}
+
+.direct-chat-messages {
+    height: 282px;
+}
+
+.members-list .list-inline-item {
+    width: 24%;
+    margin-right: 0;
+    margin-bottom: 1rem;
+    vertical-align: top;
+}
+
+.members-list img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+}

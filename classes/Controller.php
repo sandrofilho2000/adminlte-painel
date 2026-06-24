@@ -8,31 +8,33 @@ class Controller
     private $_meta_tags = [];
 
     private $_files_javascript_header = [
-        "https://code.jquery.com/jquery-3.6.0.min.js",
-        "https://cdn.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js",
-        "https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js",
-        "https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js",
-    ];
-    private $_files_javascript = [
-        "https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.js",
-        "/src/js/functions.js"
-    ];
-    private $_files_styles = [
-        "https://cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css",
-        "https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400..800&display=swap",
-        "https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.min.css",
-        "https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.min.css",
-        "/src/css/carrousel.css",
-        "https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.css",
-        "https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css",
-        "/src/css/style.css",
-        "https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js",
+        "https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js",
+        "https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js",
+        "https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.brazil.js",
     ];
 
-    private function __construct()
-    {
-    }
+
+    private $_files_javascript = [
+        "https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.js",
+        "/src/functions.js",
+        "https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js",
+        "https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js",
+        "https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.brazil.js",
+    ];
+
+    private $_files_styles = [
+        "/src/css/style.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css",
+        "https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css"
+    ];
+
+    private function __construct() {}
 
     public static function getInstance()
     {
@@ -47,7 +49,7 @@ class Controller
     {
         self::$_page_title = $title;
     }
-    
+
     public static function setMetaTag($property, $content)
     {
         self::getInstance()->_meta_tags[$property] = $content;
@@ -55,21 +57,21 @@ class Controller
 
     public static function setFileStyle($file)
     {
-        if(!in_array($file, self::getInstance()->_files_styles)) {
+        if (!in_array($file, self::getInstance()->_files_styles)) {
             self::getInstance()->_files_styles[] = $file;
         }
     }
 
     public static function setFileJavascript($file)
     {
-        if(!in_array($file, self::getInstance()->_files_javascript)) {
+        if (!in_array($file, self::getInstance()->_files_javascript)) {
             self::getInstance()->_files_javascript[] = $file;
         }
     }
 
     public static function setFileJavascriptHeader($file)
     {
-        if(!in_array($file, self::getInstance()->_files_javascript_header)) {
+        if (!in_array($file, self::getInstance()->_files_javascript_header)) {
             self::getInstance()->_files_javascript_header[] = $file;
         }
     }

@@ -20,7 +20,7 @@ class Banner extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLBanner',
-        'schema' => 'portal',
+        'schema' => 'aurora_tech',
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",

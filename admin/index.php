@@ -86,21 +86,7 @@
     <?php include_once '../includes/sidebar.php'; ?>
 
     <div class="content-wrapper">
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0">Painel</h1>
-            </div>
-            <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="/admin">Início</a></li>
-                <li class="breadcrumb-item active">Painel</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       <section class="content">
         <div class="container-fluid">
@@ -316,15 +302,8 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.brazil.js"></script>
   <script src="../src/theme-toggle.js"></script>
   <script src="js/dashboard-demo.js"></script>
-  <script src="../src/functions.js"></script>
   <script src="js/main.js"></script>
 </body>
 

@@ -97,6 +97,7 @@ try {
         'ChamadosArquivos',
         'ChamadosChecklist',
         'Notificacoes',
+        'Rotinas',
     ];
 
     if (!$className) {
