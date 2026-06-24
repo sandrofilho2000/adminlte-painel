@@ -1,0 +1,14 @@
+:root {
+  --aurora-primary: #00123f;
+  --aurora-primary-light: #0b2a6f;
+}
+
+body:not(.dark-mode) .main-header.navbar-light,
+body:not(.dark-mode) .main-header.navbar-light .navbar-nav .nav-link,
+body:not(.dark-mode) .main-header.navbar-light .btn-link.nav-link,
+body:not(.dark-mode) .main-sidebar.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link,
+body:not(.dark-mode) .main-sidebar.sidebar-light-primary .brand-link,
+body:not(.dark-mode) .main-sidebar.sidebar-light-primary .brand-link .brand-text {
+  color: var(--aurora-primary) !important;
+}
+

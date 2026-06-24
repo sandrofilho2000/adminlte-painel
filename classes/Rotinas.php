@@ -45,4 +45,21 @@ class Rotinas extends ClasseBase
 
         return $incluir;
     }
+
+    public function getRotinas()
+    {
+        $this->queryCorrente = "SELECT
+            r.id,
+            r.nome,
+            r.descricao,
+            r.url,
+            r.icone,
+            r.rotina_pai_id,
+            r.ordem,
+            r.ativo
+        FROM {$this->getNomeTabela()} r
+        WHERE 1=1";
+
+        return $this->buscar(true);
+    }
 }

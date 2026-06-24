@@ -1,6 +1,9 @@
 <?php
 Controller::setPageTitle("Rotinas");
-Controller::setFileJavascript("/admin/rotinas/js/main.js")
+Controller::setFileStyle("https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css");
+Controller::setFileJavascript("https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js");
+Controller::setFileJavascript("https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js");
+Controller::setFileJavascript("/admin/rotinas/js/main.js");
 ?>
 
 <section class="content">
@@ -117,6 +120,30 @@ Controller::setFileJavascript("/admin/rotinas/js/main.js")
           <button type="submit" class="btn btn-primary">Salvar</button>
         </div>
       </form>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Rotinas cadastradas</h3>
+      </div>
+
+      <div class="card-body">
+        <table id="tabelaRotinas" class="table table-striped table-bordered responsive dataTable no-footer collapsed" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Descricao</th>
+              <th>URL</th>
+              <th>Icone</th>
+              <th>Rotina pai</th>
+              <th>Ordem</th>
+              <th>Ativo</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>

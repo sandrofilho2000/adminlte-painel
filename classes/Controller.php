@@ -28,7 +28,7 @@ class Controller
     ];
 
     private $_files_styles = [
-        "/src/css/style.css",
+        "/src/styles.css",
         "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css",
         "https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css",
         "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css"
