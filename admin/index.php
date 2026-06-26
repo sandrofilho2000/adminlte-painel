@@ -1,6 +1,6 @@
 <?php
   if (!defined('BASE_PATH')) {
-    define('BASE_PATH', $_SERVER['DOCUMENT_ROOT'] . "/adminlte-painel");
+    define('BASE_PATH', dirname(__DIR__));
   }
 
   require_once BASE_PATH . '/vendor/autoload.php';
