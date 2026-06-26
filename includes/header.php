@@ -4,6 +4,15 @@
     $usuario_avatar = 'https://adminlte.io/themes/v3/dist/img/user2-160x160.jpg';
 ?>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <a href="/adminlte-painel/admin/" class="brand-link aurora-brand">
+        <span class="aurora-brand-icon">
+            <img
+                src="/adminlte-painel/public/images/logo-mini.png"
+                alt="Aurora Tech"
+                class="brand-image" />
+        </span>
+        <span class="brand-text"><strong>aurora</strong> tech</span>
+     </a>
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button">

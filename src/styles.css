@@ -1,0 +1,76 @@
+     @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+     .brand-link.aurora-brand {
+         display: flex;
+         align-items: center;
+         min-height: 57px;
+         padding: 0.8125rem 1rem;
+     }
+
+     .brand-link.aurora-brand .aurora-brand-icon {
+         display: inline-flex;
+         align-items: center;
+         justify-content: center;
+         flex: 0 0 auto;
+         width: 1.6rem;
+         margin-left: 0.05rem;
+         margin-right: 0.45rem;
+     }
+
+     .brand-link.aurora-brand .brand-image {
+         float: none;
+         width: 34px;
+         height: 34px;
+         max-height: none;
+         margin: 0;
+         object-fit: contain;
+         opacity: 1;
+     }
+
+     .brand-link.aurora-brand .brand-text {
+         margin-left: 5px !important;
+         font-family: 'Ubuntu', sans-serif;
+         font-size: 1.05rem;
+         font-weight: 400;
+         letter-spacing: 0;
+         font-size: 20px;
+         line-height: 1;
+         text-transform: lowercase;
+         white-space: nowrap;
+         color: #ffffff;
+         transition: visibility 0.3s ease-in-out
+     }
+
+     .brand-link.aurora-brand .brand-text strong {
+         font-weight: 700;
+     }
+
+     .sidebar-mini.sidebar-collapse .main-sidebar:not(:hover):not(.sidebar-focused) .brand-link.aurora-brand .brand-text {
+         display: none;
+     }
+
+
+     @media (min-width: 992px) {
+         html .main-sidebar {
+             padding-top: 77px;
+         }
+     }
+
+     html .sidebar-mini.sidebar-collapse .main-header {
+         margin-left: unset !important;
+     }
+
+     html .main-header {
+         z-index: 1075;
+     }
+
+
+     @media (min-width: 768px) {
+         html body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
+             margin-left: 0px;
+         }
+     }
+
+     .main-header.navbar.navbar-expand.navbar-white.navbar-light .brand-text{
+        color: #00123F;
+     }
