@@ -29,6 +29,48 @@
                          <p>Rotinas</p>
                      </a>
                  </li>
+
+                 <li class="nav-item marketing-demo-item">
+                     <a href="#" class="nav-link marketing-demo-link">
+                         <i class="nav-icon fas fa-chart-line"></i>
+                         <p>Indicadores</p>
+                     </a>
+                 </li>
+
+                 <li class="nav-item marketing-demo-item">
+                     <a href="#" class="nav-link marketing-demo-link">
+                         <i class="nav-icon fas fa-headset"></i>
+                         <p>Atendimento</p>
+                     </a>
+                 </li>
+
+                 <li class="nav-item marketing-demo-item">
+                     <a href="#" class="nav-link marketing-demo-link">
+                         <i class="nav-icon fas fa-folder-open"></i>
+                         <p>Projetos</p>
+                     </a>
+                 </li>
+
+                 <li class="nav-item marketing-demo-item">
+                     <a href="#" class="nav-link marketing-demo-link">
+                         <i class="nav-icon fas fa-calendar-check"></i>
+                         <p>Agenda</p>
+                     </a>
+                 </li>
+
+                 <li class="nav-item marketing-demo-item">
+                     <a href="#" class="nav-link marketing-demo-link">
+                         <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                         <p>Financeiro</p>
+                     </a>
+                 </li>
+
+                 <li class="nav-item marketing-demo-item">
+                     <a href="#" class="nav-link marketing-demo-link">
+                         <i class="nav-icon fas fa-shield-alt"></i>
+                         <p>Auditoria</p>
+                     </a>
+                 </li>
              </ul>
          </nav>
      </div>

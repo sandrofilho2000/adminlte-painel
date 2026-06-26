@@ -37,6 +37,7 @@ if (!$tem_permissao || $_SESSION['estado_conselho'] != 'BR') {
 
   <link rel="stylesheet" href="/adminlte-painel/templates/AdminLTE-3.2.0/plugins/jquery-confirm/jquery-confirm.min.css">
   <link rel="stylesheet" href="/adminlte-painel/admin/content/logs/css/styles.css">
+  <link rel="stylesheet" href="/adminlte-painel/src/css/style.css">
 
 </head>
 
