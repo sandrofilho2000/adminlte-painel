@@ -1,9 +1,23 @@
 <?php
+
+use Classes\Rotinas;
+use Classes\RotinasConfig;
+
 Controller::setPageTitle("Rotinas");
 Controller::setFileStyle("https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css");
+Controller::setFileStyle("https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css");
 Controller::setFileJavascript("https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js");
 Controller::setFileJavascript("https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js");
+Controller::setFileJavascript("https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js");
+Controller::setFileJavascript("https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js");
 Controller::setFileJavascript("/admin/rotinas/js/main.js");
+
+$last_code = RotinasConfig::getLastCode();
+$last_code = sprintf('%05d', $last_code);
+
+$Rotinas = new Rotinas();
+$rotinas = $Rotinas->getRotinas();
+
 ?>
 
 <section class="content">
@@ -30,12 +44,11 @@ Controller::setFileJavascript("/admin/rotinas/js/main.js");
                   name="nome"
                   maxlength="150"
                   placeholder="Ex.: Chamados"
-                  required
-                >
+                  required>
               </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-2">
               <div class="form-group">
                 <label for="rotinaIcone">Icone</label>
                 <input
@@ -44,8 +57,21 @@ Controller::setFileJavascript("/admin/rotinas/js/main.js");
                   id="rotinaIcone"
                   name="icone"
                   maxlength="100"
-                  placeholder="Ex.: fas fa-tasks"
-                >
+                  placeholder="Ex.: fas fa-tasks">
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="rotinaIcone">Código</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastIcone"
+                  name="code"
+                  placeholder="<?= $last_code ?>"
+                  readonly
+                  disabled>
               </div>
             </div>
           </div>
@@ -57,12 +83,11 @@ Controller::setFileJavascript("/admin/rotinas/js/main.js");
               id="rotinaDescricao"
               name="descricao"
               rows="4"
-              placeholder="Descreva a finalidade desta rotina"
-            ></textarea>
+              placeholder="Descreva a finalidade desta rotina"></textarea>
           </div>
 
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-9">
               <div class="form-group">
                 <label for="rotinaUrl">URL</label>
                 <input
@@ -71,38 +96,33 @@ Controller::setFileJavascript("/admin/rotinas/js/main.js");
                   id="rotinaUrl"
                   name="url"
                   maxlength="255"
-                  placeholder="/adminlte-painel/admin/rotinas/"
-                >
+                  placeholder="/adminlte-painel/admin/rotinas/">
               </div>
             </div>
 
             <div class="col-md-3">
+              <div class="form-group">
+                <label for="rotinaOrdem">Tipo</label>
+                <select class="form-control" name="tipo">
+                  <option disabled>Selecione...</option>
+                  <option value="pagina">Página</option>
+                  <option value="permissao">Permissão</option>
+                  <option value="grupo">Grupo</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
               <div class="form-group">
                 <label for="rotinaPaiId">Rotina pai</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="rotinaPaiId"
-                  name="rotina_pai_id"
-                  min="0"
-                  step="1"
-                  placeholder="ID da rotina pai"
-                >
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="rotinaOrdem">Ordem</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="rotinaOrdem"
-                  name="ordem"
-                  min="0"
-                  step="1"
-                  placeholder="0"
-                >
+                <select class="form-control" name="rotina_pai_id">
+                  <option>Selecione... (Nenhum)</option>
+                  <?php foreach ($rotinas as $rotina): ?>
+                    <option value="<?= $rotina["id"] ?>">(<?= $rotina["code"] ?>) <?= $rotina["nome"] ?></option>
+                  <?php endforeach ?>
+                </select>
               </div>
             </div>
           </div>
@@ -132,12 +152,13 @@ Controller::setFileJavascript("/admin/rotinas/js/main.js");
           <thead>
             <tr>
               <th>ID</th>
+              <th>Código</th>
               <th>Nome</th>
-              <th>Descricao</th>
+              <th>Descrição</th>
               <th>URL</th>
               <th>Icone</th>
               <th>Rotina pai</th>
-              <th>Ordem</th>
+              <th>Tipo</th>
               <th>Ativo</th>
             </tr>
           </thead>

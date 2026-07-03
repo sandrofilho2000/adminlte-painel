@@ -17,6 +17,8 @@ class Rotinas extends ClasseBase
     public $rotina_pai_id;
     public $ordem;
     public $ativo;
+    public $code;
+    public $tipo;
 
     protected $_tabela = array(
         'nome' => 'rotinas',
@@ -31,6 +33,8 @@ class Rotinas extends ClasseBase
             "rotina_pai_id",
             "ordem",
             "ativo",
+            "code",
+            "tipo",
         ),
         'permissao' => ''
     );
@@ -40,9 +44,13 @@ class Rotinas extends ClasseBase
         parent::__construct();
     }
 
-    public function criaRotina(){
+    public function criaRotina()
+    {
+        $last_code = RotinasConfig::getLastCode();
+        $last_code = sprintf('%05d', $last_code);
+        $this->code = $last_code;
         $incluir = $this->incluir();
-
+        RotinasConfig::incrementLastRotina();
         return $incluir;
     }
 
@@ -51,11 +59,13 @@ class Rotinas extends ClasseBase
         $this->queryCorrente = "SELECT
             r.id,
             r.nome,
+            r.code,
             r.descricao,
             r.url,
             r.icone,
             r.rotina_pai_id,
             r.ordem,
+            r.tipo,
             r.ativo
         FROM {$this->getNomeTabela()} r
         WHERE 1=1";

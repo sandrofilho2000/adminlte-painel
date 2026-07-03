@@ -29,6 +29,8 @@ pnpm-debug.log*
 /dist/
 /build/
 /coverage/
+.phpunit.result.cache
+.phpunit.cache/
 
 # Tooling artifacts
 .playwright-mcp/
@@ -43,4 +45,8 @@ desktop.ini
 *.swp
 *.swo
 
-python/
+# Python environments and generated files
+__pycache__/
+*.py[cod]
+.venv/
+venv/

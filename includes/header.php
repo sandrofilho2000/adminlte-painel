@@ -19,12 +19,6 @@
                 <i class="fas fa-bars"></i>
             </a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="/adminlte-painel/admin/" class="nav-link">Início</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Contato</a>
-        </li>
     </ul>
 
     <ul class="navbar-nav ml-auto">

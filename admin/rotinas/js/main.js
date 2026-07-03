@@ -6,6 +6,8 @@ function renderTabelaRotinas(page = 1) {
     if (!$.fn.DataTable.isDataTable("#tabelaRotinas")) {
         tabelaRotinas = $("#tabelaRotinas").DataTable({
             serverSide: true,
+            responsive: true,
+            autoWidth: false,
             pageLength: 20,
             lengthChange: false,
             order: [[0, "desc"]],
@@ -23,6 +25,10 @@ function renderTabelaRotinas(page = 1) {
                 {
                     name: "r.id",
                     data: "id"
+                },
+                {
+                    name: "r.code",
+                    data: "code"
                 },
                 {
                     name: "r.nome",
@@ -52,8 +58,8 @@ function renderTabelaRotinas(page = 1) {
                     data: "rotina_pai_id"
                 },
                 {
-                    name: "r.ordem",
-                    data: "ordem"
+                    name: "r.tipo",
+                    data: "tipo"
                 },
                 {
                     name: "r.ativo",
@@ -64,6 +70,11 @@ function renderTabelaRotinas(page = 1) {
                             : '<span class="badge badge-secondary">Nao</span>'
                     }
                 }
+            ],
+            columnDefs: [
+                { responsivePriority: 1, targets: 2 },
+                { responsivePriority: 2, targets: 1 },
+                { responsivePriority: 3, targets: 8 }
             ],
             language: { url: language_url }
         })

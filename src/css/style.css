@@ -1,4 +1,24 @@
 :root {
+  --aurora-bg: #F4F6F9;
+  --aurora-sidebar: #FFFFFF;
+  --aurora-header: #FFFFFF;
+  --aurora-surface: #FFFFFF;
+  --aurora-hover: #E9ECEF;
+  --aurora-input: #FFFFFF;
+  --aurora-border: #DEE2E6;
+  --aurora-border-secondary: #CED4DA;
+  --aurora-separator: #DEE2E6;
+  --aurora-text: #343A40;
+  --aurora-text-secondary: #6C757D;
+  --aurora-text-disabled: #ADB5BD;
+  --aurora-primary: #0D6EFD;
+  --aurora-success: #198754;
+  --aurora-warning: #FFC107;
+  --aurora-danger: #DC3545;
+  --aurora-info: #0DCAF0;
+}
+
+body.dark-mode {
   --aurora-bg: #0E141D;
   --aurora-sidebar: #121A24;
   --aurora-header: #141D28;
