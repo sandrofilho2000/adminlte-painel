@@ -7,11 +7,11 @@
     <a href="/adminlte-painel/admin/" class="brand-link aurora-brand">
         <span class="aurora-brand-icon">
             <img
-                src="/adminlte-painel/public/images/logo-mini.png"
-                alt="Aurora Tech"
+                src="/adminlte-painel/public/images/logo-icon.png"
+                alt="CONFEF"
                 class="brand-image" />
         </span>
-        <span class="brand-text"><strong>aurora</strong> tech</span>
+        <span class="brand-text"><strong>CONFEF</strong></span>
      </a>
     <ul class="navbar-nav">
         <li class="nav-item">
