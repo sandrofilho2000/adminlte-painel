@@ -19,6 +19,11 @@ class Controller
 
     private $_files_javascript = [
         "https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.js",
+        "https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js",
+        "https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js",
+        "https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js",
+        "https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap4.min.js",
+        "https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js",
         "/src/functions.js",
     ];
 
@@ -26,6 +31,10 @@ class Controller
         "/src/styles.css",
         "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css",
         "https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css",
+        "https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css",
+        "https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css",
+        "https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css",
+        "https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css",
         "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jqvmap.min.css"
     ];
 
@@ -137,7 +146,8 @@ class Controller
             return true;
         }
 
-        $relativeFilename = ltrim($filename, '/');
+        $assetPath = parse_url($filename, PHP_URL_PATH);
+        $relativeFilename = ltrim(is_string($assetPath) ? $assetPath : $filename, '/');
 
         return file_exists(BASE_PATH . DIRECTORY_SEPARATOR . $relativeFilename)
             || file_exists(BASE_PATH . DIRECTORY_SEPARATOR . 'paginas' . DIRECTORY_SEPARATOR . $relativeFilename);

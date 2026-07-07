@@ -99,6 +99,7 @@ try {
         'Notificacoes',
         'Rotinas',
         'Icones',
+        'Persistemas',
     ];
 
     if (!$className) {

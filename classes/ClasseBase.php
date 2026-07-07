@@ -314,7 +314,7 @@ class ClasseBase implements \JsonSerializable
                 }
             }
 
-            if (!verificaPermissao($this->_tabela['permissao'])) {
+            if (!self::ignorarPermissaoAtiva() && !empty($this->_tabela['permissao']) && !verificaPermissao($this->_tabela['permissao'])) {
                 $ignorar_permissao = self::ignorarPermissaoAtiva();
                 if ($ignorar_permissao != true) {
                     if (!empty($this->_tabela['permissao'])) {
@@ -584,7 +584,7 @@ class ClasseBase implements \JsonSerializable
             $this->validarCamposObrigatorios();
             $this->setPropriedadesVaziasParaNull();
 
-            if (!verificaPermissao($this->getPermissao(), "Incluir")) {
+            if (!self::ignorarPermissaoAtiva() && !empty($this->_tabela['permissao']) && !verificaPermissao($this->getPermissao(), "Incluir")) {
                 if (!empty($this->_tabela['permissao'])) {
                     $ignorar_permissao = self::ignorarPermissaoAtiva();
                     if ($ignorar_permissao != true) {
@@ -594,6 +594,7 @@ class ClasseBase implements \JsonSerializable
                     }
                 }
             }
+
             Dao::incluir($this);
 
             $_result = $this->converterArray();
@@ -898,7 +899,7 @@ class ClasseBase implements \JsonSerializable
             $this->validarChavePrimaria();
             $this->setPropriedadesVaziasParaNull();
 
-            if (!verificaPermissao($this->getPermissao(), "Alterar")) {
+            if (!self::ignorarPermissaoAtiva() && !empty($this->_tabela['permissao']) && !verificaPermissao($this->getPermissao(), "Alterar")) {
                 if (!empty($this->_tabela['permissao'])) {
                     throw new Exception("Você não possui permissão para realizar esta operação");
                 }
@@ -918,7 +919,7 @@ class ClasseBase implements \JsonSerializable
     {
         try {
             $this->validarChavePrimaria();
-            if (!verificaPermissao($this->getPermissao(), "Excluir")) {
+            if (!self::ignorarPermissaoAtiva() && !empty($this->_tabela['permissao']) && !verificaPermissao($this->getPermissao(), "Excluir")) {
                 if (!empty($this->_tabela['permissao'])) {
                     throw new Exception("Você não possui permissão para realizar esta operação!");
                 }

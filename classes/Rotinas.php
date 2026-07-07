@@ -91,7 +91,7 @@ class Rotinas extends ClasseBase
             pai.Rotina AS rotina_pai
         FROM {$this->getNomeTabela()} r
         LEFT JOIN {$this->getNomeTabela()} pai ON pai.id = r.id_pai
-        WHERE 1=1";
+        WHERE 1=1 ";
 
         $result = $this->buscar(true);
         return $result;

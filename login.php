@@ -1,4 +1,6 @@
 <?php
+  use Classes\Persistemas;
+
   if (session_status() === PHP_SESSION_NONE) {
     session_start();
   }
@@ -149,7 +151,7 @@
           $_SESSION['instituicao'] = $usuario['instituicao'];
           $_SESSION['estado_conselho'] = $usuario['estado_conselho'] ?: 'BR';
           unset($_SESSION['Permissoes']);
-          carregarPermissoesSessao();
+          $_SESSION['Permissoes'] = Persistemas::carregarPermissoes(true) ?: [];
 
           header('Location: ' . $redirecionamento);
           exit;

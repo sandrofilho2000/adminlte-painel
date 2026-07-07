@@ -37,6 +37,7 @@ class Usuarios extends ClasseBase
 
     protected $_tabela = array(
         'nome' => 'TBLUsuarios',
+        'schema' => 'confef1',
         'chave_primaria' => array('id'),
         'colunas' => array(
             'tipo',
@@ -420,12 +421,15 @@ class Usuarios extends ClasseBase
             SELECT 
                 u.id, 
                 u.apresentacao, 
+                u.estado_conselho, 
                 u.email, 
                 u.criado_em, 
                 u.status 
             FROM TBLUsuarios u
             WHERE 1=1
+
         ";
+        $this->ordenar("u.estado_conselho");
         $buscar = $this->buscar(true) ?? [];
         return $buscar;
     }

@@ -1,5 +1,6 @@
 <?php
 
+use Classes\Persistemas;
 /*function logAction($table, $action, $id_usuario, $data = null) {
     require_once($_SERVER['include_once __DIR__ . '../config.php';'] .  '/intranet2/admin/content/config.php');
 
@@ -169,39 +170,15 @@ function exibirAvisoEFechar($mensagem = 'Acesso negado.')
   exit;
 }
 
-function carregarPermissoesSessao(): bool
-{
-  if (isset($_SESSION['Permissoes']) && is_array($_SESSION['Permissoes'])) {
-    return true;
-  }
-
-  if (!isset($_SESSION['id']) || !is_numeric($_SESSION['id'])) {
-    return false;
-  }
-
-  global $pdo;
-  if (!isset($pdo) || !($pdo instanceof PDO)) {
-    return false;
-  }
-
-  try {
-    $stmt = $pdo->prepare('SELECT Rotina, Consulta, Incluir, Excluir, Alterar FROM TBLPersistemas WHERE Usuario = :id');
-    $stmt->execute(['id' => (int) $_SESSION['id']]);
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $_SESSION['Permissoes'] = array_values($rows ?: []);
-    return !empty($_SESSION['Permissoes']);
-  } catch (Throwable $e) {
-    return false;
-  }
-}
-
 function temPermissao($rotina, $acao)
 {
-  if (!carregarPermissoesSessao()) {
+  $permissoes = Persistemas::carregarPermissoes();
+
+  if (!$permissoes) {
     return false;
   }
 
-  foreach ($_SESSION['Permissoes'] as $permissao) {
+  foreach ($permissoes as $permissao) {
     if ($permissao['Rotina'] === $rotina && $permissao[$acao] == 1) {
       return true;
     }
@@ -244,14 +221,16 @@ function verificaPermissao($codigoRotina, $tipo_operacao = "Consulta")
     return true;
   }
 
-  if (!carregarPermissoesSessao()) {
+  $permissoes = Persistemas::carregarPermissoes();
+
+  if (!$permissoes) {
     return false;
   }
 
-  $indiceRotina = search($_SESSION["Permissoes"], $codigoRotina, 'Rotina');
+  $indiceRotina = search($permissoes, $codigoRotina, 'Rotina');
   if ($indiceRotina === -1) return false;
 
-  $temPermissao = search($_SESSION["Permissoes"][$indiceRotina], '1', $tipo_operacao) != -1;
+  $temPermissao = search($permissoes[$indiceRotina], '1', $tipo_operacao) != -1;
 
   return $temPermissao;
 }

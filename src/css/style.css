@@ -147,6 +147,33 @@ small {
   color: #fff !important;
 }
 
+.sidebar-light-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link,
+.sidebar-dark-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link {
+  color: var(--aurora-text) !important;
+}
+
+.sidebar-light-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link:hover,
+.sidebar-dark-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link:hover,
+.sidebar-light-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link:focus,
+.sidebar-dark-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link:focus {
+  background-color: var(--aurora-hover) !important;
+  color: var(--aurora-text) !important;
+}
+
+.sidebar-light-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link.active,
+.sidebar-dark-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link.active {
+  background-color: rgba(13, 110, 253, 0.18) !important;
+  border-left: 3px solid var(--aurora-primary);
+  color: var(--aurora-text) !important;
+}
+
+.sidebar-light-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link.active p,
+.sidebar-dark-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link.active p,
+.sidebar-light-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link.active .nav-icon,
+.sidebar-dark-primary .nav-sidebar .nav-treeview>.nav-item>.nav-link.active .nav-icon {
+  color: var(--aurora-text) !important;
+}
+
 .content-header h1,
 .card-title,
 .modal-title,
@@ -273,7 +300,11 @@ select,
 textarea,
 .select2-container--default .select2-selection--single,
 .select2-container--default .select2-selection--multiple,
+.select2-container--bootstrap4 .select2-selection--single,
+.select2-container--bootstrap4 .select2-selection--multiple,
 .select2-dropdown,
+.select2-container--bootstrap4 .select2-dropdown,
+.select2-container--bootstrap4 .select2-search--dropdown .select2-search__field,
 .note-editor.note-frame,
 .note-editable {
   background-color: var(--aurora-input) !important;
@@ -287,7 +318,9 @@ input:focus,
 select:focus,
 textarea:focus,
 .select2-container--default.select2-container--focus .select2-selection--multiple,
-.select2-container--default .select2-selection--single:focus {
+.select2-container--default .select2-selection--single:focus,
+.select2-container--bootstrap4.select2-container--focus .select2-selection,
+.select2-container--bootstrap4.select2-container--open .select2-selection {
   background-color: var(--aurora-input) !important;
   border-color: var(--aurora-primary) !important;
   color: var(--aurora-text) !important;
@@ -423,6 +456,91 @@ textarea::placeholder,
 .select2-container--default .select2-results__option[aria-selected='true'],
 .select2-container--default .select2-results__option[data-selected='true'] {
   background-color: var(--aurora-hover) !important;
+  color: var(--aurora-text) !important;
+}
+
+.select2-container--bootstrap4 .select2-selection,
+.select2-container--bootstrap4 .select2-selection--single,
+.select2-container--bootstrap4 .select2-selection--multiple {
+  background-color: var(--aurora-input) !important;
+  border-color: var(--aurora-border-secondary) !important;
+  color: var(--aurora-text) !important;
+}
+
+.select2-container--bootstrap4 .select2-selection--single .select2-selection__rendered,
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered,
+.select2-container--bootstrap4 .select2-search--inline .select2-search__field {
+  color: var(--aurora-text) !important;
+}
+
+.select2-container--bootstrap4 .select2-selection__placeholder {
+  color: var(--aurora-text-disabled) !important;
+}
+
+.select2-container--bootstrap4 .select2-selection__clear {
+  color: var(--aurora-text-secondary) !important;
+}
+
+.select2-container--bootstrap4 .select2-selection__arrow b {
+  border-top-color: var(--aurora-text-secondary) !important;
+}
+
+.select2-container--bootstrap4.select2-container--open .select2-selection__arrow b {
+  border-bottom-color: var(--aurora-text-secondary) !important;
+}
+
+.select2-container--bootstrap4 .select2-dropdown {
+  background-color: var(--aurora-surface) !important;
+  border-color: var(--aurora-border-secondary) !important;
+  color: var(--aurora-text) !important;
+}
+
+.select2-container--bootstrap4 .select2-search--dropdown {
+  background-color: var(--aurora-surface) !important;
+}
+
+.select2-container--bootstrap4 .select2-search--dropdown .select2-search__field,
+.select2-container--bootstrap4 .select2-search--inline .select2-search__field {
+  background-color: var(--aurora-input) !important;
+  border-color: var(--aurora-border-secondary) !important;
+  color: var(--aurora-text) !important;
+}
+
+.select2-container--bootstrap4 .select2-results__option {
+  background-color: var(--aurora-surface) !important;
+  color: var(--aurora-text) !important;
+}
+
+.select2-container--bootstrap4 .select2-results__option--highlighted,
+.select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected],
+.select2-container--bootstrap4 .select2-results__option--highlighted[data-selected] {
+  background-color: var(--aurora-primary) !important;
+  color: #fff !important;
+}
+
+.select2-container--bootstrap4 .select2-results__option[aria-selected='true'],
+.select2-container--bootstrap4 .select2-results__option[data-selected='true'] {
+  background-color: var(--aurora-hover) !important;
+  color: var(--aurora-text) !important;
+}
+
+.select2-container--bootstrap4 .select2-results__option--highlighted[aria-selected='true'],
+.select2-container--bootstrap4 .select2-results__option--highlighted[data-selected='true'] {
+  background-color: var(--aurora-primary) !important;
+  color: #fff !important;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+  background-color: var(--aurora-hover) !important;
+  border-color: var(--aurora-border-secondary) !important;
+  color: var(--aurora-text) !important;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove {
+  color: var(--aurora-text-secondary) !important;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove:hover {
   color: var(--aurora-text) !important;
 }
 

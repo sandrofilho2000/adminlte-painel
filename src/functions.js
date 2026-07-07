@@ -285,6 +285,27 @@ function formatarClassificacaoContabil(valor) {
     return valor.replace(/^(\d)(\d)(\d)(\d)(\d{2})(\d{2})(\d{3})$/, '$1.$2.$3.$4.$5.$6.$7');
 }
 
+function iniciarSelect2(campo, placeholder) {
+    if (!campo.length || typeof campo.select2 !== "function") {
+        return;
+    }
+
+    campo.select2({
+        theme: "bootstrap4",
+        width: "100%",
+        placeholder: campo.data("placeholder") || placeholder,
+        allowClear: true,
+        language: {
+            noResults: function () {
+                return "Nenhum registro encontrado";
+            },
+            searching: function () {
+                return "Pesquisando...";
+            }
+        }
+    });
+}
+
 /**
  * Carrega o formulario com dados do objeto, desde que as propriedades do objeto tenham nome iguais aos nomes dos campos do formulario
  * @param {string} formId - id do formulario a ser carregado
