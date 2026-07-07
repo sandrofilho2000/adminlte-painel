@@ -17,8 +17,25 @@ function getIdFromUrl(): ?string
   return end($partes) ?: null;
 }
 
-$paginaSolicitada = isset($_GET['pagina']) ? $_GET['pagina'] : 'home/index.php';
-$paginaSolicitada = trim(str_replace('\\', '/', $paginaSolicitada), '/');
+function obterPaginaSolicitadaPeloCaminho(): string
+{
+  $caminho = parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+  $caminho = rawurldecode(is_string($caminho) ? $caminho : '');
+  $baseAdministracao = '/adminlte-painel/admin';
+
+  if ($caminho === $baseAdministracao || $caminho === $baseAdministracao . '/') {
+    return 'home/index.php';
+  }
+
+  $prefixo = $baseAdministracao . '/';
+  if (!str_starts_with($caminho, $prefixo)) {
+    return '';
+  }
+
+  return trim(substr($caminho, strlen($prefixo)), '/');
+}
+
+$paginaSolicitada = obterPaginaSolicitadaPeloCaminho();
 
 if ($paginaSolicitada === '' || strpos($paginaSolicitada, '..') !== false) {
   http_response_code(404);
@@ -111,7 +128,7 @@ $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações
       <?php require BASE_PATH . "/includes/sidebar.php"; ?>
     <?php endif; ?>
 
-    
+
     <main class="content-wrapper">
       <div class="content-header">
         <div class="container-fluid">
@@ -128,7 +145,11 @@ $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações
           </div>
         </div>
       </div>
-      <?php echo $pageContent; ?>
+      <section class="content">
+        <div class="container-fluid">
+          <?php echo $pageContent; ?>
+        </div>
+      </section>
     </main>
 
     <!--FOOTER-->
@@ -137,9 +158,6 @@ $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações
     <?php endif; ?>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
   <?php Controller::getFilesJavascript(); ?>
 </body>
 

@@ -71,10 +71,10 @@
          }
      }
 
-     .main-header.navbar.navbar-expand.navbar-white.navbar-light .brand-text{
-        color: #00123F;
+     .main-header.navbar.navbar-expand.navbar-white.navbar-light .brand-text {
+         color: #00123F;
      }
 
-     html .brand-link{
-        background-color: unset !important;
+     html .brand-link {
+         background-color: unset !important;
      }

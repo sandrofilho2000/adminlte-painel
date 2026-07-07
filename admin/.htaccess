@@ -10,9 +10,9 @@ DirectoryIndex layout.php
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # /adminlte-painel/admin -> admin/layout.php com a pagina padrao.
+  # A pagina e resolvida pelo caminho original em REQUEST_URI.
   RewriteRule ^$ layout.php [L,QSA]
 
-  # /adminlte-painel/admin/chamados -> admin/layout.php?pagina=chamados
-  RewriteRule ^(.+?)/?$ layout.php?pagina=$1 [L,QSA]
+  # Nao envia a rota pela query string.
+  RewriteRule ^(.+?)/?$ layout.php [L,QSA]
 </IfModule>

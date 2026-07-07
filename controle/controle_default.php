@@ -98,6 +98,7 @@ try {
         'ChamadosChecklist',
         'Notificacoes',
         'Rotinas',
+        'Icones',
     ];
 
     if (!$className) {

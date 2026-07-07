@@ -20,11 +20,6 @@ class Controller
     private $_files_javascript = [
         "https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.js",
         "/src/functions.js",
-        "https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js",
-        "https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js",
-        "https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.brazil.js",
     ];
 
     private $_files_styles = [

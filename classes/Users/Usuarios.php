@@ -60,6 +60,119 @@ class Usuarios extends ClasseBase
         $this->_tabela['permissao'] = $valor;
     }
 
+    public function autenticar(string $credencial, string $senha): array
+    {
+        $credencial = trim($credencial);
+
+        if ($credencial === '' || $senha === '' || strlen($credencial) > 190 || strlen($senha) > 4096) {
+            return $this->resultadoAutenticacaoInvalida();
+        }
+
+        $consulta = $this->pdo->prepare("
+            SELECT id, login, email, tipo_login, apresentacao, instituicao,
+                   estado_conselho, senha, senha_expirada, primeiro_acesso
+            FROM TBLUsuarios
+            WHERE status = 1
+              AND (login = :credencial_login OR email = :credencial_email)
+        ");
+        $consulta->execute([
+            'credencial_login' => $credencial,
+            'credencial_email' => $credencial,
+        ]);
+        $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
+        $usuario = $this->resolverUsuarioLogin($usuarios, $credencial);
+
+        if ($usuario === null) {
+            password_verify($senha, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.');
+            return $this->resultadoAutenticacaoInvalida();
+        }
+
+        $tipoLogin = strtolower(trim((string) ($usuario['tipo_login'] ?? 'local')));
+        $autenticado = $tipoLogin === 'ad'
+            ? $this->autenticarNoDiretorioAtivo((string) $usuario['login'], $senha)
+            : password_verify($senha, (string) ($usuario['senha'] ?? ''));
+
+        if (!$autenticado) {
+            return $this->resultadoAutenticacaoInvalida();
+        }
+
+        if ($tipoLogin !== 'ad' && password_needs_rehash((string) $usuario['senha'], PASSWORD_DEFAULT)) {
+            $this->atualizarHashSenha((int) $usuario['id'], $senha);
+        }
+
+        $trocarSenha = (int) ($usuario['senha_expirada'] ?? 0) === 1
+            || (int) ($usuario['primeiro_acesso'] ?? 0) === 1;
+        unset($usuario['senha']);
+
+        return [
+            'sucesso' => true,
+            'usuario' => $usuario,
+            'trocar_senha' => $trocarSenha,
+            'erro' => null,
+        ];
+    }
+
+    private function resolverUsuarioLogin(array $usuarios, string $credencial): ?array
+    {
+        if (count($usuarios) === 1) {
+            return $usuarios[0];
+        }
+
+        $usuariosPorLogin = array_values(array_filter(
+            $usuarios,
+            static fn(array $usuario): bool => strcasecmp((string) ($usuario['login'] ?? ''), $credencial) === 0
+        ));
+
+        return count($usuariosPorLogin) === 1 ? $usuariosPorLogin[0] : null;
+    }
+
+    private function autenticarNoDiretorioAtivo(string $login, string $senha): bool
+    {
+        $servidor = trim((string) env('AD_SERVER', ''));
+        $dominio = trim((string) env('AD_DOMAIN', ''));
+
+        if ($servidor === '' || $dominio === '' || !function_exists('ldap_connect')) {
+            return false;
+        }
+
+        $conexao = @ldap_connect($servidor);
+        if ($conexao === false) {
+            return false;
+        }
+
+        try {
+            ldap_set_option($conexao, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($conexao, LDAP_OPT_REFERRALS, 0);
+
+            if (!@ldap_start_tls($conexao)) {
+                return false;
+            }
+
+            return @ldap_bind($conexao, $dominio . '\\' . $login, $senha);
+        } finally {
+            ldap_unbind($conexao);
+        }
+    }
+
+    private function atualizarHashSenha(int $idUsuario, string $senha): void
+    {
+        $consulta = $this->pdo->prepare('UPDATE TBLUsuarios SET senha = :senha WHERE id = :id AND status = 1');
+        $consulta->execute([
+            'senha' => password_hash($senha, PASSWORD_DEFAULT),
+            'id' => $idUsuario,
+        ]);
+    }
+
+    private function resultadoAutenticacaoInvalida(): array
+    {
+        return [
+            'sucesso' => false,
+            'usuario' => null,
+            'trocar_senha' => false,
+            'erro' => 'Usuário/e-mail ou senha inválidos.',
+        ];
+    }
+
     public function getUsuarioPorString($termo = null, $buscar_crefs = false)
     {
         $termo = $termo ?? $this->termo;
@@ -300,5 +413,20 @@ class Usuarios extends ClasseBase
         } catch (\Throwable $e) {
             return ['tipo' => 'fail', 'message' => $e->getMessage()];
         }
+    }
+
+    public function getUsuarios(){
+        $this->queryCorrente = "
+            SELECT 
+                u.id, 
+                u.apresentacao, 
+                u.email, 
+                u.criado_em, 
+                u.status 
+            FROM TBLUsuarios u
+            WHERE 1=1
+        ";
+        $buscar = $this->buscar(true) ?? [];
+        return $buscar;
     }
 }

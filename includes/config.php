@@ -96,15 +96,30 @@ try {
         $dsn = "mysql:host={$database['host']};port={$dbPort};dbname={$database['database']};charset={$dbCharset}";
         $pdo = new PDO($dsn, $database['user'], $database['pass']);
     } else {
-        $dbHost = env('DB_HOST', 'localhost');
-        $dbPort = env('DB_PORT', '3306');
-        $dbName = env('DB_DATABASE', env('DB_NAME'));
-        $dbUser = env('DB_USERNAME', env('DB_USER'));
-        $dbPass = env('DB_PASSWORD', env('DB_PASS', ''));
+        $ambiente = strtolower(trim((string) env('ENVIRONMENT', 'production')));
+        $usarBancoTeste = in_array($ambiente, ['localhost', 'development'], true);
+
+        if ($usarBancoTeste) {
+            $dbHost = env('DB_SERVER_TESTE');
+            $dbPort = env('DB_PORT_TESTE', '3306');
+            $dbName = env('DB_NAME_TESTE');
+            $dbUser = env('DB_USERNAME_TESTE');
+            $dbPass = env('DB_PASSWORD_TESTE', '');
+        } else {
+            $dbHost = env('DB_SERVER', env('DB_HOST', 'localhost'));
+            $dbPort = env('DB_PORT', '3306');
+            $dbName = env('DB_DATABASE', env('DB_NAME'));
+            $dbUser = env('DB_USERNAME', env('DB_USER'));
+            $dbPass = env('DB_PASSWORD', env('DB_PASS', ''));
+        }
+
         $dbCharset = env('DB_CHARSET', 'utf8mb4');
 
-        if (empty($dbName) || empty($dbUser)) {
-            throw new RuntimeException('Configure DATABASE_URL ou DB_DATABASE e DB_USERNAME no .env.');
+        if (empty($dbHost) || empty($dbName) || empty($dbUser)) {
+            $sufixo = $usarBancoTeste ? '_TESTE' : '';
+            throw new RuntimeException(
+                "Configure DB_SERVER{$sufixo}, DB_NAME{$sufixo} e DB_USERNAME{$sufixo} no .env."
+            );
         }
 
         $dsn = "mysql:host={$dbHost};port={$dbPort};dbname={$dbName};charset={$dbCharset}";

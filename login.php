@@ -9,71 +9,151 @@
 
   require_once BASE_PATH . '/includes/config.php';
   require_once BASE_PATH . '/includes/functions.php';
-  require_once BASE_PATH . '/classes/Users/Users.php';
 
   if (!isset($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
   }
 
-  function loginRedirectTarget(): string
+  function destinoRedirecionamentoLogin(): string
   {
-    $redirect = $_POST['redirect'] ?? $_GET['redirect'] ?? '/adminlte-painel/admin/';
-    $redirect = is_string($redirect) ? $redirect : '/adminlte-painel/admin/';
+    $redirecionamento = $_POST['redirect'] ?? $_GET['redirect'] ?? '/adminlte-painel/admin/';
+    $redirecionamento = is_string($redirecionamento) ? $redirecionamento : '/adminlte-painel/admin/';
 
-    if ($redirect === '' || str_starts_with($redirect, 'http://') || str_starts_with($redirect, 'https://') || !str_starts_with($redirect, '/')) {
+    if (
+      $redirecionamento === ''
+      || !str_starts_with($redirecionamento, '/')
+      || str_starts_with($redirecionamento, '//')
+      || str_contains($redirecionamento, "\r")
+      || str_contains($redirecionamento, "\n")
+    ) {
       return '/adminlte-painel/admin/';
     }
 
-    return $redirect;
+    return $redirecionamento;
+  }
+
+  function chaveLimiteLogin(string $credencial): string
+  {
+    $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+    return 'login:' . hash('sha256', $ip . '|' . strtolower(trim($credencial)));
+  }
+
+  function obterTentativasLogin(string $chave): array
+  {
+    if (function_exists('apcu_fetch')) {
+      $encontrado = false;
+      $tentativas = apcu_fetch($chave, $encontrado);
+      return $encontrado && is_array($tentativas) ? $tentativas : [];
+    }
+
+    return is_array($_SESSION['_tentativas_login'][$chave] ?? null)
+      ? $_SESSION['_tentativas_login'][$chave]
+      : [];
+  }
+
+  function salvarTentativasLogin(string $chave, array $tentativas): void
+  {
+    if (function_exists('apcu_store')) {
+      apcu_store($chave, $tentativas, 1800);
+      return;
+    }
+
+    $_SESSION['_tentativas_login'][$chave] = $tentativas;
+  }
+
+  function segundosBloqueioLogin(string $chave): int
+  {
+    return max(0, (int) (obterTentativasLogin($chave)['bloqueado_ate'] ?? 0) - time());
+  }
+
+  function registrarFalhaLogin(string $chave): void
+  {
+    $agora = time();
+    $tentativas = obterTentativasLogin($chave);
+    $inicio = (int) ($tentativas['inicio'] ?? 0);
+    $falhas = (int) ($tentativas['falhas'] ?? 0);
+
+    if ($inicio === 0 || $agora - $inicio > 900) {
+      $inicio = $agora;
+      $falhas = 0;
+    }
+
+    $falhas++;
+    $atraso = $falhas >= 5 ? min(60 * (2 ** ($falhas - 5)), 900) : 0;
+    salvarTentativasLogin($chave, [
+      'inicio' => $inicio,
+      'falhas' => $falhas,
+      'bloqueado_ate' => $agora + $atraso,
+    ]);
+  }
+
+  function limparFalhasLogin(string $chave): void
+  {
+    if (function_exists('apcu_delete')) {
+      apcu_delete($chave);
+    }
+
+    unset($_SESSION['_tentativas_login'][$chave]);
   }
 
   if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-    header('Location: ' . loginRedirectTarget());
+    header('Location: ' . destinoRedirecionamentoLogin());
     exit;
   }
 
   $erro_login = null;
-  $email = '';
-  $redirect = loginRedirectTarget();
+  $credencial = '';
+  $redirecionamento = destinoRedirecionamentoLogin();
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = strtolower(trim((string) ($_POST['email'] ?? '')));
-    $password = (string) ($_POST['password'] ?? '');
-    $csrfToken = (string) ($_POST['csrf_token'] ?? '');
+    $credencial = trim((string) ($_POST['credencial'] ?? ''));
+    $senha = (string) ($_POST['senha'] ?? '');
+    $tokenCsrf = (string) ($_POST['csrf_token'] ?? '');
 
-    if (!hash_equals((string) $_SESSION['csrf_token'], $csrfToken)) {
+    if (!hash_equals((string) $_SESSION['csrf_token'], $tokenCsrf)) {
       $erro_login = 'Sessão expirada. Recarregue a página e tente novamente.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || $password === '') {
-      $erro_login = 'Informe um e-mail e uma senha válidos.';
+    } elseif ($credencial === '' || $senha === '') {
+      $erro_login = 'Informe seu usuário ou e-mail e sua senha.';
     } else {
-      $usuario = Users::autenticarPorEmail($email, $password);
+      $chaveLimite = chaveLimiteLogin($credencial);
+      $segundosBloqueio = segundosBloqueioLogin($chaveLimite);
 
-      if ($usuario === null) {
-        $erro_login = 'E-mail ou senha inválidos.';
+      if ($segundosBloqueio > 0) {
+        $erro_login = "Muitas tentativas. Aguarde {$segundosBloqueio} segundos.";
       } else {
-        session_regenerate_id(true);
+        $resultado = (new \Classes\Usuarios())->autenticar($credencial, $senha);
 
-        $nomeUsuario = trim((string) (($usuario['first_name'] ?? '') . ' ' . ($usuario['last_name'] ?? '')));
-        $nomeUsuario = $nomeUsuario !== '' ? $nomeUsuario : $usuario['email'];
+        if (!$resultado['sucesso']) {
+          registrarFalhaLogin($chaveLimite);
+          $erro_login = $resultado['erro'];
+        } elseif ($resultado['trocar_senha']) {
+          limparFalhasLogin($chaveLimite);
+          $erro_login = 'Primeiro acesso ou senha expirada. Redefina sua senha antes de continuar.';
+        } else {
+          limparFalhasLogin($chaveLimite);
+          session_regenerate_id(true);
+          $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
-        $_SESSION['loggedin'] = true;
-        $_SESSION['is_admin'] = true;
-        $_SESSION['id'] = (int) $usuario['id'];
-        $_SESSION['user_id'] = (int) $usuario['id'];
-        $_SESSION['email'] = $usuario['email'];
-        $_SESSION['usuario_nome'] = $nomeUsuario;
-        $_SESSION['nome'] = $nomeUsuario;
-        $_SESSION['first_name'] = $usuario['first_name'];
-        $_SESSION['last_name'] = $usuario['last_name'];
-        $_SESSION['status'] = $usuario['status'];
-        $_SESSION['estado_conselho'] = 'BR';
-        $_SESSION['Permissoes'] = [
-          ['Rotina' => '00072', 'Consulta' => '1', 'Incluir' => '1', 'Excluir' => '1', 'Alterar' => '1'],
-          ['Rotina' => '00108', 'Consulta' => '1', 'Incluir' => '1', 'Excluir' => '1', 'Alterar' => '1'],
-        ];
+          $usuario = $resultado['usuario'];
+          $nomeUsuario = trim((string) ($usuario['apresentacao'] ?? ''));
+          $nomeUsuario = $nomeUsuario !== '' ? $nomeUsuario : (string) $usuario['login'];
 
-        header('Location: ' . $redirect);
-        exit;
+          $_SESSION['loggedin'] = true;
+          $_SESSION['is_admin'] = false;
+          $_SESSION['id'] = (int) $usuario['id'];
+          $_SESSION['user_id'] = (int) $usuario['id'];
+          $_SESSION['email'] = $usuario['email'];
+          $_SESSION['login'] = $usuario['login'];
+          $_SESSION['usuario_nome'] = $nomeUsuario;
+          $_SESSION['nome'] = $nomeUsuario;
+          $_SESSION['instituicao'] = $usuario['instituicao'];
+          $_SESSION['estado_conselho'] = $usuario['estado_conselho'] ?: 'BR';
+          unset($_SESSION['Permissoes']);
+          carregarPermissoesSessao();
+
+          header('Location: ' . $redirecionamento);
+          exit;
+        }
       }
     }
   }
@@ -120,10 +200,10 @@
 
         <form action="/adminlte-painel/login.php" method="post" autocomplete="on">
           <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-          <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
+          <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirecionamento, ENT_QUOTES, 'UTF-8') ?>">
 
           <div class="input-group mb-3">
-            <input id="loginEmail" name="email" type="email" class="form-control" placeholder="E-mail" autocomplete="email" value="<?= htmlspecialchars($email) ?>" required>
+            <input id="loginCredencial" name="credencial" type="text" class="form-control" placeholder="Usuário ou e-mail" autocomplete="username" value="<?= htmlspecialchars($credencial, ENT_QUOTES, 'UTF-8') ?>" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -132,7 +212,7 @@
           </div>
 
           <div class="input-group mb-3">
-            <input id="loginPassword" name="password" type="password" class="form-control" placeholder="Senha" autocomplete="current-password" required>
+            <input id="loginSenha" name="senha" type="password" class="form-control" placeholder="Senha" autocomplete="current-password" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>

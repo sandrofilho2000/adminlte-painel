@@ -131,18 +131,18 @@ small {
   color: var(--aurora-text) !important;
 }
 
-.nav-sidebar > .nav-item > .nav-link {
+.nav-sidebar>.nav-item>.nav-link {
   border-radius: 0.35rem;
 }
 
-.nav-sidebar > .nav-item > .nav-link:hover,
-.nav-sidebar > .nav-item.menu-open > .nav-link,
-.nav-sidebar > .nav-item > .nav-link:focus {
+.nav-sidebar>.nav-item>.nav-link:hover,
+.nav-sidebar>.nav-item.menu-open>.nav-link,
+.nav-sidebar>.nav-item>.nav-link:focus {
   background-color: var(--aurora-hover) !important;
   color: var(--aurora-text) !important;
 }
 
-.nav-sidebar > .nav-item > .nav-link.active {
+.nav-sidebar>.nav-item>.nav-link.active {
   background-color: var(--aurora-primary) !important;
   color: #fff !important;
 }
@@ -174,7 +174,7 @@ legend,
 .toast,
 .jumbotron,
 .list-group-item,
-.timeline > div > .timeline-item,
+.timeline>div>.timeline-item,
 .direct-chat-msg .direct-chat-text,
 .kanban-column,
 .kanban-card,
@@ -186,14 +186,7 @@ legend,
   color: var(--aurora-text) !important;
 }
 
-.card:hover,
-.info-box:hover,
-.list-group-item:hover,
-.dropdown-item:hover,
-.dropdown-item:focus {
-  background-color: var(--aurora-hover) !important;
-  color: var(--aurora-text) !important;
-}
+
 
 .card-header,
 .card-footer,
@@ -701,3 +694,14 @@ a.text-info {
 .bg-info .small-box-footer {
   color: rgba(31, 45, 61, 0.9) !important;
 }
+
+
+
+.nav-sidebar .nav-link.nav-link-submenu {
+  padding-left: calc(1rem + (var(--nivel-menu) * .1rem));
+}
+
+.nav-sidebar .nav-link.nav-link-submenu .nav-icon {
+  font-size: .9rem;
+}
+

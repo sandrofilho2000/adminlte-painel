@@ -21,6 +21,7 @@
             "App\\": "classes/"
         },
         "classmap": [
+            "classes/Users/",
             "classes/Chamados/",
             "classes/Logs/",
             "classes/Notificacoes/"

@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Classes\\Cargos' => $baseDir . '/classes/Users/Cargos.php',
     'Classes\\Chamados' => $baseDir . '/classes/Chamados/Chamados.php',
     'Classes\\ChamadosArquivos' => $baseDir . '/classes/Chamados/ChamadosArquivos.php',
     'Classes\\ChamadosAtualizacoes' => $baseDir . '/classes/Chamados/ChamadosAtualizacoes.php',
@@ -18,5 +19,8 @@ return array(
     'Classes\\NotificacoesProgramadas' => $baseDir . '/classes/Notificacoes/NotificacoesProgramadas.php',
     'Classes\\NotificacoesProgramadasCondicoes' => $baseDir . '/classes/Notificacoes/NotificacoesProgramadasCondicoes.php',
     'Classes\\NotificacoesUsuarios' => $baseDir . '/classes/Notificacoes/NotificacoesUsuarios.php',
+    'Classes\\Setores' => $baseDir . '/classes/Users/Setores.php',
+    'Classes\\Usuarios' => $baseDir . '/classes/Users/Usuarios.php',
+    'Classes\\UsuariosCargos' => $baseDir . '/classes/Users/UsuariosCargos.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );

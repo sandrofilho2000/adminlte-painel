@@ -4,25 +4,22 @@ namespace Classes;
 
 require_once BASE_PATH . '/includes/functions.php';
 
-use PDO;
-use DateTime;
-
 class RotinasConfig extends ClasseBase
 {
     public $id;
-    public $created_at;
-    public $updated_at;
-    public $last_code;
+    public $criado_em;
+    public $atualizado_em;
+    public $ultimo_codigo;
 
     protected $_tabela = array(
-        'nome' => 'rotinas_config',
-        'schema' => 'aurora_tech',
+        'nome' => 'TBLRotinasConfig',
+        'schema' => 'portal',
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",
-            "created_at",
-            "updated_at",
-            "last_code",
+            "criado_em",
+            "atualizado_em",
+            "ultimo_codigo",
         ),
         'permissao' => ''
     );
@@ -32,17 +29,22 @@ class RotinasConfig extends ClasseBase
         parent::__construct();
     }
 
-    public static function getLastCode()
+    public static function obterUltimoCodigo($incrementar = false): int
     {
-        $last_code = self::instanciarPorId(1);
-        return $last_code->last_code;
-    }
+        $config = self::instanciarPorId(1);
+        $ultimoCodigo = $config->ultimo_codigo;
+        $ultimoCodigo++;
 
+        if (!$incrementar) {
+            return $ultimoCodigo;
+        }
+        
+        $config->ultimo_codigo = $ultimoCodigo;
+        $salvar = $config->salvar();
+        if ($salvar['row_count'] === 1) {
+            return $ultimoCodigo;
+        }
 
-    public static function incrementLastRotina()
-    {
-        $last_code = self::instanciarPorId(1);
-        $last_code->last_code = (int)$last_code->last_code++;
-        $last_code->salvar();
+        throw new \RuntimeException('Falha ao atualizar o último código da rotina.');
     }
 }

@@ -29,6 +29,7 @@ class ComposerStaticInit961bb97cb74046925cbec385e90d2368
     );
 
     public static $classMap = array (
+        'Classes\\Cargos' => __DIR__ . '/../..' . '/classes/Users/Cargos.php',
         'Classes\\Chamados' => __DIR__ . '/../..' . '/classes/Chamados/Chamados.php',
         'Classes\\ChamadosArquivos' => __DIR__ . '/../..' . '/classes/Chamados/ChamadosArquivos.php',
         'Classes\\ChamadosAtualizacoes' => __DIR__ . '/../..' . '/classes/Chamados/ChamadosAtualizacoes.php',
@@ -41,6 +42,9 @@ class ComposerStaticInit961bb97cb74046925cbec385e90d2368
         'Classes\\NotificacoesProgramadas' => __DIR__ . '/../..' . '/classes/Notificacoes/NotificacoesProgramadas.php',
         'Classes\\NotificacoesProgramadasCondicoes' => __DIR__ . '/../..' . '/classes/Notificacoes/NotificacoesProgramadasCondicoes.php',
         'Classes\\NotificacoesUsuarios' => __DIR__ . '/../..' . '/classes/Notificacoes/NotificacoesUsuarios.php',
+        'Classes\\Setores' => __DIR__ . '/../..' . '/classes/Users/Setores.php',
+        'Classes\\Usuarios' => __DIR__ . '/../..' . '/classes/Users/Usuarios.php',
+        'Classes\\UsuariosCargos' => __DIR__ . '/../..' . '/classes/Users/UsuariosCargos.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 

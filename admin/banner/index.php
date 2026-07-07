@@ -1,0 +1,3 @@
+<?php
+    Controller::setPageTitle("Banners");
+?>
