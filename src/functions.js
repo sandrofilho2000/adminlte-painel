@@ -36,6 +36,7 @@ const campos_alterados = []
 
 const SISTEMA_COLUMN_ORDER_STORAGE_PREFIX = "painel:datatable:colorder"
 const SISTEMA_COLUMN_ORDER_PERSISTENCE_FLAG = "__sistemaColumnOrderPersistenceInstalled"
+const urlIdioma = "https://cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json"
 
 function getSistemaColumnOrderStorageKey(settings) {
     const tableNode = settings && settings.nTable ? settings.nTable : null

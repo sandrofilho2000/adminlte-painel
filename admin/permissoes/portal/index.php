@@ -11,8 +11,8 @@ Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
 
 ?>
 
-<div class="card card-primary card-outline">
-    <form id="formUsuarioPermissao" method="post" action="#">
+<form id="formUsuarioPermissao" method="post" action="#">
+    <div class="card card-primary card-outline">
         <input type="hidden" name="objeto" id="objeto" value="Persistemas">
         <input type="hidden" name="metodo" id="metodo" value="criaPersistemas">
         <div class="card-body">
@@ -81,8 +81,33 @@ Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
                 </div>
             </div>
         </div>
-    </form>
-</div>
-</div>
+    </div>
 </form>
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">Permissões cadastradas</h3>
+    </div>
+    <div class="card-body">
+        <table id="tabelaPermissoes" class="table table-striped table-bordered responsive nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>CREF</th>
+                    <th>Rotina</th>
+                    <th>Ler</th>
+                    <th>Incluir</th>
+                    <th>Deletar</th>
+                    <th>Editar</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-primary" id="salvarAlteracoesPermissoes" disabled>
+            <i class="fas fa-save mr-1"></i> Salvar alteracoes
+        </button>
+    </div>
 </div>

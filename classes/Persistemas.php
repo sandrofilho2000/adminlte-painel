@@ -20,6 +20,7 @@ class Persistemas extends ClasseBase
     public $Alterar;
     public $id;
     public $criado_em;
+    public $permissoes;
 
     protected $_tabela = array(
         'nome' => 'TBLPersistemas',
@@ -66,6 +67,19 @@ class Persistemas extends ClasseBase
 
         $salvar = $permissao->salvar();
         return $salvar;
+    }
+
+    public function editPersistemaseMassa()
+    {
+        $permissoes = $this->permissoes;
+        foreach($permissoes as $permissao) {
+            $this->Consulta = (int) ($permissao['Consulta'] ?? 0) === 1 ? 1 : 0;
+            $this->Incluir = (int) ($permissao['Incluir'] ?? 0) === 1 ? 1 : 0;
+            $this->Excluir = (int) ($permissao['Excluir'] ?? 0) === 1 ? 1 : 0;
+            $this->Alterar = (int) ($permissao['Alterar'] ?? 0) === 1 ? 1 : 0;
+            $this->editPersistemas($permissao['id']);
+        }
+        return true;
     }
 
 
@@ -138,7 +152,6 @@ class Persistemas extends ClasseBase
         return true;
     }
 
-
     public static function carregarPermissoes(bool $forcarRecarregamento = false)
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -189,5 +202,23 @@ class Persistemas extends ClasseBase
         $permissao = $permissao[0] ?? null;
         return $permissao['id'] ?? null;
 
+    }
+
+    public function getPermissoes(){
+        $tabela = $this->getNomeTabela();
+        $this->queryCorrente = "SELECT
+        p.id,
+        r.Descricao,
+        r.tipo_sistema,
+        r.Rotina,
+        u.apresentacao,
+        u.estado_conselho,
+        p.Consulta,
+        p.Incluir,
+        p.Excluir,
+        p.Alterar
+        FROM $tabela p LEFT JOIN portal.TBLRotinas r ON p.Rotina = r.Rotina LEFT JOIN  confef1.TBLUsuarios u ON p.Usuario = u.id WHERE 1=1 " ;
+        $result = $this->buscar(true);
+        return $result;
     }
 }

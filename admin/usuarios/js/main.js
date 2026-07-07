@@ -1,5 +1,4 @@
 let tabelaUsuarios = null
-const urlIdioma = "https://cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json"
 
 function renderizarTabelaUsuarios(pagina = 1) {
     if (!$.fn.DataTable.isDataTable("#tabelaUsuarios")) {
