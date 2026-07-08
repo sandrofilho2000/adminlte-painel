@@ -1,0 +1,40 @@
+.icone-opcao-select2 {
+    display: inline-block;
+    width: 1.5rem;
+    text-align: center;
+}
+
+#cartaoFormularioRotina .card-header {
+    min-height: 3rem;
+}
+
+#indicadorModoFormulario {
+    font-size: .85rem;
+    padding: .45rem .65rem;
+}
+
+.opcao-rotina {
+    min-height: 3.5rem;
+    display: flex;
+    align-items: center;
+    padding: .75rem 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: .25rem;
+    background: rgba(0, 0, 0, .02);
+}
+
+#tabelaRotinas th {
+    white-space: nowrap;
+}
+
+@media (max-width: 767.98px) {
+    #cartaoFormularioRotina .card-header {
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+
+    #indicadorModoFormulario {
+        margin-left: 0 !important;
+        margin-top: .5rem;
+    }
+}

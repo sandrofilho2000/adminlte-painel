@@ -6,55 +6,13 @@ use Classes\Icones;
 
 Controller::setPageTitle("Rotinas");
 Controller::setFileJavascript("/admin/rotinas/js/main.js?v=$v");
+Controller::setFileStyle("/admin/rotinas/css/styles.css?v=$v");
 
 $objetoRotinas = new Rotinas();
 $rotinas = $objetoRotinas->getRotinas();
 $icones = (new Icones())->getIcones();
 
 $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT); ?>
-
-<style>
-  .icone-opcao-select2 {
-    display: inline-block;
-    width: 1.5rem;
-    text-align: center;
-  }
-
-  #cartaoFormularioRotina .card-header {
-    min-height: 3rem;
-  }
-
-  #indicadorModoFormulario {
-    font-size: .85rem;
-    padding: .45rem .65rem;
-  }
-
-  .opcao-rotina {
-    min-height: 3.5rem;
-    display: flex;
-    align-items: center;
-    padding: .75rem 1rem;
-    border: 1px solid #dee2e6;
-    border-radius: .25rem;
-    background: rgba(0, 0, 0, .02);
-  }
-
-  #tabelaRotinas th {
-    white-space: nowrap;
-  }
-
-  @media (max-width: 767.98px) {
-    #cartaoFormularioRotina .card-header {
-      align-items: flex-start !important;
-      flex-direction: column;
-    }
-
-    #indicadorModoFormulario {
-      margin-left: 0 !important;
-      margin-top: .5rem;
-    }
-  }
-</style>
 
 <div class="card card-primary" id="cartaoFormularioRotina">
   <div class="card-header d-flex align-items-center">
