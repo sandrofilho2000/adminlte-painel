@@ -6,6 +6,7 @@ use Classes\Rotinas;
 $usuarios = (new Usuarios())->getUsuarios();
 $rotinas = (new Rotinas())->getRotinas();
 
+Controller::setPermissao("00013");
 Controller::setPageTitle("Permissões do Portal");
 Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
 
@@ -101,7 +102,7 @@ Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
         </table>
     </div>
     <div class="card-footer">
-        <button type="button" class="btn btn-primary" id="salvarAlteracoesPermissoes" disabled>
+        <button type="button" class="btn btn-primary" id="salvarAlteracoesPermissoes">
             <i class="fas fa-save mr-1"></i> Salvar alteracoes
         </button>
     </div>

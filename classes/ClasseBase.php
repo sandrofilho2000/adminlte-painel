@@ -833,7 +833,7 @@ class ClasseBase implements \JsonSerializable
                 $this->_filtros[" $operador UPPER($campo) NOT LIKE ? "] = "%$valor";
                 break;
 
-            case 'empty':
+            case 'EMPTY':
                 array_push($this->_filtros_direto, "AND ($campo IS NULL OR $campo = '') ");
                 break;
 

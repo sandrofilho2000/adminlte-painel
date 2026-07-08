@@ -51,6 +51,7 @@ $members = [
   ['name' => 'Mina Lee', 'date' => '15 Jan', 'avatar' => 'https://adminlte.io/themes/v3/dist/img/user3-128x128.jpg'],
 ];
 
+Controller::setPermissao("00000");
 Controller::setFileJavascript("/src/theme-toggle.js?v=$v");
 Controller::setFileJavascript("/admin/js/main.js?v=$v");
 Controller::setFileStyle("/admin/css/styles.css?v=$v");

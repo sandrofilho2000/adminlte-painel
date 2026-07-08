@@ -4,11 +4,13 @@ use Classes\Rotinas;
 use Classes\RotinasConfig;
 use Classes\Icones;
 
+Controller::setPermissao("00006");
 Controller::setPageTitle("Rotinas");
 Controller::setFileJavascript("/admin/rotinas/js/main.js?v=$v");
 Controller::setFileStyle("/admin/rotinas/css/styles.css?v=$v");
 
 $objetoRotinas = new Rotinas();
+$objetoRotinas->filtrar("r.id_pai", "","EMPTY");
 $rotinas = $objetoRotinas->getRotinas();
 $icones = (new Icones())->getIcones();
 

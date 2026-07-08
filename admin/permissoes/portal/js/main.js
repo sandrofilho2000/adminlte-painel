@@ -2,9 +2,6 @@ let tabelaPermissoes = null
 let idPermissaoExclusao = null
 const permissoesAlteradas = new Map()
 
-function atualizarBotaoSalvarAlteracoes() {
-    $("#salvarAlteracoesPermissoes").prop("disabled", permissoesAlteradas.size === 0)
-}
 
 function registrarAlteracaoPermissao(idPermissao, campo, valor, valorOriginal) {
     const permissao = permissoesAlteradas.get(idPermissao) || { id: idPermissao }
@@ -190,7 +187,6 @@ $(function () {
         const valorOriginal = Number(alternador.data("valor-original"))
 
         registrarAlteracaoPermissao(idPermissao, campo, valor, valorOriginal)
-        atualizarBotaoSalvarAlteracoes()
     })
 
     $("#tabelaPermissoes").on("click", ".btn-delete-permissao", function () {
@@ -205,7 +201,7 @@ $(function () {
                 'metodo': "deletePermissao",
                 'id': idPermissaoExclusao
             }, function(result){
-                console.log("🚀 ~ result:", result)
+                tabelaPermissoes.ajax.reload(null, false)
             }
         )
         $("#modalExcluirPermissao").modal("hide")
@@ -230,6 +226,5 @@ $(function () {
         )
 
         permissoesAlteradas.clear()
-        atualizarBotaoSalvarAlteracoes()
     })
 })

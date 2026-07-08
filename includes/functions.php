@@ -221,6 +221,10 @@ function verificaPermissao($codigoRotina, $tipo_operacao = "Consulta")
     return true;
   }
 
+  if($codigoRotina == "00000"){
+    return true;
+  }
+
   $permissoes = Persistemas::carregarPermissoes();
 
   if (!$permissoes) {

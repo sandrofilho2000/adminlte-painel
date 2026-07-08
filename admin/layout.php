@@ -82,6 +82,15 @@ $pageTitle = Controller::getPageTitle() ?? 'Painel';
 $renderizarHeader = $renderizarHeader ?? true;
 $renderizarFooter = $renderizarFooter ?? true;
 $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações para profissionais da Educação Física.';
+$permissao = Controller::getPermissao();
+
+if(empty($permissao)){
+  http_response_code(404);
+  exit('Permissão não configurada.');
+}else if(!verificaPermissao($permissao) && $permissao != 00000){
+  header('Location: /adminlte-painel/admin/');
+  exit;
+}
 
 ?>
 

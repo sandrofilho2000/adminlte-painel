@@ -3,6 +3,7 @@
 class Controller
 {
     private static $_instance;
+    private static $_permissao;
     private static $_page_title = 'Painel';
 
     private $_meta_tags = [];
@@ -15,7 +16,6 @@ class Controller
         "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/jquery.vmap.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/jqvmap/1.5.1/maps/jquery.vmap.brazil.js",
     ];
-
 
     private $_files_javascript = [
         "https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.js",
@@ -71,6 +71,16 @@ class Controller
         if (!in_array($file, self::getInstance()->_files_javascript)) {
             self::getInstance()->_files_javascript[] = $file;
         }
+    }
+
+    public static function setPermissao($permissao)
+    {
+        self::$_permissao = $permissao;
+    }
+
+    public static function getPermissao()
+    {
+        return self::$_permissao;
     }
 
     public static function setFileJavascriptHeader($file)

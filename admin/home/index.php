@@ -6,6 +6,7 @@ if (!defined('BASE_PATH')) {
 Controller::setFileStyle("/admin/home/css/home.css");
 Controller::setFileJavascript("/admin/home/js/dashboard-demo.js");
 Controller::setFileJavascript("/admin/home/js/main.js");
+Controller::setPermissao("00000");
 
 require_once BASE_PATH . '/vendor/autoload.php';
 require_once BASE_PATH . '/admin/includes/session_manager.php';

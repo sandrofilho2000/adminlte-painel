@@ -79,6 +79,7 @@ class Persistemas extends ClasseBase
             $this->Alterar = (int) ($permissao['Alterar'] ?? 0) === 1 ? 1 : 0;
             $this->editPersistemas($permissao['id']);
         }
+        self::carregarPermissoes();
         return true;
     }
 
@@ -137,6 +138,7 @@ class Persistemas extends ClasseBase
                 $this->id = null;
                 $this->Usuario = $UsuarioId;
                 $this->incluir();
+                self::carregarPermissoes();
             } catch (\Throwable $e) {
                 $mensagem = $e->getMessage();
                 $codigo = (string) $e->getCode();
@@ -239,6 +241,7 @@ class Persistemas extends ClasseBase
             }
 
             $excluir = $permissao->excluir();
+            self::carregarPermissoes();
             return $excluir;
         }
         return false;
