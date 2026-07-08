@@ -18,6 +18,11 @@ if (!defined('ID_USER')) {
 }
 
 $_SESSION['estado_conselho'] = $_SESSION['estado_conselho'] ?? 'BR';
+
+if (!defined('ESTADO_CONSELHO')) {
+    define('ESTADO_CONSELHO', $_SESSION['estado_conselho']);
+}
+
 $_SESSION['nome'] = $_SESSION['nome'] ?? ($_SESSION['usuario_nome'] ?? 'Usuario');
 $_SESSION['usuario_nome'] = $_SESSION['usuario_nome'] ?? $_SESSION['nome'];
 $_SESSION['is_admin'] = $_SESSION['is_admin'] ?? true;

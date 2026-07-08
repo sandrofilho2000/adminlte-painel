@@ -8,6 +8,10 @@ if (!defined('ADMIN_PATH')) {
     define('ADMIN_PATH', BASE_PATH . '/admin');
 }
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once BASE_PATH . '/vendor/autoload.php';
 
 function loadEnvFile(string $path): void
@@ -131,4 +135,21 @@ try {
     $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 } catch (Throwable $exception) {
     throw new RuntimeException('Erro ao conectar ao banco de dados: ' . $exception->getMessage(), 0, $exception);
+}
+
+
+if(!defined('ID_USER') && (!empty($_SESSION['id']) || !empty($_SESSION['user_id']))){
+    define('ID_USER', (int) ($_SESSION['id'] ?? $_SESSION['user_id']));
+}
+
+if(!defined('ENVIRONMENT') && !empty($_ENV['ENVIRONMENT'])){
+    define('ENVIRONMENT', $_ENV['ENVIRONMENT']);
+}
+
+if(
+    !defined('ESTADO_CONSELHO')
+    && !empty($_SESSION['estado_conselho'])
+    && (!empty($_SESSION['loggedin']) || !empty($_SESSION['id']) || !empty($_SESSION['user_id']))
+){
+    define('ESTADO_CONSELHO', $_SESSION['estado_conselho']);
 }

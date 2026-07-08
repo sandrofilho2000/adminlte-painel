@@ -1,4 +1,5 @@
 let tabelaPermissoes = null
+let idPermissaoExclusao = null
 const permissoesAlteradas = new Map()
 
 function atualizarBotaoSalvarAlteracoes() {
@@ -143,8 +144,8 @@ function renderizarTabelaPermissoes(pagina = 1) {
                     searchable: false,
                     className: "dt-center no-search all always-visible td-edicoes",
                     render: (dados, tipo, permissao) => `
-                        <div class="d-flex">
-                            <button type="button" class="btn btn-danger" data-id="${permissao.id}">
+                        <div class="d-flex justify-content-around">
+                            <button type="button" class="btn btn-danger btn-delete-permissao" data-id="${permissao.id}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -167,18 +168,17 @@ $(function () {
     renderizarTabelaPermissoes()
 
     iniciarSelect2(campoUsuario, "Selecione um usuario")
+    campoUsuario.val((campoUsuario.val() || []).filter(Boolean)).trigger("change")
 
     $("#formUsuarioPermissao").on("submit", function (e) {
         e.preventDefault()
 
         const formData = new FormData(this)
-        const usuarios = $("#id_usuario").val() || []
+        const usuarios = ($("#id_usuario").val() || []).filter(Boolean)
         formData.append("Usuarios", usuarios)
 
         requestAjax(formData, function (resultado) {
-            if (resultado === true || resultado?.success) {
-                tabelaPermissoes.ajax.reload(null, false)
-            }
+            tabelaPermissoes.ajax.reload(null, false)
         })
     })
 
@@ -191,6 +191,28 @@ $(function () {
 
         registrarAlteracaoPermissao(idPermissao, campo, valor, valorOriginal)
         atualizarBotaoSalvarAlteracoes()
+    })
+
+    $("#tabelaPermissoes").on("click", ".btn-delete-permissao", function () {
+        idPermissaoExclusao = $(this).data("id")
+        $("#modalExcluirPermissao").modal("show")
+    })
+
+    $("#confirmarExcluirPermissao").on("click", function () {
+        requestAjax(
+            {
+                'objeto': "Persistemas",
+                'metodo': "deletePermissao",
+                'id': idPermissaoExclusao
+            }, function(result){
+                console.log("🚀 ~ result:", result)
+            }
+        )
+        $("#modalExcluirPermissao").modal("hide")
+    })
+
+    $("#modalExcluirPermissao").on("hidden.bs.modal", function () {
+        idPermissaoExclusao = null
     })
 
     botaoSalvarAlteracoes.on("click", function () {

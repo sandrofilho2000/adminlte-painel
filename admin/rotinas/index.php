@@ -131,7 +131,7 @@ $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT
       </div>
     </div>
 
-    <div class="card-footer d-flex flex-wrap justify-content-end">
+    <div class="card-footer">
       <button type="reset" class="btn btn-secondary mr-2" id="botaoLimparRotina">Limpar</button>
       <button type="submit" class="btn btn-primary" id="botaoSalvarRotina">
         <i class="fas fa-plus mr-1"></i> Criar rotina

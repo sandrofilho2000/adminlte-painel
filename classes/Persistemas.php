@@ -72,7 +72,7 @@ class Persistemas extends ClasseBase
     public function editPersistemaseMassa()
     {
         $permissoes = $this->permissoes;
-        foreach($permissoes as $permissao) {
+        foreach ($permissoes as $permissao) {
             $this->Consulta = (int) ($permissao['Consulta'] ?? 0) === 1 ? 1 : 0;
             $this->Incluir = (int) ($permissao['Incluir'] ?? 0) === 1 ? 1 : 0;
             $this->Excluir = (int) ($permissao['Excluir'] ?? 0) === 1 ? 1 : 0;
@@ -201,10 +201,10 @@ class Persistemas extends ClasseBase
         $permissao = $Persistemas->buscar(true) ?: [];
         $permissao = $permissao[0] ?? null;
         return $permissao['id'] ?? null;
-
     }
 
-    public function getPermissoes(){
+    public function getPermissoes()
+    {
         $tabela = $this->getNomeTabela();
         $this->queryCorrente = "SELECT
         p.id,
@@ -217,8 +217,30 @@ class Persistemas extends ClasseBase
         p.Incluir,
         p.Excluir,
         p.Alterar
-        FROM $tabela p LEFT JOIN portal.TBLRotinas r ON p.Rotina = r.Rotina LEFT JOIN  confef1.TBLUsuarios u ON p.Usuario = u.id WHERE 1=1 " ;
+        FROM $tabela p LEFT JOIN portal.TBLRotinas r ON p.Rotina = r.Rotina LEFT JOIN  confef1.TBLUsuarios u ON p.Usuario = u.id WHERE 1=1 ";
         $result = $this->buscar(true);
         return $result;
+    }
+
+
+    public function deletePermissao($id)
+    {
+        $id = (int) $id ?? $this->id;
+        $permissao = self::instanciarPorId($id);
+        if (!empty($permissao)) {
+            if (ESTADO_CONSELHO !== "BRRRR") {
+                $usuario = Usuarios::instanciarPorId($permissao->Usuario);
+                if (empty($usuario)) {
+                    if ($usuario->estado_conselho !== ESTADO_CONSELHO) {
+                        throw new Exception("Não é possível excluir permissões de outras pessoas.");
+                    }
+                    throw new Exception("Usuário não encontrado.");
+                }
+            }
+
+            $excluir = $permissao->excluir();
+            return $excluir;
+        }
+        return false;
     }
 }

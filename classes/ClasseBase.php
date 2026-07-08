@@ -909,7 +909,11 @@ class ClasseBase implements \JsonSerializable
             if ($row_count) {
                 $_result = $this->converterArray();
             }
-            return ['tipo' => 'success', 'row_count' => $row_count];
+
+            $message = $row_count > 0 ? "Dados atualizados com sucesso." : false;
+
+            return ['tipo' => 'success', 'row_count' => $row_count, 'message'=> $message];
+            
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
         }

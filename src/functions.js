@@ -37,6 +37,68 @@ const campos_alterados = []
 const SISTEMA_COLUMN_ORDER_STORAGE_PREFIX = "painel:datatable:colorder"
 const SISTEMA_COLUMN_ORDER_PERSISTENCE_FLAG = "__sistemaColumnOrderPersistenceInstalled"
 const urlIdioma = "https://cdn.datatables.net/plug-ins/1.13.7/i18n/pt-BR.json"
+const MENSAGEM_BOOTSTRAP_CONTAINER_ID = "mensagens-bootstrap-container"
+
+function normalizarTipoMensagemBootstrap(tipo) {
+    return tipo === "success" ? "success" : "danger"
+}
+
+function obterContainerMensagemBootstrap() {
+    let $container = $("#" + MENSAGEM_BOOTSTRAP_CONTAINER_ID)
+
+    if ($container.length) {
+        return $container
+    }
+
+    $container = $("<div>", {
+        id: MENSAGEM_BOOTSTRAP_CONTAINER_ID,
+        class: "position-fixed",
+        css: {
+            top: "1rem",
+            right: "1rem",
+            zIndex: 1080,
+            maxWidth: "420px",
+            width: "calc(100% - 2rem)"
+        }
+    })
+
+    $("body").append($container)
+    return $container
+}
+
+function exibirMensagemBootstrap(mensagem, tipo = "danger", tempo = 6000) {
+    const texto = String(mensagem || "").trim()
+
+    if (!texto) {
+        return
+    }
+
+    const tipoMensagem = normalizarTipoMensagemBootstrap(tipo)
+    const $mensagem = $("<div>", {
+        class: `alert alert-${tipoMensagem} alert-dismissible fade show shadow-sm`,
+        role: "alert"
+    })
+
+    $("<span>").text(texto).appendTo($mensagem)
+    $("<button>", {
+        type: "button",
+        class: "close",
+        "data-dismiss": "alert",
+        "aria-label": "Fechar",
+        html: '<span aria-hidden="true">&times;</span>'
+    }).appendTo($mensagem)
+
+    obterContainerMensagemBootstrap().append($mensagem)
+
+    window.setTimeout(function () {
+        if ($mensagem.closest("body").length) {
+            $mensagem.find(".close").trigger("click")
+            return
+        }
+
+        $mensagem.remove()
+    }, tempo)
+}
 
 function getSistemaColumnOrderStorageKey(settings) {
     const tableNode = settings && settings.nTable ? settings.nTable : null
@@ -510,7 +572,7 @@ function gravarFrm(frmId, instanceTable, callback) {
         },
         error: function (erro, er) {
             var msg = 'Erro ' + erro.status + ' - ' + erro.statusText + ' (Tipo de erro: ' + er + ')';
-            alert(msg);
+            exibirMensagemBootstrap(msg, "danger");
         }
     });
     return false;
@@ -571,7 +633,7 @@ async function gravarFrmAsync(frmId, instanceTable, callback, acaoName) {
                 },
                 error: function (erro, er) {
                     var msg = 'Erro ' + erro.status + ' - ' + erro.statusText + ' (Tipo de erro: ' + er + ')';
-                    alert(msg);
+                    exibirMensagemBootstrap(msg, "danger");
                     reject(msg);
                 }
             });
@@ -831,7 +893,8 @@ function requestAjax(dados, callback, loading = true) {
         headers: token ? { 'X-CSRF-Token': token } : {},
         success: function (result) {
             if (result && typeof result.message !== 'undefined') {
-                alert(result.message);
+                const tipoMensagem = result.tipo === "success" || result.success === true ? "success" : "danger"
+                exibirMensagemBootstrap(result.message, tipoMensagem);
             }
             if (typeof callback === 'function') {
                 callback(result);
@@ -851,7 +914,7 @@ function requestAjax(dados, callback, loading = true) {
             else {
                 msg = 'Erro ' + erro.status + ' - ' + erro.statusText + ' (Tipo de erro: ' + er + ')';
             }
-            alert(msg);
+            exibirMensagemBootstrap(msg, "danger");
         },
         complete: function () {
             $controles.each(function () {
@@ -898,7 +961,7 @@ function validaTamanhoTotalArquivos($form, limiteMB = 60) {
 
     if (totalSize > limiteBytes) {
         const totalMB = (totalSize / 1024 / 1024).toFixed(2)
-        alert(`O tamanho total dos arquivos (${totalMB}MB) não pode ultrapassar ${limiteMB}MB.`)
+        exibirMensagemBootstrap(`O tamanho total dos arquivos (${totalMB}MB) não pode ultrapassar ${limiteMB}MB.`, "danger")
         return false
     }
 
@@ -920,19 +983,19 @@ function requisicaoAjaxArquivo(dados, callback, url) {
             const pdfBlob = xhr.response; // ✅ Agora a variável está corretamente definida
             callback(pdfBlob);
         } else {
-            alert('Erro ao obter contrato: ' + xhr.status);
+            exibirMensagemBootstrap('Erro ao obter contrato: ' + xhr.status, "danger");
         }
     };
 
     xhr.onerror = function () {
-        alert('Erro de rede ao obter contrato.');
+        exibirMensagemBootstrap('Erro de rede ao obter contrato.', "danger");
     };
 
     xhr.send(formData);
 }
 
 function atualizarLinhasDataTable(table, dados, columnName, propertyName) {
-    alert('revisar, parece não estar funcionando');
+    exibirMensagemBootstrap('revisar, parece não estar funcionando', "danger");
     var obj;
     for (var i = 0; i < dados.length; i++) {
         obj = dados[i];

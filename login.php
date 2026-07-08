@@ -150,6 +150,9 @@
           $_SESSION['nome'] = $nomeUsuario;
           $_SESSION['instituicao'] = $usuario['instituicao'];
           $_SESSION['estado_conselho'] = $usuario['estado_conselho'] ?: 'BR';
+          if (!defined('ESTADO_CONSELHO')) {
+            define('ESTADO_CONSELHO', $_SESSION['estado_conselho']);
+          }
           unset($_SESSION['Permissoes']);
           $_SESSION['Permissoes'] = Persistemas::carregarPermissoes(true) ?: [];
 

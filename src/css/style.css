@@ -823,3 +823,9 @@ a.text-info {
   font-size: .9rem;
 }
 
+
+.nav-sidebar .nav-link.active,
+.nav-sidebar .nav-link.active p,
+.nav-sidebar .nav-link.active .nav-icon {
+  color: white !important;
+}

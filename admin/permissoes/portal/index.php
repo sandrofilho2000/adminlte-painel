@@ -21,7 +21,6 @@ Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
                     <div class="form-group">
                         <label for="id_usuario">Usuário</label>
                         <select class="form-control select2" id="id_usuario" multiple name="Usuario" data-placeholder="Selecione um usuario">
-                            <option value="" selected disabled>Selecione...</option>
                             <?php foreach ($usuarios as $usuario): ?>
                                 <option value="<?= (int) $usuario['id'] ?>">
                                     (<?= $usuario['estado_conselho'] ?>) <?= htmlspecialchars((string) $usuario['apresentacao'], ENT_QUOTES, 'UTF-8') ?>
@@ -73,7 +72,7 @@ Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
             </div>
         </div>
         <div class="card-footer">
-            <div class="row mt-4">
+            <div class="row">
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save mr-1"></i> Salvar permissão
@@ -109,5 +108,27 @@ Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
         <button type="button" class="btn btn-primary" id="salvarAlteracoesPermissoes" disabled>
             <i class="fas fa-save mr-1"></i> Salvar alteracoes
         </button>
+    </div>
+</div>
+
+<div class="modal fade" id="modalExcluirPermissao" tabindex="-1" role="dialog" aria-labelledby="modalExcluirPermissaoTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h5 id="modalExcluirPermissaoTitulo">Excluir permissao</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Deseja realmente excluir esta permissao?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmarExcluirPermissao">
+                    <i class="fas fa-trash mr-1"></i> Excluir
+                </button>
+            </div>
+        </div>
     </div>
 </div>
