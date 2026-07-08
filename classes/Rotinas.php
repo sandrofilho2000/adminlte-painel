@@ -139,13 +139,16 @@ class Rotinas extends ClasseBase
                 r.exibir_menu,
                 COALESCE(NULLIF(TRIM(r.rota), ''), NULLIF(TRIM(r.link), '')) AS url
             FROM {$this->getNomeTabela()} r
+            RIGHT JOIN portal.TBLPersistemas p ON r.Rotina = p.Rotina
             WHERE COALESCE(NULLIF(TRIM(r.rota), ''), NULLIF(TRIM(r.link), '')) IS NOT NULL
-            AND r.status = 1
-            AND r.exibir_menu = 1
-            AND r.tipo_sistema = 'portal'
-            ORDER BY r.Descricao, r.id
         ";
 
+        $this->filtrar("p.Usuario", ID_USER);
+        $this->filtrar("r.status", 1);
+        $this->filtrar("r.exibir_menu", 1);
+        $this->filtrar("r.tipo_sistema", 'portal');
+        $this->ordenar("r.Descricao");
+        
         $registros = $this->buscar(true);
         $arvore_registros =  self::montarArvoreRotinas($registros);
         return $arvore_registros;

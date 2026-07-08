@@ -44,29 +44,25 @@ Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
                     </div>
                 </div>
             </div>
-            <div class="row mt-2">
-                <div class="col-sm-6 col-md-3">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="permissaoLer" name="Consulta" value="1">
-                        <label class="custom-control-label" for="permissaoLer">Ler</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="permissaoIncluir" name="Incluir" value="1">
-                        <label class="custom-control-label" for="permissaoIncluir">Incluir</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="permissaoDeletar" name="Excluir" value="1">
-                        <label class="custom-control-label" for="permissaoDeletar">Deletar</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="permissaoEditar" name="Alterar" value="1">
-                        <label class="custom-control-label" for="permissaoEditar">Editar</label>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center">
+                        <div class="custom-control custom-switch mb-3 mb-md-0 mr-3">
+                            <input type="checkbox" class="custom-control-input" id="permissaoLer" name="Consulta" value="1">
+                            <label class="custom-control-label" for="permissaoLer">Ler</label>
+                        </div>
+                        <div class="custom-control custom-switch mb-3 mb-md-0 mr-3">
+                            <input type="checkbox" class="custom-control-input" id="permissaoIncluir" name="Incluir" value="1">
+                            <label class="custom-control-label" for="permissaoIncluir">Incluir</label>
+                        </div>
+                        <div class="custom-control custom-switch mb-3 mb-md-0 mr-3">
+                            <input type="checkbox" class="custom-control-input" id="permissaoDeletar" name="Excluir" value="1">
+                            <label class="custom-control-label" for="permissaoDeletar">Deletar</label>
+                        </div>
+                        <div class="custom-control custom-switch mb-3 mb-md-0">
+                            <input type="checkbox" class="custom-control-input" id="permissaoEditar" name="Alterar" value="1">
+                            <label class="custom-control-label" for="permissaoEditar">Editar</label>
+                        </div>
                     </div>
                 </div>
             </div>
