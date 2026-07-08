@@ -83,15 +83,20 @@ $renderizarHeader = $renderizarHeader ?? true;
 $renderizarFooter = $renderizarFooter ?? true;
 $pageDescription = $pageDescription ?? 'O Sistema oferece cursos e informações para profissionais da Educação Física.';
 $permissao = Controller::getPermissao();
+$apenasConfef = Controller::getApenasConfef();
+$csrfToken = (string) ($_SESSION['csrf_token'] ?? '');
 
-if(empty($permissao)){
+if (empty($permissao)) {
   http_response_code(404);
   exit('Permissão não configurada.');
-}else if(!verificaPermissao($permissao) && $permissao != 00000){
+} else if (!verificaPermissao($permissao) && $permissao != 00000) {
   header('Location: /adminlte-painel/admin/');
   exit;
 }
 
+if ($apenasConfef && ESTADO_CONSELHO !== "BR") {
+  header('Location: /adminlte-painel/admin/');
+}
 ?>
 
 <!DOCTYPE html>
@@ -100,6 +105,11 @@ if(empty($permissao)){
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<?php echo htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8'); ?>">
+  <script>
+    window.csrfToken = <?php echo json_encode($csrfToken, JSON_UNESCAPED_SLASHES); ?>;
+    var csrfToken = window.csrfToken;
+  </script>
 
   <!-- SEO Metatags -->
   <title>Aurora Tech | <?php echo htmlspecialchars($pageTitle); ?></title>

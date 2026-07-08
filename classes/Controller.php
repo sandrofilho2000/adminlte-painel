@@ -5,6 +5,7 @@ class Controller
     private static $_instance;
     private static $_permissao;
     private static $_page_title = 'Painel';
+    private static $_apenas_confef = false;
 
     private $_meta_tags = [];
 
@@ -81,6 +82,16 @@ class Controller
     public static function getPermissao()
     {
         return self::$_permissao;
+    }
+
+    public static function setApenasConfef($apenas_confef)
+    {
+        self::$_apenas_confef = $apenas_confef;
+    }
+
+    public static function getApenasConfef()
+    {
+        return self::$_apenas_confef;
     }
 
     public static function setFileJavascriptHeader($file)

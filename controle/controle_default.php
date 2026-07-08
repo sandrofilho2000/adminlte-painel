@@ -9,13 +9,15 @@ if (session_status() === PHP_SESSION_NONE) {
 $headers = function_exists('getallheaders') ? getallheaders() : [];
 $headers = array_change_key_case($headers, CASE_LOWER);
 
-$csrf_token = $headers['x-csrf-token'] ?? '';;
+$csrf_token = (string) ($headers['x-csrf-token'] ?? $_POST['csrf_token'] ?? '');
+$csrf_session = (string) ($_SESSION['csrf_token'] ?? '');
 
-/* if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+if ($csrf_session === '' || $csrf_token === '' || !hash_equals($csrf_session, $csrf_token)) {
     http_response_code(403);
-    echo json_encode(['status' => 'error', 'message' => 'Token CSRF inválido']);
+    header('Content-Type: application/json');
+    echo json_encode(['tipo' => 'erro', 'status' => 'error', 'message' => 'Token CSRF invalido.']);
     exit;
-} */
+}
 
 header('Content-Type: application/json');
 
@@ -38,7 +40,11 @@ try {
     if (!$pdo->inTransaction()) {
         $pdo->beginTransaction();
     }
-    
+
+    if ($_SESSION['loggedin'] !== true) {
+        throw new Exception('Acesso não autorizado. Faça login para continuar.');
+    }
+
     $_result = [];
 
     $className = $_POST['objeto'] ?? null;
@@ -100,6 +106,7 @@ try {
         'Rotinas',
         'Icones',
         'Persistemas',
+        'PortaisCrefs',
     ];
 
     if (!$className) {

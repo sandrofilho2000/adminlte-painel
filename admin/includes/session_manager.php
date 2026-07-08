@@ -25,7 +25,7 @@ if (!defined('ESTADO_CONSELHO')) {
 
 $_SESSION['nome'] = $_SESSION['nome'] ?? ($_SESSION['usuario_nome'] ?? 'Usuario');
 $_SESSION['usuario_nome'] = $_SESSION['usuario_nome'] ?? $_SESSION['nome'];
-$_SESSION['is_admin'] = $_SESSION['is_admin'] ?? true;
+/* $_SESSION['is_admin'] = $_SESSION['is_admin'] ?? true; */
 
 if (!isset($_SESSION['Permissoes']) || !is_array($_SESSION['Permissoes'])) {
     $_SESSION['Permissoes'] = [

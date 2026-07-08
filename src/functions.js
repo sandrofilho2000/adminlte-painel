@@ -21,10 +21,12 @@
  * @returns {itemSelecionado}
  */
 
-if (typeof csrfToken !== 'undefined') {
+const tokenCsrfInicial = obterTokenCsrfAtual()
+
+if (tokenCsrfInicial) {
     $.ajaxSetup({
         beforeSend: function (xhr) {
-            xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+            xhr.setRequestHeader('X-CSRF-Token', obterTokenCsrfAtual());
         }
     });
 } else {
@@ -881,7 +883,7 @@ function requestAjax(dados, callback, loading = true) {
         $controle.prop("disabled", true)
     })
 
-    const token = (typeof csrfToken !== 'undefined' && csrfToken) || $('meta[name="csrf-token"]').attr('content') || '';
+    const token = obterTokenCsrfAtual()
 
     return $.ajax({
         url: url,
@@ -1951,7 +1953,7 @@ function burst(total = 4, delay = 5000) {
 }
 
 function obterTokenCsrfAtual() {
-    return (typeof csrfToken !== "undefined" && csrfToken) || $('meta[name="csrf-token"]').attr("content") || ""
+    return (window.csrfToken || (typeof csrfToken !== "undefined" && csrfToken) || $('meta[name="csrf-token"]').attr("content") || "")
 }
 
 function obterChaveBaseNotificacao(notificacao) {

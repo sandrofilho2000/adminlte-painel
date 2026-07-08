@@ -6,8 +6,8 @@ use Classes\Icones;
 
 Controller::setPermissao("00006");
 Controller::setPageTitle("Rotinas");
-Controller::setFileJavascript("/admin/rotinas/js/main.js?v=$v");
-Controller::setFileStyle("/admin/rotinas/css/styles.css?v=$v");
+Controller::setFileJavascript("/admin/permissoes/rotinas/js/main.js?v=$v");
+Controller::setFileStyle("/admin/permissoes/rotinas/css/styles.css?v=$v");
 
 $objetoRotinas = new Rotinas();
 $objetoRotinas->filtrar("r.id_pai", "","EMPTY");

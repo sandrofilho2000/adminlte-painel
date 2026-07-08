@@ -141,7 +141,7 @@
           $nomeUsuario = $nomeUsuario !== '' ? $nomeUsuario : (string) $usuario['login'];
 
           $_SESSION['loggedin'] = true;
-          $_SESSION['is_admin'] = false;
+          /* $_SESSION['is_admin'] = false; */
           $_SESSION['id'] = (int) $usuario['id'];
           $_SESSION['user_id'] = (int) $usuario['id'];
           $_SESSION['email'] = $usuario['email'];

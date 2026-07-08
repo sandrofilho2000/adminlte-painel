@@ -12,6 +12,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+if (empty($_SESSION['csrf_token']) || !is_string($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 require_once BASE_PATH . '/vendor/autoload.php';
 
 function loadEnvFile(string $path): void

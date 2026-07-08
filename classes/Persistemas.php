@@ -66,6 +66,7 @@ class Persistemas extends ClasseBase
         $permissao->Alterar = (int) ($this->Alterar ?? 0) === 1 ? 1 : 0;
 
         $salvar = $permissao->salvar();
+        self::carregarPermissoes(true);
         return $salvar;
     }
 
@@ -79,7 +80,7 @@ class Persistemas extends ClasseBase
             $this->Alterar = (int) ($permissao['Alterar'] ?? 0) === 1 ? 1 : 0;
             $this->editPersistemas($permissao['id']);
         }
-        self::carregarPermissoes();
+        self::carregarPermissoes(true);
         return true;
     }
 
@@ -124,8 +125,10 @@ class Persistemas extends ClasseBase
             try {
                 $Usuario = Usuarios::instanciarPorId($UsuarioId);
 
-                if (empty($Usuario) || $Usuario->estado_conselho === "ABC") {
-                    continue;
+                if (ESTADO_CONSELHO !== "BR") {
+                    if (empty($Usuario) || $Usuario->estado_conselho !== ESTADO_CONSELHO) {
+                        continue;
+                    }
                 }
 
                 $permissao_existe = self::getPermissoesUsuario($UsuarioId, $this->Rotina);
@@ -138,7 +141,7 @@ class Persistemas extends ClasseBase
                 $this->id = null;
                 $this->Usuario = $UsuarioId;
                 $this->incluir();
-                self::carregarPermissoes();
+                self::carregarPermissoes(true);
             } catch (\Throwable $e) {
                 $mensagem = $e->getMessage();
                 $codigo = (string) $e->getCode();
@@ -227,16 +230,17 @@ class Persistemas extends ClasseBase
 
     public function deletePermissao($id)
     {
+        self::carregarPermissoes();
         $id = (int) $id ?? $this->id;
         $permissao = self::instanciarPorId($id);
         if (!empty($permissao)) {
             if (ESTADO_CONSELHO !== "BRRRR") {
                 $usuario = Usuarios::instanciarPorId($permissao->Usuario);
                 if (empty($usuario)) {
-                    if ($usuario->estado_conselho !== ESTADO_CONSELHO) {
-                        throw new Exception("Não é possível excluir permissões de outras pessoas.");
-                    }
                     throw new Exception("Usuário não encontrado.");
+                }
+                else if ($usuario->estado_conselho !== ESTADO_CONSELHO) {
+                    throw new Exception("Não é possível excluir permissões de outras pessoas.");
                 }
             }
 
