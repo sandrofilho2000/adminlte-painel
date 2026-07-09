@@ -5,7 +5,7 @@ use Classes\RotinasConfig;
 use Classes\Icones;
 
 Controller::setPermissao("00006");
-Controller::setPageTitle("Rotinas");
+Controller::setPageTitle("Listar Rotinas");
 Controller::setFileJavascript("/admin/permissoes/rotinas/js/main.js?v=$v");
 Controller::setFileStyle("/admin/permissoes/rotinas/css/styles.css?v=$v");
 
@@ -92,19 +92,6 @@ $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-group">
-            <label for="tipo_sistema">Tipo de sistema</label>
-            <select class="form-control" id="tipo_sistema" name="tipo_sistema" required>
-              <option value="" selected disabled>Selecione...</option>
-              <option value="portal">Portal</option>
-              <option value="site">Site</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
       <div class="row mt-2">
         <div class="col-md-4">
           <div class="opcao-rotina mb-3">
@@ -153,7 +140,6 @@ $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT
           <th>ID</th>
           <th>Rotina</th>
           <th>Descrição</th>
-          <th>Sistema</th>
           <th>Rota</th>
           <th>Ícone</th>
           <th>Pai</th>

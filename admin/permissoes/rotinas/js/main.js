@@ -164,7 +164,6 @@ function renderizarTabelaRotinas(pagina = 1) {
                 { name: "r.id", data: "id" },
                 { name: "r.Rotina", data: "Rotina" },
                 { name: "r.Descricao", data: "Descricao" },
-                { name: "r.tipo_sistema", data: "tipo_sistema" },
                 { name: "r.rota", data: "rota" },
                 {
                     name: "r.icon",

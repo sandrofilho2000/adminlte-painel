@@ -7,8 +7,8 @@ $usuarios = (new Usuarios())->getUsuarios();
 $rotinas = (new Rotinas())->getRotinas();
 
 Controller::setPermissao("00013");
-Controller::setPageTitle("Permissões do Portal");
-Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
+Controller::setPageTitle("Atribuir Rotinas");
+Controller::setFileJavascript("/admin/permissoes/atribuir/js/main.js?v=$v");
 
 ?>
 
@@ -38,7 +38,7 @@ Controller::setFileJavascript("/admin/permissoes/portal/js/main.js?v=$v");
                             <option value="" selected disabled>Selecione...</option>
                             <?php foreach ($rotinas as $rotina): ?>
                                 <option value="<?= $rotina['Rotina'] ?>">
-                                    (<?= $rotina['tipo_sistema'] ?>) <?= htmlspecialchars((string) $rotina['Descricao'], ENT_QUOTES, 'UTF-8') ?> - <?= $rotina['Rotina'] ?>
+                                    <?= htmlspecialchars((string) $rotina['Descricao'], ENT_QUOTES, 'UTF-8') ?> - <?= $rotina['Rotina'] ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

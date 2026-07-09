@@ -17,7 +17,6 @@ class Rotinas extends ClasseBase
     public $status;
     public $id_pai;
     public $em_manutencao;
-    public $tipo_sistema;
     public $exibir_menu;
 
     public $itens_menu;
@@ -38,7 +37,6 @@ class Rotinas extends ClasseBase
             "status",
             "id_pai",
             "em_manutencao",
-            "tipo_sistema",
             "exibir_menu",
         ),
         'permissao' => ''
@@ -81,7 +79,6 @@ class Rotinas extends ClasseBase
             r.id,
             r.Rotina,
             r.Descricao,
-            r.tipo_sistema,
             r.icon,
             r.rota,
             r.status,
@@ -104,7 +101,6 @@ class Rotinas extends ClasseBase
         $rotina_existente->icon = $this->normalizarTexto($this->icon) ?? $rotina_existente->icon;
         $rotina_existente->id_pai = $this->id_pai;
         $rotina_existente->rota = $this->normalizarTexto($this->rota) ?? $rotina_existente->rota;
-        $rotina_existente->tipo_sistema = $this->normalizarTexto($this->tipo_sistema) ?? $rotina_existente->tipo_sistema;
         $rotina_existente->status = (int) ($this->status ?? 0) === 1 ? 1 : 0 ?? $rotina_existente->status;
         $rotina_existente->em_manutencao = (int) ($this->em_manutencao ?? 0) === 1 ? 1 : 0 ?? $rotina_existente->em_manutencao;
         $rotina_existente->exibir_menu = (int) ($this->exibir_menu ?? 0) === 1 ? 1 :0 ?? $rotina_existente->exibir_menu;
@@ -125,9 +121,7 @@ class Rotinas extends ClasseBase
             SELECT
                 r.id,
                 r.Rotina,
-                r.tipo_sistema,
                 r.Descricao,
-                r.tipo_sistema,
                 r.icon,
                 r.rota,
                 r.link,
@@ -146,7 +140,6 @@ class Rotinas extends ClasseBase
         $this->filtrar("p.Usuario", ID_USER);
         $this->filtrar("r.status", 1);
         $this->filtrar("r.exibir_menu", 1);
-        $this->filtrar("r.tipo_sistema", 'portal');
         $this->ordenar("r.Descricao");
         
         $registros = $this->buscar(true);

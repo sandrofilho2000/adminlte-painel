@@ -214,7 +214,6 @@ class Persistemas extends ClasseBase
         $this->queryCorrente = "SELECT
         p.id,
         r.Descricao,
-        r.tipo_sistema,
         r.Rotina,
         u.apresentacao,
         u.estado_conselho,
