@@ -1,5 +1,5 @@
 
-var tabelaPortaisCrefs;
+var tabelaPortais;
 var arquivoLogoPortal = null;
 var conselhosRegionaisPortal = {
     RJ: "CREF1/RJ",
@@ -128,7 +128,7 @@ function carregarPreviewLogoPortalUrl(urlLogo) {
 function obterDadosLinhaPortal(botao) {
     const linha = $(botao).closest("tr")
     const linhaPrincipal = linha.hasClass("child") ? linha.prev() : linha
-    return tabelaPortaisCrefs ? tabelaPortaisCrefs.row(linhaPrincipal).data() : null
+    return tabelaPortais ? tabelaPortais.row(linhaPrincipal).data() : null
 }
 
 function carregarPortalNoFormulario(portal) {
@@ -211,9 +211,9 @@ function limparPreviewLogoPortal() {
     $("#areaLogoPortal").removeClass("border-primary border-success")
 }
 
-function renderizarTabelaPortaisCrefs(pagina = 1) {
-    if (!$.fn.DataTable.isDataTable("#tabelaPortaisCrefs")) {
-        tabelaPortaisCrefs = $("#tabelaPortaisCrefs").DataTable({
+function renderizarTabelaPortais(pagina = 1) {
+    if (!$.fn.DataTable.isDataTable("#tabelaPortais")) {
+        tabelaPortais = $("#tabelaPortais").DataTable({
             serverSide: true,
             responsive: true,
             autoWidth: false,
@@ -225,8 +225,8 @@ function renderizarTabelaPortaisCrefs(pagina = 1) {
                 url: "/adminlte-painel/controle/controle_default.php",
                 type: "POST",
                 data: function (dados) {
-                    dados.objeto = "PortaisCrefs"
-                    dados.metodo = "getPortaisCrefs"
+                    dados.objeto = "Portais"
+                    dados.metodo = "getPortais"
                     dados.aplicarPaginacaoNoResultado = 1
                 }
             },
@@ -287,12 +287,12 @@ function renderizarTabelaPortaisCrefs(pagina = 1) {
         return
     }
 
-    tabelaPortaisCrefs.ajax.reload(null, false)
+    tabelaPortais.ajax.reload(null, false)
 }
 
 
 $(function () {
-    renderizarTabelaPortaisCrefs()
+    renderizarTabelaPortais()
 
     $("#areaLogoPortal").on("click keydown", function (e) {
         if (e.type === "click" || e.key === "Enter" || e.key === " ") {
@@ -316,7 +316,7 @@ $(function () {
         }
 
         const formData = new FormData()
-        formData.append("objeto", "PortaisCrefs")
+        formData.append("objeto", "Portais")
         formData.append("metodo", "removerFundoLogoPortal")
         formData.append("logo_portal", arquivoLogoPortal, arquivoLogoPortal.name || "logo_portal.png")
 
@@ -379,7 +379,7 @@ $(function () {
                 form.reset()
                 limparPreviewLogoPortal()
                 definirModoFormularioPortal()
-                tabelaPortaisCrefs.ajax.reload(null, false)
+                tabelaPortais.ajax.reload(null, false)
             }
         })
     })

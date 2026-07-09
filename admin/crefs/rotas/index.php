@@ -1,8 +1,21 @@
 <?php
-    Controller::setPermissao("00008");
-    Controller::setPageTitle("Rotas do Site");
-    Controller::setApenasConfef(true);
-    Controller::setFileJavascript("/admin/crefs/rotas/js/main.js?v=$v");
+
+use Classes\Rotas;
+use Classes\Portais;
+use Classes\ConselhosRegionais;
+
+Controller::setPermissao("00008");
+Controller::setPageTitle("Rotas do Site");
+Controller::setApenasConfef(true);
+Controller::setFileJavascript("/admin/crefs/rotas/js/main.js?v=$v");
+
+
+$rotas = new Rotas() ;
+$rotas = $rotas->getRotas();
+
+
+$portais = new Portais();
+$portais = $portais->getPortais();
 ?>
 
 <style>
@@ -110,7 +123,72 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="abaAtribuirRotas" role="tabpanel" aria-labelledby="abaAtribuirRotasTab"></div>
+            <div class="tab-pane fade" id="abaAtribuirRotas" role="tabpanel" aria-labelledby="abaAtribuirRotasTab">
+                <form id="formAtribuirRotas" method="post" action="#">
+                    <div class="row linha-campos-rota">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="id_portal">Portal</label>
+                                <select name="portal" id="id_portal" class="form-control">
+                                    <option selected disabled>Selecione...</option>
+                                    <?php foreach($portais as $portal): ?>
+                                        <option value="<?= $portal->id ?>"><?= ConselhosRegionais::obterLegenda($portal->estado_conselho) ?> </option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-control custom-checkbox mb-3">
+                        <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="rota_atribuicao_todos"
+                            name="todas_rotas"
+                            value="1">
+                        <label class="custom-control-label" for="rota_atribuicao_todos">Todos</label>
+                    </div>
+
+                    <div class="row">
+                        <?php foreach ($rotas as $rota): ?>
+                            <?php
+                                $rota = (array) $rota;
+                                $idRota = (string) ($rota['id'] ?? '');
+                                $nomeRota = (string) ($rota['nome'] ?? '');
+                                $urlRota = (string) ($rota['url'] ?? '');
+                                $rotuloRota = trim($nomeRota) !== '' ? $nomeRota : $urlRota;
+
+                                if ($idRota === '' || $rotuloRota === '') {
+                                    continue;
+                                }
+
+                                $idCheckbox = 'rota_atribuicao_' . preg_replace('/[^A-Za-z0-9_\-]/', '_', $idRota);
+                            ?>
+                            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <div class="custom-control custom-checkbox mb-2">
+                                    <input
+                                        type="checkbox"
+                                        class="custom-control-input checkbox-rota-atribuicao"
+                                        id="<?= htmlspecialchars($idCheckbox, ENT_QUOTES, 'UTF-8') ?>"
+                                        name="rotas[]"
+                                        value="<?= htmlspecialchars($idRota, ENT_QUOTES, 'UTF-8') ?>"
+                                        data-id="<?= htmlspecialchars($idRota, ENT_QUOTES, 'UTF-8') ?>">
+                                    <label class="custom-control-label" for="<?= htmlspecialchars($idCheckbox, ENT_QUOTES, 'UTF-8') ?>">
+                                        <span class="d-block"><?= htmlspecialchars($rotuloRota, ENT_QUOTES, 'UTF-8') ?></span>
+                                        <?php if (trim($urlRota) !== ''): ?>
+                                            <small class="d-block text-muted"><?= htmlspecialchars($urlRota, ENT_QUOTES, 'UTF-8') ?></small>
+                                        <?php endif; ?>
+                                    </label>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3" id="botaoSalvarAtribuicaoRotas">
+                        <i class="fas fa-save mr-1"></i> Salvar atribuicao
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

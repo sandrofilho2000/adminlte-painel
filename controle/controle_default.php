@@ -108,6 +108,7 @@ try {
         'Persistemas',
         'PortaisCrefs',
         'Rotas',
+        'PortaisRotas',
     ];
 
     if (!$className) {

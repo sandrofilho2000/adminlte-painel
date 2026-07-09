@@ -1,33 +1,12 @@
 <?php
+use Classes\ConselhosRegionais;
+
 Controller::setPermissao("00014");
 Controller::setPageTitle("Portais de CREF's");
 Controller::setApenasConfef(true);
 Controller::setFileJavascript("/admin/crefs/portais/js/main.js?v=$v");
 
-$conselhosRegionais = [
-    'RJ' => 'CREF1/RJ',
-    'RS' => 'CREF2/RS',
-    'SC' => 'CREF3/SC',
-    'SP' => 'CREF4/SP',
-    'CE' => 'CREF5/CE',
-    'MG' => 'CREF6/MG',
-    'DF' => 'CREF7/DF',
-    'AM' => 'CREF8/AM-AC-RO-RR',
-    'PR' => 'CREF9/PR',
-    'PB' => 'CREF10/PB',
-    'MS' => 'CREF11/MS',
-    'PE' => 'CREF12/PE',
-    'BA' => 'CREF13/BA',
-    'GO' => 'CREF14/GO-TO',
-    'PI' => 'CREF15/PI',
-    'RN' => 'CREF16/RN',
-    'MT' => 'CREF17/MT',
-    'PA' => 'CREF18/PA-AP',
-    'AL' => 'CREF19/AL',
-    'SE' => 'CREF20/SE',
-    'MA' => 'CREF21/MA',
-    'ES' => 'CREF22/ES',
-];
+$conselhosRegionais = ConselhosRegionais::listar();
 ?>
 
 <style>
@@ -72,7 +51,7 @@ $conselhosRegionais = [
 
     <form id="formPortais" method="post" action="#">
         <div class="card-body">
-            <input type="hidden" name="objeto" value="PortaisCrefs">
+            <input type="hidden" name="objeto" value="Portais">
             <input type="hidden" name="metodo" value="criaPortalCref">
             <input type="hidden" name="id" value="">
 
@@ -146,7 +125,7 @@ $conselhosRegionais = [
         <h3 class="card-title">Portais cadastrados</h3>
     </div>
     <div class="card-body">
-        <table id="tabelaPortaisCrefs" class="table table-striped table-bordered responsive nowrap" style="width:100%">
+        <table id="tabelaPortais" class="table table-striped table-bordered responsive nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th>ID</th>

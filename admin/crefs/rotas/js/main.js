@@ -166,11 +166,62 @@ $(function () {
         window.setTimeout(definirModoFormularioRota, 0)
     })
 
+    $("#formAtribuirRotas").on("submit", function (e) {
+        e.preventDefault()
+
+        const formData = {
+            objeto: 'PortaisRotas',
+            metodo: 'upsertPortalRotaEmMassa',
+            id_portal: $("#id_portal").val() || "",
+            rotas: $(".checkbox-rota-atribuicao").map(function () {
+                return {
+                    id: $(this).data("id"),
+                    selecionada: $(this).prop("checked")
+                }
+            }).get()
+        }
+
+        requestAjax(formData, function (result) {
+            console.log("🚀 ~ result:", result)
+        })
+    })
+
     $(document).on("click", ".btn-editar-rota", function () {
         carregarRotaNoFormulario(obterDadosLinhaRota(this))
     })
 
     $(document).on("click", ".btn-remover-rota", function () {
         exibirMensagemBootstrap("Remocao ainda nao implementada no backend.", "warning")
+    })
+
+    $("#rota_atribuicao_todos").on("change", function () {
+        $(".checkbox-rota-atribuicao").prop("checked", this.checked)
+    })
+
+    $(document).on("change", ".checkbox-rota-atribuicao", function () {
+        const totalRotas = $(".checkbox-rota-atribuicao").length
+        const totalMarcadas = $(".checkbox-rota-atribuicao:checked").length
+
+        $("#rota_atribuicao_todos").prop("checked", totalRotas > 0 && totalRotas === totalMarcadas)
+    })
+
+    $(document).on("change", "#id_portal", function () {
+        requestAjax(
+            {
+                objeto: 'PortaisRotas',
+                metodo: 'getPortalRotaPorIdPortal',
+                id_portal: $(this).val()
+            },
+            function (result) {
+
+                const rotasPorId = new Map(result.map(item => [Number(item.id_rota), item]));
+
+                $("[id*=rota_atribuicao]").each(function () {
+                    const id = Number($(this).data("id"));
+                    const rota = rotasPorId.get(id);
+                    $(this).prop("checked", rota?.ativo == 1);
+                });
+            }
+        );
     })
 })

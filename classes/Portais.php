@@ -8,7 +8,7 @@ use PDO;
 use DateTime;
 use Exception;
 
-class PortaisCrefs extends ClasseBase
+class Portais extends ClasseBase
 {
     public $id;
     public $estado_conselho;
@@ -18,7 +18,7 @@ class PortaisCrefs extends ClasseBase
     public $logo;
 
     protected $_tabela = array(
-        'nome' => 'TBLPortaisCREFS',
+        'nome' => 'TBLPortais',
         'schema' => 'portal',
         'chave_primaria' => array('id'),
         'colunas' => array(
@@ -251,9 +251,9 @@ class PortaisCrefs extends ClasseBase
         return DIRECTORY_SEPARATOR === '\\' ? 'python' : 'python3';
     }
 
-    public function getPortaisCrefs()
+    public function getPortais()
     {
-        $this->queryCorrente = "SELECT * FROM portal.TBLPortaisCREFS WHERE 1=1 ";
+        $this->queryCorrente = "SELECT * FROM portal.TBLPortais WHERE 1=1 ";
         return $this->buscar();
     }
 }
