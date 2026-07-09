@@ -12,6 +12,8 @@ class Rotas extends ClasseBase
     public $nome;
     public $url;
     public $ativo;
+    public $id_pai;
+    public $hierarquico;
 
     protected $_tabela = [
         'nome' => 'TBLRotas',
@@ -21,7 +23,8 @@ class Rotas extends ClasseBase
             'id',
             'nome',
             'url',
-            'ativo'
+            'ativo',
+            'id_pai',
         ],
         'permissao' => '00008'
     ];
@@ -31,17 +34,57 @@ class Rotas extends ClasseBase
         parent::__construct();
     }
 
-    public function getRotas()
+    public function getRotas($hierarquico = false)
     {
-        $this->queryCorrente = "
-            SELECT
-                r.id,
-                r.nome,
-                r.url,
-                r.ativo
-            FROM {$this->getNomeTabela()} r
-            WHERE 1 = 1
-        ";
+        $hierarquico = $this->hierarquico ?? $hierarquico;
+        if ($hierarquico) {
+            $this->queryCorrente = "
+                    WITH RECURSIVE rotas AS (
+                        SELECT
+                            id,
+                            nome,
+                            url,
+                            ativo,
+                            id_pai,
+                            CAST(LPAD(id, 10, '0') AS CHAR(1000)) AS ordem,
+                            0 AS nivel
+                        FROM {$this->getNomeTabela()}
+                        WHERE id_pai IS NULL
+
+                        UNION ALL
+
+                        SELECT
+                            r.id,
+                            r.nome,
+                            r.url,
+                            r.ativo,
+                            r.id_pai,
+                            CONCAT(p.ordem, '.', LPAD(r.id, 10, '0')),
+                            p.nivel + 1
+                        FROM {$this->getNomeTabela()} r
+                        INNER JOIN rotas p
+                            ON r.id_pai = p.id
+                    )
+                    SELECT
+                        id,
+                        nome,
+                        url,
+                        ativo,
+                        id_pai,
+                        nivel
+                    FROM rotas r WHERE 1=1 ";
+        } else {
+            $this->queryCorrente = "
+                SELECT
+                    r.id,
+                    r.nome,
+                    r.url,
+                    r.ativo,
+                    r.id_pai
+                FROM {$this->getNomeTabela()} r
+                WHERE 1 = 1
+            ";
+        }
 
         return $this->buscar(true);
     }
@@ -51,6 +94,7 @@ class Rotas extends ClasseBase
         $this->nome = $this->normalizarTexto($this->nome);
         $this->url = $this->normalizarUrl($this->url);
         $this->ativo = (int) ($this->ativo ?? 0) === 1 ? 1 : 0;
+        $this->id_pai = $this->normalizarIdPai($this->id_pai);
 
         if ($this->nome === null) {
             throw new Exception('Informe o nome da rota.');
@@ -70,6 +114,7 @@ class Rotas extends ClasseBase
             $rotaExistente->nome = $this->nome;
             $rotaExistente->url = $this->url;
             $rotaExistente->ativo = $this->ativo;
+            $rotaExistente->id_pai = $this->id_pai;
 
             $resultado = $rotaExistente->salvar();
             $resultado['tipo'] = 'success';
@@ -104,5 +149,16 @@ class Rotas extends ClasseBase
         }
 
         return $valor . '/';
+    }
+
+    private function normalizarIdPai($valor): ?int
+    {
+        if ($valor === null || $valor === '') {
+            return null;
+        }
+
+        $valor = (int) $valor;
+
+        return $valor > 0 ? $valor : null;
     }
 }

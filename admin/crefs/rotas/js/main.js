@@ -52,6 +52,21 @@ function renderizarUrlRota(valor) {
     return `<code>${escaparHtmlRota(caminho)}</code>`
 }
 
+function iniciarSelectRotaPai() {
+    const campoRotaPai = $("#rotaPai")
+
+    if (!campoRotaPai.length || typeof campoRotaPai.select2 !== "function") {
+        return
+    }
+
+    campoRotaPai.select2({
+        theme: "bootstrap4",
+        width: "100%",
+        placeholder: "Selecione uma rota pai",
+        allowClear: true
+    })
+}
+
 function obterDadosLinhaRota(botao) {
     const linha = $(botao).closest("tr")
     const linhaPrincipal = linha.hasClass("child") ? linha.prev() : linha
@@ -66,6 +81,7 @@ function carregarRotaNoFormulario(rota) {
     $("#formRotas input[name='id']").val(rota.id || "")
     $("#rotaNome").val(rota.nome || "")
     $("#rotaUrl").val(rota.url || "")
+    $("#rotaPai").val(rota.id_pai || "").trigger("change")
     $("#rotaAtivo").prop("checked", Number(rota.ativo) === 1)
     definirModoFormularioRota(rota.id)
     document.getElementById("cartaoFormularioRota")?.scrollIntoView({ behavior: "smooth", block: "start" })
@@ -102,11 +118,18 @@ function renderizarTabelaRotas(pagina = 1) {
                 data: function (dados) {
                     dados.objeto = "Rotas"
                     dados.metodo = "getRotas"
+                    dados.hierarquico = 1
                     dados.aplicarPaginacaoNoResultado = 1
                 }
             },
             columns: [
-                { name: "r.nome", data: "nome" },
+                {
+                    name: "r.nome",
+                    data: "nome",
+                    render: function (data, type, row) {
+                        return `${'--'.repeat(row.nivel)}${data}`;
+                    }
+                },
                 {
                     name: "r.url",
                     data: "url",
@@ -145,6 +168,7 @@ function renderizarTabelaRotas(pagina = 1) {
 }
 
 $(function () {
+    iniciarSelectRotaPai()
     renderizarTabelaRotas()
 
     $("#formRotas").on("submit", function (e) {
@@ -156,6 +180,7 @@ $(function () {
         requestAjax(formData, function (resultado) {
             if (resultado === true || resultado?.tipo === "success" || resultado?.success) {
                 form.reset()
+                $("#rotaPai").val("").trigger("change")
                 definirModoFormularioRota()
                 tabelaRotas.ajax.reload(null, false)
             }
@@ -163,6 +188,7 @@ $(function () {
     })
 
     $("#formRotas").on("reset", function () {
+        window.setTimeout(() => $("#rotaPai").val("").trigger("change"), 0)
         window.setTimeout(definirModoFormularioRota, 0)
     })
 

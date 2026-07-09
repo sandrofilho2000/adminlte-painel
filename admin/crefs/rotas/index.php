@@ -11,6 +11,7 @@ Controller::setFileJavascript("/admin/crefs/rotas/js/main.js?v=$v");
 
 
 $rotas = new Rotas() ;
+$rotas->ordenar("nome");
 $rotas = $rotas->getRotas();
 
 
@@ -73,13 +74,38 @@ $portais = $portais->getPortais();
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="rotaUrl">URL</label>
                                         <input type="text" class="form-control" id="rotaUrl" name="url" maxlength="255" placeholder="caminho/do/site/">
                                         <small class="form-text text-muted">
                                             Esta rota sera adicionada como complemento de <strong>https://(UF do CREF).confef.org.br/</strong>
                                         </small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="rotaPai">Rota pai</label>
+                                        <select class="form-control" id="rotaPai" name="id_pai">
+                                            <option value="">Nenhuma</option>
+                                            <?php foreach ($rotas as $rotaPai): ?>
+                                                <?php
+                                                    $rotaPai = (array) $rotaPai;
+                                                    $idRotaPai = (string) ($rotaPai['id'] ?? '');
+                                                    $nomeRotaPai = (string) ($rotaPai['nome'] ?? '');
+                                                    $urlRotaPai = (string) ($rotaPai['url'] ?? '');
+                                                    $rotuloRotaPai = trim($nomeRotaPai) !== '' ? $nomeRotaPai : $urlRotaPai;
+
+                                                    if ($idRotaPai === '' || $rotuloRotaPai === '') {
+                                                        continue;
+                                                    }
+                                                ?>
+                                                <option value="<?= htmlspecialchars($idRotaPai, ENT_QUOTES, 'UTF-8') ?>">
+                                                    <?= htmlspecialchars($rotuloRotaPai, ENT_QUOTES, 'UTF-8') ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
                                 </div>
 
