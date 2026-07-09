@@ -1,6 +1,148 @@
 
 var tabelaPortaisCrefs;
 var arquivoLogoPortal = null;
+var conselhosRegionaisPortal = {
+    RJ: "CREF1/RJ",
+    RS: "CREF2/RS",
+    SC: "CREF3/SC",
+    SP: "CREF4/SP",
+    CE: "CREF5/CE",
+    MG: "CREF6/MG",
+    DF: "CREF7/DF",
+    AM: "CREF8/AM-AC-RO-RR",
+    PR: "CREF9/PR",
+    PB: "CREF10/PB",
+    MS: "CREF11/MS",
+    PE: "CREF12/PE",
+    BA: "CREF13/BA",
+    GO: "CREF14/GO-TO",
+    PI: "CREF15/PI",
+    RN: "CREF16/RN",
+    MT: "CREF17/MT",
+    PA: "CREF18/PA-AP",
+    AL: "CREF19/AL",
+    SE: "CREF20/SE",
+    MA: "CREF21/MA",
+    ES: "CREF22/ES",
+}
+
+function escaparHtmlPortal(valor) {
+    return $("<div>").text(valor ?? "").html()
+}
+
+function normalizarUrlLogoPortal(valor) {
+    let urlLogo = String(valor || "").trim().replace(/\\/g, "/")
+
+    if (!urlLogo) {
+        return ""
+    }
+
+    if (/^https?:\/\//i.test(urlLogo) || urlLogo.startsWith("/")) {
+        return urlLogo
+    }
+
+    urlLogo = urlLogo.replace(/^file:\/\/\//i, "")
+
+    const marcadorArmazenamento = "webconfef_storage/"
+    const indiceArmazenamento = urlLogo.indexOf(marcadorArmazenamento)
+
+    if (indiceArmazenamento >= 0) {
+        return "/" + urlLogo.substring(indiceArmazenamento)
+    }
+
+    return "/webconfef_storage/" + urlLogo.replace(/^\/+/, "")
+}
+
+function renderizarLogoPortalTabela(valor) {
+    const urlLogo = normalizarUrlLogoPortal(valor)
+
+    if (!urlLogo) {
+        return '<span class="text-muted">-</span>'
+    }
+
+    const urlEscapada = escaparHtmlPortal(urlLogo)
+    return `<img src="${urlEscapada}" alt="Logo do portal" class="logo-portal-tabela">`
+}
+
+function renderizarAtivoPortal(valor) {
+    return Number(valor) === 1
+        ? '<span class="badge badge-success">Ativo</span>'
+        : '<span class="badge badge-danger">Inativo</span>'
+}
+
+function renderizarConselhoRegionalPortal(valor) {
+    const sigla = String(valor || "").trim().toUpperCase()
+    return escaparHtmlPortal(conselhosRegionaisPortal[sigla] || sigla || "-")
+}
+
+function definirModoFormularioPortal(idPortal = null) {
+    const cartao = $("#cartaoFormularioPortal")
+    const titulo = $("#tituloFormularioPortal")
+    const indicador = $("#indicadorModoFormularioPortal")
+    const botaoSalvar = $("#botaoSalvarPortal")
+    const botaoLimpar = $("#botaoLimparPortal")
+    const campoEstado = $("#estado_conselho")
+    const idAtual = Number(idPortal)
+    const editando = Number.isInteger(idAtual) && idAtual > 0
+
+    cartao.toggleClass("card-primary", !editando)
+    cartao.toggleClass("card-warning", editando)
+
+    campoEstado.prop("disabled", editando)
+
+    if (editando) {
+        titulo.text("Editar portal")
+        indicador.html(`<i class="fas fa-pen mr-1"></i> Editando ID #${idAtual}`)
+        botaoSalvar
+            .removeClass("btn-primary")
+            .addClass("btn-warning")
+            .html('<i class="fas fa-save mr-1"></i> Salvar alteracoes')
+        botaoLimpar.text("Cancelar edicao")
+        return
+    }
+
+    titulo.text("Cadastrar portal")
+    indicador.html('<i class="fas fa-plus-circle mr-1"></i> Modo de criacao')
+    botaoSalvar
+        .removeClass("btn-warning")
+        .addClass("btn-primary")
+        .html('<i class="fas fa-plus mr-1"></i> Salvar portal')
+    botaoLimpar.text("Limpar")
+}
+
+function carregarPreviewLogoPortalUrl(urlLogo) {
+    const urlNormalizada = normalizarUrlLogoPortal(urlLogo)
+    arquivoLogoPortal = null
+    $("#logo_portal").val("")
+
+    if (!urlNormalizada) {
+        limparPreviewLogoPortal()
+        return
+    }
+
+    $("#previewLogoPortal").attr("src", urlNormalizada).removeClass("d-none")
+    $("#conteudoLogoPortal").addClass("d-none")
+    $("#areaLogoPortal").removeClass("border-primary").addClass("border-success")
+}
+
+function obterDadosLinhaPortal(botao) {
+    const linha = $(botao).closest("tr")
+    const linhaPrincipal = linha.hasClass("child") ? linha.prev() : linha
+    return tabelaPortaisCrefs ? tabelaPortaisCrefs.row(linhaPrincipal).data() : null
+}
+
+function carregarPortalNoFormulario(portal) {
+    if (!portal) {
+        return
+    }
+
+    $("#formPortais input[name='id']").val(portal.id || "")
+    $("#estado_conselho").prop("disabled", false).val(portal.estado_conselho || "").trigger("change")
+    $("#ativo").prop("checked", Number(portal.ativo) === 1)
+    carregarPreviewLogoPortalUrl(portal.logo)
+    definirModoFormularioPortal(portal.id)
+    document.getElementById("cartaoFormularioPortal")?.scrollIntoView({ behavior: "smooth", block: "start" })
+}
 
 function atualizarPreviewLogoPortal(arquivo) {
     if (!arquivo || !arquivo.type || !arquivo.type.startsWith("image/")) {
@@ -29,6 +171,18 @@ function atribuirArquivoLogoPortal(arquivo) {
     }
 
     atualizarPreviewLogoPortal(arquivo)
+}
+
+function converterBase64ParaArquivoLogoPortal(base64, nomeArquivo, tipoArquivo) {
+    const binario = atob(base64)
+    const tamanho = binario.length
+    const bytes = new Uint8Array(tamanho)
+
+    for (let i = 0; i < tamanho; i++) {
+        bytes[i] = binario.charCodeAt(i)
+    }
+
+    return new File([bytes], nomeArquivo, { type: tipoArquivo })
 }
 
 function obterImagemTransferida(transferencia) {
@@ -78,18 +232,55 @@ function renderizarTabelaPortaisCrefs(pagina = 1) {
             },
             columns: [
                 { name: "id", data: "id", visible: false },
-                { name: "estado_conselho", data: "estado_conselho" },
-                { name: "ativo", data: "ativo" },
+                {
+                    name: "logo",
+                    data: "logo",
+                    orderable: false,
+                    searchable: false,
+                    render: function (data) {
+                        return renderizarLogoPortalTabela(data)
+                    }
+                },
+                {
+                    name: "estado_conselho",
+                    data: "estado_conselho",
+                    render: function (data) {
+                        return renderizarConselhoRegionalPortal(data)
+                    }
+                },
+                {
+                    name: "ativo",
+                    data: "ativo",
+                    render: function (data) {
+                        return renderizarAtivoPortal(data)
+                    }
+                },
                 { name: "dt_inclusao", data: "dt_inclusao" },
-                { data: null, render: function(data, type, row){
-                    return `
-                        <div class="teste"></div>
-                    `
-                } },
+                {
+                    data: null,
+                    className: "dt-center no-search all always-visible td-edicoes",
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        const id = escaparHtmlPortal(row && row.id ? row.id : "")
+
+                        return `
+                            <div class="d-flex justify-content-center">
+                                <button type="button" class="btn btn-primary mr-1 btn-editar-portal" data-id="${id}" title="Editar portal">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-remover-portal" data-id="${id}" title="Remover portal">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        `
+                    }
+                },
             ],
             columnDefs: [
-                { responsivePriority: 1, targets: 3 },
+                { responsivePriority: 1, targets: 2 },
                 { responsivePriority: 2, targets: 1 },
+                { responsivePriority: 3, targets: 4 },
             ],
             language: { url: urlIdioma }
         })
@@ -116,6 +307,30 @@ $(function () {
         if (arquivo) {
             atualizarPreviewLogoPortal(arquivo)
         }
+    })
+
+    $("#botaoRemoverFundoLogoPortal").on("click", function () {
+        if (!arquivoLogoPortal) {
+            exibirMensagemBootstrap("Selecione uma imagem antes de remover o fundo.", "warning")
+            return
+        }
+
+        const formData = new FormData()
+        formData.append("objeto", "PortaisCrefs")
+        formData.append("metodo", "removerFundoLogoPortal")
+        formData.append("logo_portal", arquivoLogoPortal, arquivoLogoPortal.name || "logo_portal.png")
+
+        requestAjax(formData, function (resultado) {
+            if (!resultado || resultado.tipo !== "success" || !resultado.imagem_base64) {
+                return
+            }
+
+            const tipoArquivo = resultado.tipo_imagem || "image/png"
+            const nomeArquivo = resultado.nome_arquivo || "logo_sem_fundo.png"
+            const arquivoSemFundo = converterBase64ParaArquivoLogoPortal(resultado.imagem_base64, nomeArquivo, tipoArquivo)
+
+            atribuirArquivoLogoPortal(arquivoSemFundo)
+        })
     })
 
     $("#areaLogoPortal").on("dragenter dragover", function (e) {
@@ -151,18 +366,34 @@ $(function () {
 
         const form = this
         const formData = new FormData(form)
+
         formData.delete("logo_portal")
+        formData.set("estado_conselho", $("#estado_conselho").val() || "")
+
+        if (arquivoLogoPortal) {
+            formData.append("logo_portal", arquivoLogoPortal, arquivoLogoPortal.name || "logo_portal.png")
+        }
 
         requestAjax(formData, function (resultado) {
             if (resultado === true || resultado?.tipo === "success" || resultado?.success) {
                 form.reset()
                 limparPreviewLogoPortal()
+                definirModoFormularioPortal()
                 tabelaPortaisCrefs.ajax.reload(null, false)
             }
         })
     })
 
     $("#formPortais").on("reset", function () {
+        definirModoFormularioPortal()
         window.setTimeout(limparPreviewLogoPortal, 0)
+    })
+
+    $(document).on("click", ".btn-editar-portal", function () {
+        carregarPortalNoFormulario(obterDadosLinhaPortal(this))
+    })
+
+    $(document).on("click", ".btn-remover-portal", function () {
+        exibirMensagemBootstrap("Remocao ainda nao implementada no backend.", "warning")
     })
 })

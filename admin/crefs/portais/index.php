@@ -4,40 +4,34 @@ Controller::setPageTitle("Portais de CREF's");
 Controller::setApenasConfef(true);
 Controller::setFileJavascript("/admin/crefs/portais/js/main.js?v=$v");
 
-$estadosConselho = [
-    'BR' => 'Conselho Federal',
-    'AC' => 'Acre',
-    'AL' => 'Alagoas',
-    'AP' => 'Amapa',
-    'AM' => 'Amazonas',
-    'BA' => 'Bahia',
-    'CE' => 'Ceara',
-    'DF' => 'Distrito Federal',
-    'ES' => 'Espirito Santo',
-    'GO' => 'Goias',
-    'MA' => 'Maranhao',
-    'MT' => 'Mato Grosso',
-    'MS' => 'Mato Grosso do Sul',
-    'MG' => 'Minas Gerais',
-    'PA' => 'Para',
-    'PB' => 'Paraiba',
-    'PR' => 'Parana',
-    'PE' => 'Pernambuco',
-    'PI' => 'Piaui',
-    'RJ' => 'Rio de Janeiro',
-    'RN' => 'Rio Grande do Norte',
-    'RS' => 'Rio Grande do Sul',
-    'RO' => 'Rondonia',
-    'RR' => 'Roraima',
-    'SC' => 'Santa Catarina',
-    'SP' => 'Sao Paulo',
-    'SE' => 'Sergipe',
-    'TO' => 'Tocantins',
+$conselhosRegionais = [
+    'RJ' => 'CREF1/RJ',
+    'RS' => 'CREF2/RS',
+    'SC' => 'CREF3/SC',
+    'SP' => 'CREF4/SP',
+    'CE' => 'CREF5/CE',
+    'MG' => 'CREF6/MG',
+    'DF' => 'CREF7/DF',
+    'AM' => 'CREF8/AM-AC-RO-RR',
+    'PR' => 'CREF9/PR',
+    'PB' => 'CREF10/PB',
+    'MS' => 'CREF11/MS',
+    'PE' => 'CREF12/PE',
+    'BA' => 'CREF13/BA',
+    'GO' => 'CREF14/GO-TO',
+    'PI' => 'CREF15/PI',
+    'RN' => 'CREF16/RN',
+    'MT' => 'CREF17/MT',
+    'PA' => 'CREF18/PA-AP',
+    'AL' => 'CREF19/AL',
+    'SE' => 'CREF20/SE',
+    'MA' => 'CREF21/MA',
+    'ES' => 'CREF22/ES',
 ];
 ?>
 
 <style>
-    #areaLogoPortal {
+    html body div #areaLogoPortal {
         background-image:
             linear-gradient(45deg, #d9dee3 25%, transparent 25%),
             linear-gradient(-45deg, #d9dee3 25%, transparent 25%),
@@ -45,39 +39,55 @@ $estadosConselho = [
             linear-gradient(-45deg, transparent 75%, #d9dee3 75%);
         background-position: 0 0, 0 8px, 8px -8px, -8px 0;
         background-size: 16px 16px;
+        background-color: #c3c3c3 !important;
+    }
+
+    #conteudoLogoPortal {
+        background: rgba(0, 0, 0, 0.72);
+        border-radius: 6px;
+        color: #fff;
+        max-width: 100%;
+        padding: 14px 18px;
+    }
+
+    #conteudoLogoPortal .text-muted {
+        color: rgba(255, 255, 255, 0.78) !important;
+    }
+
+    .logo-portal-tabela {
+        display: block;
+        max-height: 70px;
+        max-width: 96px;
+        object-fit: contain;
     }
 </style>
 
-<div class="card card-primary card-outline">
-    <div class="card-header">
-        <h3 class="card-title">Cadastrar Portais</h3>
+<div class="card card-primary card-outline" id="cartaoFormularioPortal">
+    <div class="card-header d-flex align-items-center">
+        <h3 class="card-title" id="tituloFormularioPortal">Cadastrar portal</h3>
+        <span class="badge badge-light ml-auto" id="indicadorModoFormularioPortal">
+            <i class="fas fa-plus-circle mr-1"></i> Modo de criacao
+        </span>
     </div>
 
     <form id="formPortais" method="post" action="#">
         <div class="card-body">
             <input type="hidden" name="objeto" value="PortaisCrefs">
-            <input type="hidden" name="metodo" value="salvarPortalCref">
+            <input type="hidden" name="metodo" value="criaPortalCref">
             <input type="hidden" name="id" value="">
 
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-10">
                     <div class="form-group">
                         <label for="estado_conselho">Estado conselho</label>
                         <select class="form-control" id="estado_conselho" name="estado_conselho" required>
                             <option value="" selected disabled>Selecione...</option>
-                            <?php foreach ($estadosConselho as $sigla => $nome): ?>
+                            <?php foreach ($conselhosRegionais as $sigla => $nome): ?>
                                 <option value="<?= htmlspecialchars($sigla, ENT_QUOTES, 'UTF-8') ?>">
-                                    (<?= htmlspecialchars($sigla, ENT_QUOTES, 'UTF-8') ?>) <?= htmlspecialchars($nome, ENT_QUOTES, 'UTF-8') ?>
+                                    <?= htmlspecialchars($nome, ENT_QUOTES, 'UTF-8') ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="dt_inclusao">Data de inclusao</label>
-                        <input type="datetime-local" class="form-control" id="dt_inclusao" name="dt_inclusao">
                     </div>
                 </div>
 
@@ -113,6 +123,9 @@ $estadosConselho = [
                                 class="img-fluid d-none"
                                 style="max-height: 150px;">
                         </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="botaoRemoverFundoLogoPortal">
+                            <i class="fas fa-magic mr-1"></i> Remover fundo
+                        </button>
                         <input type="file" class="d-none" id="logo_portal" name="logo_portal" accept="image/*">
                     </div>
                 </div>
@@ -137,6 +150,7 @@ $estadosConselho = [
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Logo</th>
                     <th>CREF</th>
                     <th>Ativo</th>
                     <th>Data de cadastro</th>

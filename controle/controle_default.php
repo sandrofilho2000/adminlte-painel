@@ -107,6 +107,7 @@ try {
         'Icones',
         'Persistemas',
         'PortaisCrefs',
+        'Rotas',
     ];
 
     if (!$className) {
