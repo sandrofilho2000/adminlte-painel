@@ -13,7 +13,6 @@ class Rotinas extends ClasseBase
     public $rota;
     public $link;
     public $url_tutorial;
-    public $grupo;
     public $status;
     public $id_pai;
     public $em_manutencao;
@@ -33,7 +32,6 @@ class Rotinas extends ClasseBase
             "rota",
             "link",
             "url_tutorial",
-            "grupo",
             "status",
             "id_pai",
             "em_manutencao",
@@ -126,7 +124,6 @@ class Rotinas extends ClasseBase
                 r.rota,
                 r.link,
                 r.url_tutorial,
-                r.grupo,
                 r.status,
                 r.id_pai,
                 r.em_manutencao,
