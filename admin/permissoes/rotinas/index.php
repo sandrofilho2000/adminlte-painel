@@ -24,7 +24,7 @@ $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT
     </span>
   </div>
 
-  <form id="formRotinas" method="post" action="#">
+  <form id="formRotinas">
     <div class="card-body">
       <input type="hidden" name="objeto" value="Rotinas">
       <input type="hidden" name="metodo" value="criaRotina">

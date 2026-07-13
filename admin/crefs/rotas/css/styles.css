@@ -38,6 +38,12 @@
         line-height: 1.25;
     }
 
+    .codigo-atribuicao-rota {
+        color: #007bff;
+        font-family: monospace;
+        font-weight: 700;
+    }
+
     @media (max-width: 991.98px) {
         .lista-atribuicao-rotas {
             column-count: 2;

@@ -17,8 +17,6 @@ $portais = new Portais();
 $portais = $portais->getPortais();
 
 $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT); ?>
-?>
-
 
 <div class="card card-primary card-outline card-outline-tabs">
     <div class="card-header p-0 border-bottom-0 bg-primary">
@@ -165,6 +163,21 @@ $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="pesquisaAtribuicaoRotas">Pesquisar rotas</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            </div>
+                            <input
+                                type="search"
+                                class="form-control"
+                                id="pesquisaAtribuicaoRotas"
+                                placeholder="Pesquise por nome, código ou URL"
+                                autocomplete="off">
+                        </div>
+                    </div>
+
                     <div class="custom-control custom-checkbox mb-3">
                         <input
                             type="checkbox"
@@ -180,29 +193,35 @@ $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT
                             <?php
                             $rota = (array) $rota;
                             $idRota = (string) ($rota['id'] ?? '');
+                            $rotinaRota = (string) ($rota['rotina'] ?? '');
                             $nomeRota = (string) ($rota['nome'] ?? '');
                             $urlRota = (string) ($rota['url'] ?? '');
                             $nivelRota = (int) ($rota['nivel'] ?? 0);
                             $rotaFinal = (string) ($rota['rota_ascendentes'] ?? '') . $urlRota;
                             $rotuloRota = trim($nomeRota) !== '' ? $nomeRota : $urlRota;
 
-                            if ($idRota === '' || $rotuloRota === '') {
+                            if ($idRota === '' || $rotinaRota === '' || $rotuloRota === '') {
                                 continue;
                             }
 
                             $idCheckbox = 'rota_atribuicao_' . preg_replace('/[^A-Za-z0-9_\-]/', '_', $idRota);
                             ?>
-                            <div class="item-atribuicao-rota">
+                            <div
+                                class="item-atribuicao-rota"
+                                data-pesquisa="<?= htmlspecialchars($nomeRota . ' ' . $rotinaRota . ' ' . $urlRota . ' ' . $rotaFinal, ENT_QUOTES, 'UTF-8') ?>">
                                 <div class="custom-control custom-checkbox mb-2" style="padding-left: <?= 1.5 + ($nivelRota * 1.25) ?>rem;">
                                     <input
                                         type="checkbox"
                                         class="custom-control-input checkbox-rota-atribuicao"
                                         id="<?= htmlspecialchars($idCheckbox, ENT_QUOTES, 'UTF-8') ?>"
                                         name="rotas[]"
-                                        value="<?= htmlspecialchars($idRota, ENT_QUOTES, 'UTF-8') ?>"
-                                        data-id="<?= htmlspecialchars($idRota, ENT_QUOTES, 'UTF-8') ?>">
+                                        value="<?= htmlspecialchars($rotinaRota, ENT_QUOTES, 'UTF-8') ?>"
+                                        data-rotina="<?= htmlspecialchars($rotinaRota, ENT_QUOTES, 'UTF-8') ?>">
                                     <label class="custom-control-label" for="<?= htmlspecialchars($idCheckbox, ENT_QUOTES, 'UTF-8') ?>">
-                                        <span class="d-block"><?= htmlspecialchars($rotuloRota, ENT_QUOTES, 'UTF-8') ?></span>
+                                        <span class="d-block">
+                                            <span class="codigo-atribuicao-rota">(<?= htmlspecialchars($rotinaRota, ENT_QUOTES, 'UTF-8') ?>)</span>
+                                            <?= htmlspecialchars($rotuloRota, ENT_QUOTES, 'UTF-8') ?>
+                                        </span>
                                         <?php if (trim($rotaFinal) !== ''): ?>
                                             <small class="d-block text-muted"><?= htmlspecialchars($rotaFinal, ENT_QUOTES, 'UTF-8') ?></small>
                                         <?php endif; ?>
@@ -211,6 +230,10 @@ $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT
                             </div>
                         <?php endforeach; ?>
                     </div>
+
+                    <p class="text-muted d-none" id="mensagemPesquisaRotasVazia">
+                        Nenhuma rota encontrada.
+                    </p>
 
                     <button type="submit" class="btn btn-primary mt-3" id="botaoSalvarAtribuicaoRotas">
                         <i class="fas fa-save mr-1"></i> Salvar atribuicao

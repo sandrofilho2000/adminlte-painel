@@ -5,6 +5,36 @@ function escaparHtmlRota(valor) {
     return $("<div>").text(valor ?? "").html()
 }
 
+function normalizarCodigoRotina(valor) {
+    const rotina = String(valor ?? "").trim()
+
+    return /^\d+$/.test(rotina) ? rotina.replace(/^0+(?=\d)/, "") : rotina
+}
+
+function normalizarTextoPesquisaRota(valor) {
+    return String(valor ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim()
+}
+
+function filtrarListaAtribuicaoRotas() {
+    const termo = normalizarTextoPesquisaRota($("#pesquisaAtribuicaoRotas").val())
+    let totalVisiveis = 0
+
+    $(".item-atribuicao-rota").each(function () {
+        const item = $(this)
+        const conteudo = normalizarTextoPesquisaRota(item.attr("data-pesquisa"))
+        const visivel = !termo || conteudo.includes(termo)
+
+        item.toggle(visivel)
+        totalVisiveis += visivel ? 1 : 0
+    })
+
+    $("#mensagemPesquisaRotasVazia").toggleClass("d-none", totalVisiveis > 0)
+}
+
 function definirModoFormularioRota(idRota = null) {
     const cartao = $("#cartaoFormularioRota")
     const titulo = $("#tituloFormularioRota")
@@ -326,7 +356,7 @@ function obterEstadoAtualAtribuicaoRotas() {
     const estado = new Map()
 
     $(".checkbox-rota-atribuicao").each(function () {
-        estado.set(String($(this).data("id")), $(this).prop("checked"))
+        estado.set(normalizarCodigoRotina($(this).attr("data-rotina")), $(this).prop("checked"))
     })
 
     return estado
@@ -334,18 +364,21 @@ function obterEstadoAtualAtribuicaoRotas() {
 
 function criarItemAtribuicaoRota(rota, estadoAtual) {
     const id = String(rota?.id || "")
+    const rotina = String(rota?.rotina || "")
     const nome = String(rota?.nome || "")
     const url = String(rota?.url || "")
     const rotulo = nome || url
     const nivel = Math.max(0, Number(rota?.nivel || 0))
     const rotaFinal = `${String(rota?.rota_ascendentes || "")}${url}`
 
-    if (!id || !rotulo) {
+    if (!id || !rotina || !rotulo) {
         return null
     }
 
     const idCheckbox = `rota_atribuicao_${id.replace(/[^A-Za-z0-9_-]/g, "_")}`
-    const item = $("<div>").addClass("item-atribuicao-rota")
+    const item = $("<div>")
+        .addClass("item-atribuicao-rota")
+        .attr("data-pesquisa", `${nome} ${rotina} ${url} ${rotaFinal}`)
     const controle = $("<div>")
         .addClass("custom-control custom-checkbox mb-2")
         .css("padding-left", `${1.5 + (nivel * 1.25)}rem`)
@@ -356,10 +389,10 @@ function criarItemAtribuicaoRota(rota, estadoAtual) {
         class: "custom-control-input checkbox-rota-atribuicao",
         id: idCheckbox,
         name: "rotas[]",
-        value: id
+        value: rotina
     })
-        .attr("data-id", id)
-        .prop("checked", estadoAtual.get(id) === true)
+        .attr("data-rotina", rotina)
+        .prop("checked", estadoAtual.get(normalizarCodigoRotina(rotina)) === true)
         .appendTo(controle)
 
     const label = $("<label>", {
@@ -367,7 +400,13 @@ function criarItemAtribuicaoRota(rota, estadoAtual) {
         for: idCheckbox
     }).appendTo(controle)
 
-    $("<span>").addClass("d-block").text(rotulo).appendTo(label)
+    const titulo = $("<span>").addClass("d-block").appendTo(label)
+
+    $("<span>")
+        .addClass("codigo-atribuicao-rota")
+        .text(`(${rotina})`)
+        .appendTo(titulo)
+    titulo.append(document.createTextNode(` ${rotulo}`))
 
     if (rotaFinal.trim()) {
         $("<small>").addClass("d-block text-muted").text(rotaFinal).appendTo(label)
@@ -400,6 +439,8 @@ function atualizarListaAtribuicaoRotas() {
                 lista.append(item)
             }
         })
+
+        filtrarListaAtribuicaoRotas()
 
         if (idPortal) {
             $("#id_portal").trigger("change")
@@ -498,6 +539,8 @@ $(function () {
     $("#rotaUrl").on("input", atualizarPreviewRotaFinal)
     $("#rotaUrl").on("blur", aplicarLimpezaCampoRota)
 
+    $("#pesquisaAtribuicaoRotas").on("input", filtrarListaAtribuicaoRotas)
+
     $("#rotaPai").on("change", function () {
         carregarPreviewRotaPai($(this).val())
     })
@@ -543,7 +586,7 @@ $(function () {
             id_portal: $("#id_portal").val() || "",
             rotas: $(".checkbox-rota-atribuicao").map(function () {
                 return {
-                    id: $(this).data("id"),
+                    rotina: $(this).attr("data-rotina"),
                     selecionada: $(this).prop("checked")
                 }
             }).get()
@@ -574,6 +617,11 @@ $(function () {
     })
 
     $(document).on("change", "#id_portal", function () {
+        const checkboxesRotas = $(".checkbox-rota-atribuicao")
+
+        checkboxesRotas.prop("checked", false)
+        $("#rota_atribuicao_todos").prop("checked", false)
+
         requestAjax(
             {
                 objeto: 'PortaisRotas',
@@ -581,15 +629,23 @@ $(function () {
                 id_portal: $(this).val()
             },
             function (result) {
+                const atribuicoes = Array.isArray(result) ? result : []
+                const rotasPorRotina = new Map(atribuicoes.map(function (item) {
+                    return [normalizarCodigoRotina(item.rotina), item]
+                }))
 
-                const rotasPorId = new Map(result.map(item => [Number(item.id_rota), item]));
+                checkboxesRotas.each(function () {
+                    const rotina = normalizarCodigoRotina($(this).attr("data-rotina"))
+                    const atribuicao = rotasPorRotina.get(rotina)
 
-                $("[id*=rota_atribuicao]").each(function () {
-                    const id = Number($(this).data("id"));
-                    const rota = rotasPorId.get(id);
-                    $(this).prop("checked", rota?.ativo == 1);
-                });
+                    $(this).prop("checked", Number(atribuicao?.ativo) === 1)
+                })
+
+                const totalRotas = checkboxesRotas.length
+                const totalMarcadas = checkboxesRotas.filter(":checked").length
+
+                $("#rota_atribuicao_todos").prop("checked", totalRotas > 0 && totalRotas === totalMarcadas)
             }
-        );
+        )
     })
 })

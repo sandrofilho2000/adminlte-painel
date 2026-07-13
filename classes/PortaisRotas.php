@@ -11,7 +11,7 @@ class PortaisRotas extends ClasseBase
 {
     public $id;
     public $id_portal;
-    public $id_rota;
+    public $rotina;
     public $rotas = [];
     public $ativo;
 
@@ -22,7 +22,7 @@ class PortaisRotas extends ClasseBase
         'colunas' => array(
             "id",
             "id_portal",
-            "id_rota",
+            "rotina",
             "ativo",
         ),
         'permissao' => '00008'
@@ -33,12 +33,29 @@ class PortaisRotas extends ClasseBase
         parent::__construct();
     }
 
+    private static function normalizarRotina($rotina): string
+    {
+        $rotina = trim((string) $rotina);
+
+        if ($rotina === '' || !ctype_digit($rotina)) {
+            throw new \Exception('Informe um código de rotina numérico válido.');
+        }
+
+        $numeroRotina = (int) $rotina;
+
+        if ($numeroRotina <= 0 || $numeroRotina > 99999) {
+            throw new \Exception('O código da rotina deve possuir até cinco dígitos.');
+        }
+
+        return str_pad((string) $numeroRotina, 5, '0', STR_PAD_LEFT);
+    }
+
     public function getPortalRotaPorIdPortal($id_portal = null)
     {
-        $id_portal = (int) $id_portal ?? (int) $this->id_portal;
+        $id_portal = (int) ($id_portal ?? $this->id_portal);
 
         if (empty($id_portal)) {
-            throw new \Exception('Erro! Informe o ID do portal e o ID da rota.');
+            throw new \Exception('Erro! Informe o ID do portal.');
         }
 
         $this->queryCorrente = $this->getQuerybase();
@@ -47,18 +64,18 @@ class PortaisRotas extends ClasseBase
         return $result;
     }
 
-    public function getPortalRota($id_portal = null, $id_rota = null)
+    public function getPortalRota($id_portal = null, $rotina = null)
     {
-        $id_portal = (int) $id_portal ?? (int) $this->id_portal;
-        $id_rota = (int) $id_rota ?? (int) $this->id_rota;
+        $id_portal = (int) ($id_portal ?? $this->id_portal);
+        $rotina = self::normalizarRotina($rotina ?? $this->rotina);
 
-        if (empty($id_rota) || empty($id_portal)) {
-            throw new \Exception('Erro! Informe o ID do portal e o ID da rota.');
+        if (empty($id_portal)) {
+            throw new \Exception('Erro! Informe o ID do portal e o código da rotina.');
         }
 
         $this->queryCorrente = $this->getQuerybase();
         $this->filtrar("id_portal", $id_portal);
-        $this->filtrar("id_rota", $id_rota);
+        $this->filtrar("rotina", $rotina);
         $this->limitar(1);
         $portal_rota = $this->buscar() ?? [];
         $portal_rota = $portal_rota[0] ?? null;
@@ -71,7 +88,9 @@ class PortaisRotas extends ClasseBase
         $totalAtualizados = 0;
 
         foreach ($rotas as $rota) {
-            $portal_rota = self::getPortalRota($this->id_portal, $rota['id']);
+            $rotina = self::normalizarRotina($rota['rotina'] ?? '');
+
+            $portal_rota = self::getPortalRota($this->id_portal, $rotina);
             $ativo = $rota['selecionada'] == "true";
             
 
@@ -81,7 +100,7 @@ class PortaisRotas extends ClasseBase
                 }else{
                     $PortaisRotas = new PortaisRotas();
                     $PortaisRotas->id_portal =  $this->id_portal;
-                    $PortaisRotas->id_rota =  $rota['id'];
+                    $PortaisRotas->rotina = $rotina;
                     $PortaisRotas->ativo = $ativo;
                     $incluir = $PortaisRotas->incluir();
                     $totalAtualizados++;
