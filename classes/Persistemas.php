@@ -51,13 +51,13 @@ class Persistemas extends ClasseBase
         $id_permissao = (int) $id_permissao;
 
         if ($id_permissao <= 0) {
-            throw new Exception("Informe uma permissao valida para editar.");
+            throw new Exception("Informe uma permissão válida para editar.");
         }
 
         $permissao = self::instanciarPorId($id_permissao);
 
         if (empty($permissao) || (int) ($permissao->id ?? 0) !== $id_permissao) {
-            throw new Exception("Permissao nao encontrada.");
+            throw new Exception("Permissão não encontrada.");
         }
 
         $permissao->Consulta = (int) ($this->Consulta ?? 0) === 1 ? 1 : 0;
@@ -94,7 +94,7 @@ class Persistemas extends ClasseBase
         $this->Alterar = (int) ($this->Alterar ?? 0) === 1 ? 1 : 0;
 
         if ($this->Rotina === '') {
-            throw new Exception("Informe a rotina da permissao.");
+            throw new Exception("Informe a rotina da permissão.");
         }
 
         if (
@@ -103,7 +103,7 @@ class Persistemas extends ClasseBase
             && $this->Excluir !== 1
             && $this->Alterar !== 1
         ) {
-            throw new Exception("Informe ao menos uma acao de permissao.");
+            throw new Exception("Informe ao menos uma ação de permissão.");
         }
 
         $usuariosInformados = $this->Usuarios ?? $this->Usuario ?? '';
@@ -112,7 +112,7 @@ class Persistemas extends ClasseBase
             : explode(",", (string) $usuariosInformados);
 
         if (empty(array_filter($Usuarios, static fn($UsuarioId) => trim((string) $UsuarioId) !== ''))) {
-            throw new Exception("Informe ao menos um usuario.");
+            throw new Exception("Informe ao menos um usuário.");
         }
 
         foreach ($Usuarios as $UsuarioId) {

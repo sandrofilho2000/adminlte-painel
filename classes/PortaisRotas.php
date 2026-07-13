@@ -38,7 +38,7 @@ class PortaisRotas extends ClasseBase
         $id_portal = (int) $id_portal ?? (int) $this->id_portal;
 
         if (empty($id_portal)) {
-            throw new \Exception('Erro! Informe id do portal e id da rota');
+            throw new \Exception('Erro! Informe o ID do portal e o ID da rota.');
         }
 
         $this->queryCorrente = $this->getQuerybase();
@@ -53,7 +53,7 @@ class PortaisRotas extends ClasseBase
         $id_rota = (int) $id_rota ?? (int) $this->id_rota;
 
         if (empty($id_rota) || empty($id_portal)) {
-            throw new \Exception('Erro! Informe id do portal e id da rota');
+            throw new \Exception('Erro! Informe o ID do portal e o ID da rota.');
         }
 
         $this->queryCorrente = $this->getQuerybase();

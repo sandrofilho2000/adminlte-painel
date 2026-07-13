@@ -156,7 +156,7 @@ class Dao
 
             if ($token === '?') {
                 if (!array_key_exists($indiceFiltro, $filtrosOriginais)) {
-                    throw new Exception("Quantidade de parametros de filtro nao corresponde aos placeholders da query.");
+                    throw new Exception("Quantidade de parâmetros de filtro não corresponde aos placeholders da query.");
                 }
                 $parametrosFinais[] = $filtrosOriginais[$indiceFiltro];
                 $indiceFiltro++;
@@ -172,7 +172,7 @@ class Dao
         }, $query);
 
         if ($indiceFiltro !== count($filtrosOriginais)) {
-            throw new Exception("Quantidade de parametros de filtro nao corresponde aos placeholders da query.");
+            throw new Exception("Quantidade de parâmetros de filtro não corresponde aos placeholders da query.");
         }
 
         self::$_questions = $parametrosFinais;

@@ -56,7 +56,7 @@ class Portais extends ClasseBase
             $portal = self::instanciarPorId((int) $this->id);
 
             if (empty($portal)) {
-                throw new Exception("Portal nao encontrado.");
+                throw new Exception("Portal não encontrado.");
             }
 
             $portal->estado_conselho = $this->estado_conselho;
@@ -114,7 +114,7 @@ class Portais extends ClasseBase
         $tamanhoArquivo = (int) ($upload['size'] ?? 0);
 
         if ($tamanhoArquivo <= 0 || $tamanhoArquivo > $tamanhoMaximo) {
-            throw new Exception("A imagem deve ter no maximo 10MB.");
+            throw new Exception("A imagem deve ter no máximo 10MB.");
         }
 
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
@@ -127,7 +127,7 @@ class Portais extends ClasseBase
         ];
 
         if (!in_array($tipoImagem, $tiposPermitidos, true)) {
-            throw new Exception("Formato de imagem nao permitido.");
+            throw new Exception("Formato de imagem não permitido.");
         }
 
         $pastaTemporaria = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR);
@@ -135,20 +135,20 @@ class Portais extends ClasseBase
         $saidaBase = tempnam($pastaTemporaria, 'logo_saida_');
 
         if ($entrada === false || $saidaBase === false) {
-            throw new Exception("Nao foi possivel preparar os arquivos temporarios.");
+            throw new Exception("Não foi possível preparar os arquivos temporários.");
         }
 
         $saida = $saidaBase . '.png';
 
         try {
             if (!copy($caminhoTemporario, $entrada)) {
-                throw new Exception("Nao foi possivel preparar a imagem enviada.");
+                throw new Exception("Não foi possível preparar a imagem enviada.");
             }
 
             $this->executarRemovedorFundoPython($entrada, $saida);
 
             if (!is_file($saida) || filesize($saida) <= 0) {
-                throw new Exception("Nao foi possivel gerar a imagem sem fundo.");
+                throw new Exception("Não foi possível gerar a imagem sem fundo.");
             }
 
             return [
@@ -170,7 +170,7 @@ class Portais extends ClasseBase
         $script = BASE_PATH . DIRECTORY_SEPARATOR . 'python' . DIRECTORY_SEPARATOR . 'remover_fundo.py';
 
         if (!is_file($script)) {
-            throw new Exception("Script de remocao de fundo nao encontrado.");
+            throw new Exception("Script de remoção de fundo não encontrado.");
         }
 
         $python = $this->obterExecutavelPython();
@@ -182,7 +182,7 @@ class Portais extends ClasseBase
         $processo = proc_open($comando, $descritores, $pipes, BASE_PATH);
 
         if (!is_resource($processo)) {
-            throw new Exception("Nao foi possivel iniciar o processo Python.");
+            throw new Exception("Não foi possível iniciar o processo Python.");
         }
 
         stream_set_blocking($pipes[1], false);
@@ -220,12 +220,12 @@ class Portais extends ClasseBase
         $codigoRetorno = proc_close($processo);
 
         if ($tempoEsgotado) {
-            throw new Exception("A remocao de fundo demorou mais que {$tempoLimite} segundos. Tente uma imagem menor ou tente novamente.");
+            throw new Exception("A remoção de fundo demorou mais que {$tempoLimite} segundos. Tente uma imagem menor ou tente novamente.");
         }
 
         if ($codigoRetorno !== 0) {
             $mensagem = trim($saidaErro ?: $saidaPadrao);
-            throw new Exception($mensagem !== '' ? $mensagem : "Nao foi possivel remover o fundo da imagem.");
+            throw new Exception($mensagem !== '' ? $mensagem : "Não foi possível remover o fundo da imagem.");
         }
     }
 

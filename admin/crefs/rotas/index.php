@@ -9,14 +9,12 @@ Controller::setPageTitle("Rotas do Site");
 Controller::setApenasConfef(true);
 Controller::setFileJavascript("/admin/crefs/rotas/js/main.js?v=$v");
 
-
-$rotas = new Rotas() ;
-$rotas->ordenar("nome");
-$rotas = $rotas->getRotas();
-
+$rotas = new Rotas();
+$rotas = $rotas->getRotas(true);
 
 $portais = new Portais();
 $portais = $portais->getPortais();
+
 ?>
 
 <style>
@@ -34,6 +32,42 @@ $portais = $portais->getPortais();
 
     #abasRotasSite .nav-link.active {
         color: #495057;
+    }
+
+    .lista-atribuicao-rotas {
+        column-count: 3;
+        column-gap: 2rem;
+    }
+
+    .item-atribuicao-rota {
+        break-inside: avoid-column;
+        page-break-inside: avoid;
+        display: inline-block;
+        width: 100%;
+        margin-bottom: .5rem;
+    }
+
+    .item-atribuicao-rota .custom-control-label {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .item-atribuicao-rota small {
+        white-space: normal;
+        line-height: 1.25;
+    }
+
+    @media (max-width: 991.98px) {
+        .lista-atribuicao-rotas {
+            column-count: 2;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .lista-atribuicao-rotas {
+            column-count: 1;
+        }
     }
 </style>
 
@@ -56,7 +90,7 @@ $portais = $portais->getPortais();
                     <div class="card-header d-flex align-items-center">
                         <h3 class="card-title" id="tituloFormularioRota">Nova rota</h3>
                         <span class="badge badge-light ml-auto" id="indicadorModoFormularioRota">
-                            <i class="fas fa-plus-circle mr-1"></i> Modo de criacao
+                            <i class="fas fa-plus-circle mr-1"></i> Modo de criação
                         </span>
                     </div>
 
@@ -67,47 +101,24 @@ $portais = $portais->getPortais();
                             <input type="hidden" name="id" value="">
 
                             <div class="row linha-campos-rota">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="rotaNome">Nome</label>
                                         <input type="text" class="form-control" id="rotaNome" name="nome" maxlength="120" placeholder="Ex.: Portal CREF1/RJ">
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-7">
                                     <div class="form-group">
                                         <label for="rotaUrl">URL</label>
                                         <input type="text" class="form-control" id="rotaUrl" name="url" maxlength="255" placeholder="caminho/do/site/">
                                         <small class="form-text text-muted">
-                                            Esta rota sera adicionada como complemento de <strong>https://(UF do CREF).confef.org.br/</strong>
+                                            Rota final
+                                            <strong>https://(UF do CREF).confef.org.br/</strong><span id="previewRotaPai" class="text-info font-italic"></span><span id="previewRotaDigitada" class="text-primary font-weight-bold"></span>
                                         </small>
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="rotaPai">Rota pai</label>
-                                        <select class="form-control" id="rotaPai" name="id_pai">
-                                            <option value="">Nenhuma</option>
-                                            <?php foreach ($rotas as $rotaPai): ?>
-                                                <?php
-                                                    $rotaPai = (array) $rotaPai;
-                                                    $idRotaPai = (string) ($rotaPai['id'] ?? '');
-                                                    $nomeRotaPai = (string) ($rotaPai['nome'] ?? '');
-                                                    $urlRotaPai = (string) ($rotaPai['url'] ?? '');
-                                                    $rotuloRotaPai = trim($nomeRotaPai) !== '' ? $nomeRotaPai : $urlRotaPai;
-
-                                                    if ($idRotaPai === '' || $rotuloRotaPai === '') {
-                                                        continue;
-                                                    }
-                                                ?>
-                                                <option value="<?= htmlspecialchars($idRotaPai, ENT_QUOTES, 'UTF-8') ?>">
-                                                    <?= htmlspecialchars($rotuloRotaPai, ENT_QUOTES, 'UTF-8') ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
 
                                 <div class="col-md-2">
                                     <div class="form-group controle-ativo-rota mb-md-3 w-100">
@@ -118,7 +129,39 @@ $portais = $portais->getPortais();
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="rotaPai">Rota pai</label>
+                                        <select class="form-control" id="rotaPai" name="id_pai">
+                                            <option value="">Nenhuma</option>
+                                            <?php foreach ($rotas as $rotaPai): ?>
+                                                <?php
+                                                $rotaPai = (array) $rotaPai;
+                                                $idRotaPai = (string) ($rotaPai['id'] ?? '');
+                                                $nomeRotaPai = (string) ($rotaPai['nome'] ?? '');
+                                                $urlRotaPai = (string) ($rotaPai['url'] ?? '');
+                                                $nivelRotaPai = (int) ($rotaPai['nivel'] ?? 0);
+                                                $rotaFinalPai = (string) ($rotaPai['rota_ascendentes'] ?? '') . $urlRotaPai;
+                                                $rotuloRotaPai = trim($nomeRotaPai) !== '' ? $nomeRotaPai : $urlRotaPai;
+    
+                                                if ($idRotaPai === '' || $rotuloRotaPai === '') {
+                                                    continue;
+                                                }
+                                                ?>
+                                                <option
+                                                    value="<?= htmlspecialchars($idRotaPai, ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-nivel="<?= htmlspecialchars((string) $nivelRotaPai, ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-rota-final="<?= htmlspecialchars($rotaFinalPai, ENT_QUOTES, 'UTF-8') ?>">
+                                                    <?= htmlspecialchars($rotuloRotaPai, ENT_QUOTES, 'UTF-8') ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
 
                         <div class="card-footer">
                             <button type="reset" class="btn btn-secondary mr-2" id="botaoLimparRota">Limpar</button>
@@ -137,6 +180,7 @@ $portais = $portais->getPortais();
                         <table id="tabelaRotas" class="table table-striped table-bordered responsive nowrap" style="width:100%">
                             <thead>
                                 <tr>
+                                    <th>Id</th>
                                     <th>Nome</th>
                                     <th>Url</th>
                                     <th>Ativa</th>
@@ -157,7 +201,7 @@ $portais = $portais->getPortais();
                                 <label for="id_portal">Portal</label>
                                 <select name="portal" id="id_portal" class="form-control">
                                     <option selected disabled>Selecione...</option>
-                                    <?php foreach($portais as $portal): ?>
+                                    <?php foreach ($portais as $portal): ?>
                                         <option value="<?= $portal->id ?>"><?= ConselhosRegionais::obterLegenda($portal->estado_conselho) ?> </option>
                                     <?php endforeach ?>
                                 </select>
@@ -175,23 +219,25 @@ $portais = $portais->getPortais();
                         <label class="custom-control-label" for="rota_atribuicao_todos">Todos</label>
                     </div>
 
-                    <div class="row">
+                    <div class="lista-atribuicao-rotas">
                         <?php foreach ($rotas as $rota): ?>
                             <?php
-                                $rota = (array) $rota;
-                                $idRota = (string) ($rota['id'] ?? '');
-                                $nomeRota = (string) ($rota['nome'] ?? '');
-                                $urlRota = (string) ($rota['url'] ?? '');
-                                $rotuloRota = trim($nomeRota) !== '' ? $nomeRota : $urlRota;
+                            $rota = (array) $rota;
+                            $idRota = (string) ($rota['id'] ?? '');
+                            $nomeRota = (string) ($rota['nome'] ?? '');
+                            $urlRota = (string) ($rota['url'] ?? '');
+                            $nivelRota = (int) ($rota['nivel'] ?? 0);
+                            $rotaFinal = (string) ($rota['rota_ascendentes'] ?? '') . $urlRota;
+                            $rotuloRota = trim($nomeRota) !== '' ? $nomeRota : $urlRota;
 
-                                if ($idRota === '' || $rotuloRota === '') {
-                                    continue;
-                                }
+                            if ($idRota === '' || $rotuloRota === '') {
+                                continue;
+                            }
 
-                                $idCheckbox = 'rota_atribuicao_' . preg_replace('/[^A-Za-z0-9_\-]/', '_', $idRota);
+                            $idCheckbox = 'rota_atribuicao_' . preg_replace('/[^A-Za-z0-9_\-]/', '_', $idRota);
                             ?>
-                            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-                                <div class="custom-control custom-checkbox mb-2">
+                            <div class="item-atribuicao-rota">
+                                <div class="custom-control custom-checkbox mb-2" style="padding-left: <?= 1.5 + ($nivelRota * 1.25) ?>rem;">
                                     <input
                                         type="checkbox"
                                         class="custom-control-input checkbox-rota-atribuicao"
@@ -201,8 +247,8 @@ $portais = $portais->getPortais();
                                         data-id="<?= htmlspecialchars($idRota, ENT_QUOTES, 'UTF-8') ?>">
                                     <label class="custom-control-label" for="<?= htmlspecialchars($idCheckbox, ENT_QUOTES, 'UTF-8') ?>">
                                         <span class="d-block"><?= htmlspecialchars($rotuloRota, ENT_QUOTES, 'UTF-8') ?></span>
-                                        <?php if (trim($urlRota) !== ''): ?>
-                                            <small class="d-block text-muted"><?= htmlspecialchars($urlRota, ENT_QUOTES, 'UTF-8') ?></small>
+                                        <?php if (trim($rotaFinal) !== ''): ?>
+                                            <small class="d-block text-muted"><?= htmlspecialchars($rotaFinal, ENT_QUOTES, 'UTF-8') ?></small>
                                         <?php endif; ?>
                                     </label>
                                 </div>

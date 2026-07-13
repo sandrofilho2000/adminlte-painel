@@ -785,7 +785,7 @@ if (!function_exists('renderTabelaMultilinha')) {
   ): void {
     $totalColunas = count($cabecalhos);
     if ($totalColunas === 0 || $totalColunas !== count($largurasColunas)) {
-      throw new InvalidArgumentException('Cabecalhos e larguras das colunas estao invalidos.');
+      throw new InvalidArgumentException('Cabeçalhos e larguras das colunas estão inválidos.');
     }
 
     if (empty($alinhamentosColunas)) {

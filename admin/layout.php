@@ -39,12 +39,12 @@ $paginaSolicitada = obterPaginaSolicitadaPeloCaminho();
 
 if ($paginaSolicitada === '' || strpos($paginaSolicitada, '..') !== false) {
   http_response_code(404);
-  exit('Pagina nao encontrada.');
+  exit('Página não encontrada.');
 }
 
 if (!preg_match('/^[a-zA-Z0-9_\/.-]+$/', $paginaSolicitada)) {
   http_response_code(404);
-  exit('Pagina nao encontrada.');
+  exit('Página não encontrada.');
 }
 
 if (substr($paginaSolicitada, -4) !== '.php') {
@@ -64,7 +64,7 @@ if (
   !is_file($conteudoPaginaPath)
 ) {
   http_response_code(404);
-  exit('Pagina nao encontrada.');
+  exit('Página não encontrada.');
 }
 
 ob_start();

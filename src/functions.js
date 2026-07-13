@@ -2715,7 +2715,7 @@ function renderBellNotifications() {
 
 
 function lerNotificacao(url, id) {
-    console.log("notificacao clicada:", { url, id })
+    console.log("notificação clicada:", { url, id })
 
     const destino = String(url || "").trim()
     const notificacaoId = String(id || "").trim()

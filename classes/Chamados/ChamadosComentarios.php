@@ -145,7 +145,7 @@ class ChamadosComentarios extends ClasseBase
         $result = self::executarComIgnorados(
             function () use ($atributos_editaveis, $Chamados) {
                 if (empty($this->comentario)) {
-                    throw new \Exception('Nao e possivel criar um comentario vazio.');
+                    throw new \Exception('Não é possível criar um comentário vazio.');
                 }
         
                 $this->criado_por_id = ID_USER;
@@ -178,21 +178,21 @@ class ChamadosComentarios extends ClasseBase
         $comentario = self::instanciarPorId($this->id);
 
         if (empty($comentario)) {
-            throw new \Exception('Comentario nao encontrado.');
+            throw new \Exception('Comentário não encontrado.');
         }
 
         $chamado = (new Chamados())->instanciarPorId($comentario->id_chamado);
         if (!empty($chamado) && ((int)$chamado->arquivado === 1 || $chamado->coluna === 'arquivados')) {
-            throw new \Exception('Nao e possivel excluir comentarios de cards arquivados.');
+            throw new \Exception('Não é possível excluir comentários de cards arquivados.');
         }
 
         if ((string)$comentario->criado_por_id !== (string)ID_USER) {
-            throw new \Exception('Voce nao tem permissao para excluir este comentario.');
+            throw new \Exception('Você não tem permissão para excluir este comentário.');
         }
 
         $exclusao = $this->excluir($comentario->id);
         if ($exclusao <= 0) {
-            throw new \Exception('Nao foi possivel excluir o comentario.');
+            throw new \Exception('Não foi possível excluir o comentário.');
         }
 
         return [

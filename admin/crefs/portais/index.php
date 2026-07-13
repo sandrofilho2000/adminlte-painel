@@ -45,7 +45,7 @@ $conselhosRegionais = ConselhosRegionais::listar();
     <div class="card-header d-flex align-items-center">
         <h3 class="card-title" id="tituloFormularioPortal">Cadastrar portal</h3>
         <span class="badge badge-light ml-auto" id="indicadorModoFormularioPortal">
-            <i class="fas fa-plus-circle mr-1"></i> Modo de criacao
+            <i class="fas fa-plus-circle mr-1"></i> Modo de criação
         </span>
     </div>
 
@@ -141,7 +141,7 @@ $conselhosRegionais = ConselhosRegionais::listar();
     </div>
     <div class="card-footer">
         <button type="button" class="btn btn-primary" id="salvarAlteracoesRotasSite">
-            <i class="fas fa-save mr-1"></i> Salvar alteracoes
+            <i class="fas fa-save mr-1"></i> Salvar alterações
         </button>
     </div>
 </div>

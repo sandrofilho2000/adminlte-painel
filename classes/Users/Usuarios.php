@@ -372,15 +372,15 @@ class Usuarios extends ClasseBase
         }
 
         if ($tamanho < 3) {
-            throw new \Exception('O nome deve ter no minimo 3 caracteres.');
+            throw new \Exception('O nome deve ter no mínimo 3 caracteres.');
         }
 
         if ($tamanho > $maxLength) {
-            throw new \Exception('O nome deve ter no maximo ' . $maxLength . ' caracteres.');
+            throw new \Exception('O nome deve ter no máximo ' . $maxLength . ' caracteres.');
         }
 
         if (!preg_match('/^(?=.*\p{L})[\p{L}\p{M}\p{N}]+(?: [\p{L}\p{M}\p{N}]+)*$/u', $nome)) {
-            throw new \Exception('O nome deve conter apenas letras, numeros e espacos.');
+            throw new \Exception('O nome deve conter apenas letras, números e espaços.');
         }
 
         return $nome;
@@ -391,7 +391,7 @@ class Usuarios extends ClasseBase
         $id = (int) (ID_USER ?? 0);
 
         if ($id <= 0) {
-            return ['tipo' => 'fail', 'message' => 'Usuario invalido.'];
+            return ['tipo' => 'fail', 'message' => 'Usuário inválido.'];
         }
 
         try {
@@ -399,7 +399,7 @@ class Usuarios extends ClasseBase
                 $usuario = $this->instanciarPorId($id);
 
                 if (empty($usuario) || (int) $usuario->id !== $id) {
-                    return ['tipo' => 'fail', 'message' => 'Usuario nao encontrado.'];
+                    return ['tipo' => 'fail', 'message' => 'Usuário não encontrado.'];
                 }
 
                 $usuario->apresentacao = $this->validarApresentacaoPerfil($this->apresentacao ?? $usuario->apresentacao);

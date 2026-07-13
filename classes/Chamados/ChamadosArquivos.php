@@ -190,23 +190,23 @@ class ChamadosArquivos extends ClasseBase
         $arquivo = self::instanciarPorId($this->id);
 
         if (empty($arquivo)) {
-            throw new \Exception('Arquivo nao encontrado.');
+            throw new \Exception('Arquivo não encontrado.');
         }
 
         if (!empty($arquivo->id_chamado)) {
             $chamado = (new Chamados())->instanciarPorId($arquivo->id_chamado);
             if (!empty($chamado) && ((int)$chamado->arquivado === 1 || $chamado->coluna === 'arquivados')) {
-                throw new \Exception('Nao e possivel excluir arquivos de cards arquivados.');
+                throw new \Exception('Não é possível excluir arquivos de cards arquivados.');
             }
         }
 
         if ((string)$arquivo->criado_por_id !== (string)ID_USER) {
-            throw new \Exception('Voce nao tem permissao para excluir este arquivo.');
+            throw new \Exception('Você não tem permissão para excluir este arquivo.');
         }
 
         $exclusao = Dao::excluir($arquivo);
         if ($exclusao <= 0) {
-            throw new \Exception('Nao foi possivel excluir o arquivo.');
+            throw new \Exception('Não foi possível excluir o arquivo.');
         }
 
         return [

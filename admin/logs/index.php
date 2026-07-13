@@ -91,7 +91,7 @@ if (!$tem_permissao || $_SESSION['estado_conselho'] != 'BR') {
                       <th>ID</th>
                       <th>Data</th>
                       <th>Mensagem</th>
-                      <th>Usuario</th>
+                      <th>Usuário</th>
                       <th>Estado conselho</th>
                       <th>Arquivo</th>
                       <th>Linha</th>

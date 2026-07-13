@@ -76,7 +76,7 @@ function parseDatabaseUrl(string $databaseUrl): array
     $parts = parse_url($databaseUrl);
 
     if ($parts === false || empty($parts['scheme'])) {
-        throw new InvalidArgumentException('DATABASE_URL invalida.');
+        throw new InvalidArgumentException('DATABASE_URL inválida.');
     }
 
     return [
@@ -96,7 +96,7 @@ try {
         $database = parseDatabaseUrl((string) $databaseUrl);
 
         if ($database['driver'] !== 'mysql') {
-            throw new RuntimeException('Apenas DATABASE_URL mysql:// e suportada.');
+            throw new RuntimeException('Apenas DATABASE_URL mysql:// é suportada.');
         }
 
         $dbCharset = env('DB_CHARSET', 'utf8mb4');

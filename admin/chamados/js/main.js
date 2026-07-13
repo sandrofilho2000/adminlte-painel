@@ -296,7 +296,7 @@ function mostrarPainelMarcacaoComentarioErro() {
         .removeClass("d-none")
         .html(`
             <div class="kanban-comment-mention-panel-header">Marcar pessoas</div>
-            <div class="kanban-comment-mention-panel-empty">Nao foi possivel carregar as pessoas para mencao.</div>
+            <div class="kanban-comment-mention-panel-empty">Não foi possível carregar as pessoas para menção.</div>
         `)
 }
 

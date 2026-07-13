@@ -118,8 +118,8 @@ class Chamados extends ClasseBase
             'suporte-para-programas-e-aplicativos' => 'Suporte para Programas e Aplicativos',
             'suporte-para-perifericos' => 'Suporte para Perifericos',
             'suporte-para-duvidas-no-geral' => 'Suporte para duvidas no geral',
-            'liberacao-de-acesso-para-internos' => 'Liberacao de acesso para internos',
-            'liberacao-de-acesso-para-externos' => 'Liberacao de acesso para externos',
+            'liberacao-de-acesso-para-internos' => 'Liberação de acesso para internos',
+            'liberacao-de-acesso-para-externos' => 'Liberação de acesso para externos',
         );
 
         $modulo = trim((string) $modulo);

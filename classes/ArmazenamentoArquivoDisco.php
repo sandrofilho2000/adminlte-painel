@@ -197,7 +197,7 @@ class ArmazenamentoArquivoDisco
 
         $real = realpath($raiz);
         if ($real === false || !is_dir($real)) {
-            throw new RuntimeException('Pasta de armazenamento invalida.');
+            throw new RuntimeException('Pasta de armazenamento inválida.');
         }
 
         return rtrim($real, "/\\");
@@ -283,11 +283,11 @@ class ArmazenamentoArquivoDisco
     private function validarArquivoFisico(string $caminho, string $extensao, int $tamanhoBytes): string
     {
         if ($tamanhoBytes <= 0) {
-            throw new RuntimeException('O arquivo enviado esta vazio.');
+            throw new RuntimeException('O arquivo enviado está vazio.');
         }
 
         if ($tamanhoBytes > $this->tamanhoMaximoBytes) {
-            throw new RuntimeException('O arquivo excede o tamanho maximo permitido.');
+            throw new RuntimeException('O arquivo excede o tamanho máximo permitido.');
         }
 
         $mimeType = $this->detectarMimeType($caminho);
@@ -310,7 +310,7 @@ class ArmazenamentoArquivoDisco
         $diretorio = $this->raiz . ($diretorioRelativo !== '' ? DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $diretorioRelativo) : '');
 
         if (!$this->caminhoEstaNaRaiz($diretorio)) {
-            throw new RuntimeException('Diretorio de destino invalido.');
+            throw new RuntimeException('Diretório de destino inválido.');
         }
 
         if (!is_dir($diretorio) && !mkdir($diretorio, 0775, true) && !is_dir($diretorio)) {

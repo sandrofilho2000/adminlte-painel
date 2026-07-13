@@ -15,7 +15,7 @@ $csrf_session = (string) ($_SESSION['csrf_token'] ?? '');
 if ($csrf_session === '' || $csrf_token === '' || !hash_equals($csrf_session, $csrf_token)) {
     http_response_code(403);
     header('Content-Type: application/json');
-    echo json_encode(['tipo' => 'erro', 'status' => 'error', 'message' => 'Token CSRF invalido.']);
+    echo json_encode(['tipo' => 'erro', 'status' => 'error', 'message' => 'Token CSRF inválido.']);
     exit;
 }
 
@@ -106,7 +106,7 @@ try {
         'Rotinas',
         'Icones',
         'Persistemas',
-        'PortaisCrefs',
+        'Portais',
         'Rotas',
         'PortaisRotas',
     ];

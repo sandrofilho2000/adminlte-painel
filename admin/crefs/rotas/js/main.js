@@ -1,4 +1,5 @@
 var tabelaRotas = null;
+var caminhoRotaPaiSelecionada = "";
 
 function escaparHtmlRota(valor) {
     return $("<div>").text(valor ?? "").html()
@@ -22,13 +23,13 @@ function definirModoFormularioRota(idRota = null) {
         botaoSalvar
             .removeClass("btn-primary")
             .addClass("btn-warning")
-            .html('<i class="fas fa-save mr-1"></i> Salvar alteracoes')
-        botaoLimpar.text("Cancelar edicao")
+            .html('<i class="fas fa-save mr-1"></i> Salvar alterações')
+        botaoLimpar.text("Cancelar edição")
         return
     }
 
     titulo.text("Nova rota")
-    indicador.html('<i class="fas fa-plus-circle mr-1"></i> Modo de criacao')
+    indicador.html('<i class="fas fa-plus-circle mr-1"></i> Modo de criação')
     botaoSalvar
         .removeClass("btn-warning")
         .addClass("btn-primary")
@@ -42,14 +43,229 @@ function renderizarStatusRota(valor) {
         : '<span class="badge badge-danger">Inativa</span>'
 }
 
-function renderizarUrlRota(valor) {
+function renderizarUrlRota(valor, rota = {}) {
     const caminho = String(valor || "").trim()
+    const caminhoAscendente = String(rota.rota_ascendentes || "").trim()
 
-    if (!caminho) {
+    if (!caminho && !caminhoAscendente) {
         return '<span class="text-muted">-</span>'
     }
 
-    return `<code>${escaparHtmlRota(caminho)}</code>`
+    return `
+        <code>
+            ${caminhoAscendente ? `<span class="text-muted font-italic">${escaparHtmlRota(caminhoAscendente)}</span>` : ""}
+            ${caminho ? `<span class="text-primary font-weight-bold">${escaparHtmlRota(caminho)}</span>` : ""}
+        </code>
+    `
+}
+
+function normalizarCaminhoPreviewRota(valor) {
+    const caminho = String(valor || "").trim().replace(/^\/+|\/+$/g, "")
+
+    return caminho ? `${caminho}/` : ""
+}
+
+function limparCaminhoRotaDigitado(valor) {
+    const caminho = String(valor || "")
+        .trim()
+        .split(/[?#]/, 1)[0]
+        .trim()
+        .replace(/^\/+|\/+$/g, "")
+
+    return caminho ? `${caminho}/` : ""
+}
+
+function aplicarLimpezaCampoRota() {
+    const campo = $("#rotaUrl")
+    const caminhoLimpo = limparCaminhoRotaDigitado(campo.val())
+
+    campo.val(caminhoLimpo)
+    atualizarPreviewRotaFinal()
+
+    return caminhoLimpo
+}
+
+function obterErroCaminhoRota(valor) {
+    const caminho = String(valor || "").trim()
+
+    if (!caminho) {
+        return null
+    }
+
+    if (/\s/.test(caminho)) {
+        return "A URL da rota não pode conter espaços."
+    }
+
+    if (/^[a-z][a-z0-9+\-.]*:\/\//i.test(caminho) || caminho.startsWith("//") || /^www\./i.test(caminho) || /^https?(\/|$)/i.test(caminho)) {
+        return "Informe apenas o caminho da rota, sem https, domínio ou link completo."
+    }
+
+    if (/^[a-z0-9-]+(\.[a-z0-9-]+)*\.(com|org|net|gov|edu|br|info)(\.[a-z]{2})?(\/|$)/i.test(caminho)) {
+        return "Informe apenas o caminho interno da rota, sem domínio."
+    }
+
+    if (caminho.includes("\\") || caminho.includes("?") || caminho.includes("#")) {
+        return "A URL da rota deve ser um caminho limpo, sem parâmetros, âncora ou barras invertidas."
+    }
+
+    if (!/^[A-Za-z0-9._~/-]+$/.test(caminho)) {
+        return "A URL da rota possui caracteres inválidos. Use apenas letras, números, hífen, underline, ponto e barra."
+    }
+
+    if (caminho.includes("//")) {
+        return "A URL da rota não pode conter barras duplicadas."
+    }
+
+    const partes = caminho.replace(/^\/+|\/+$/g, "").split("/").filter(Boolean)
+    const possuiSegmentoInvalido = partes.some(function (parte) {
+        return parte === "." || parte === ".."
+    })
+
+    if (possuiSegmentoInvalido) {
+        return 'A URL da rota não pode conter segmentos "." ou "..".'
+    }
+
+    return null
+}
+
+function validarFormularioRota() {
+    const erroCaminho = obterErroCaminhoRota($("#rotaUrl").val())
+
+    if (erroCaminho) {
+        exibirMensagemBootstrap(erroCaminho, "warning")
+        $("#rotaUrl").focus()
+        return false
+    }
+
+    return true
+}
+
+function atualizarPreviewRotaFinal() {
+    const caminhoDigitado = normalizarCaminhoPreviewRota($("#rotaUrl").val())
+
+    $("#previewRotaPai").text(caminhoRotaPaiSelecionada)
+    $("#previewRotaDigitada").text(caminhoDigitado)
+}
+
+function obterCaminhoRotaPai(rotaPai) {
+    if (!rotaPai) {
+        return ""
+    }
+
+    const caminhosAscendentes = Array.isArray(rotaPai.rotas_ascendentes)
+        ? rotaPai.rotas_ascendentes.map(function (rota) {
+            return normalizarCaminhoPreviewRota(rota.url)
+        }).join("")
+        : ""
+    const caminhoPai = normalizarCaminhoPreviewRota(rotaPai.url)
+
+    return `${caminhosAscendentes}${caminhoPai}`
+}
+
+function carregarPreviewRotaPai(idRotaPai) {
+    const id = Number(idRotaPai || 0)
+
+    caminhoRotaPaiSelecionada = ""
+    atualizarPreviewRotaFinal()
+
+    if (!id) {
+        return
+    }
+
+    requestAjax({
+        objeto: "Rotas",
+        metodo: "getRota",
+        id_rota: id
+    }, function (rotaPai) {
+        caminhoRotaPaiSelecionada = obterCaminhoRotaPai(rotaPai)
+        atualizarPreviewRotaFinal()
+    }, false)
+}
+
+function montarOpcaoRotaPai(opcao) {
+    if (!opcao.id || !opcao.element) {
+        return opcao.text
+    }
+
+    const nivel = Math.max(0, Number($(opcao.element).data("nivel") || 0))
+    const rotaFinal = String($(opcao.element).data("rota-final") || "")
+    const conteudo = $("<span>")
+        .addClass("d-block")
+        .css("padding-left", `${nivel * 18}px`)
+
+    $("<span>").text(opcao.text).appendTo(conteudo)
+
+    if (rotaFinal) {
+        $("<small>")
+            .addClass("d-block text-muted")
+            .text(rotaFinal)
+            .appendTo(conteudo)
+    }
+
+    return conteudo
+}
+
+function montarSelecaoRotaPai(opcao) {
+    if (!opcao.id || !opcao.element) {
+        return opcao.text
+    }
+
+    const rotaFinal = String($(opcao.element).data("rota-final") || "")
+
+    return rotaFinal ? `${opcao.text} - ${rotaFinal}` : opcao.text
+}
+
+function criarOpcaoRotaPai(rota) {
+    const id = String(rota?.id || "")
+    const nome = String(rota?.nome || "")
+    const url = String(rota?.url || "")
+    const rotulo = nome || url
+    const nivel = Math.max(0, Number(rota?.nivel || 0))
+    const rotaFinal = `${String(rota?.rota_ascendentes || "")}${url}`
+
+    if (!id || !rotulo) {
+        return null
+    }
+
+    return $("<option>", {
+        value: id,
+        text: rotulo
+    })
+        .attr("data-nivel", nivel)
+        .attr("data-rota-final", rotaFinal)
+}
+
+function atualizarSelectRotaPai(valorSelecionado = null) {
+    const campoRotaPai = $("#rotaPai")
+
+    if (!campoRotaPai.length) {
+        return
+    }
+
+    const valorAtual = valorSelecionado !== null ? String(valorSelecionado || "") : String(campoRotaPai.val() || "")
+
+    requestAjax({
+        objeto: "Rotas",
+        metodo: "getRotas",
+        hierarquico: 1
+    }, function (rotas) {
+        campoRotaPai.empty()
+        campoRotaPai.append($("<option>", {
+            value: "",
+            text: "Nenhuma"
+        }))
+
+        ;(Array.isArray(rotas) ? rotas : []).forEach(function (rota) {
+            const opcao = criarOpcaoRotaPai(rota)
+
+            if (opcao) {
+                campoRotaPai.append(opcao)
+            }
+        })
+
+        const valorExiste = valorAtual && campoRotaPai.find(`option[value="${valorAtual}"]`).length > 0
+        campoRotaPai.val(valorExiste ? valorAtual : "").trigger("change")
+    }, false)
 }
 
 function iniciarSelectRotaPai() {
@@ -63,7 +279,9 @@ function iniciarSelectRotaPai() {
         theme: "bootstrap4",
         width: "100%",
         placeholder: "Selecione uma rota pai",
-        allowClear: true
+        allowClear: true,
+        templateResult: montarOpcaoRotaPai,
+        templateSelection: montarSelecaoRotaPai
     })
 }
 
@@ -82,6 +300,7 @@ function carregarRotaNoFormulario(rota) {
     $("#rotaNome").val(rota.nome || "")
     $("#rotaUrl").val(rota.url || "")
     $("#rotaPai").val(rota.id_pai || "").trigger("change")
+    atualizarPreviewRotaFinal()
     $("#rotaAtivo").prop("checked", Number(rota.ativo) === 1)
     definirModoFormularioRota(rota.id)
     document.getElementById("cartaoFormularioRota")?.scrollIntoView({ behavior: "smooth", block: "start" })
@@ -102,16 +321,104 @@ function renderizarAcoesRota(row) {
     `
 }
 
+function obterEstadoAtualAtribuicaoRotas() {
+    const estado = new Map()
+
+    $(".checkbox-rota-atribuicao").each(function () {
+        estado.set(String($(this).data("id")), $(this).prop("checked"))
+    })
+
+    return estado
+}
+
+function criarItemAtribuicaoRota(rota, estadoAtual) {
+    const id = String(rota?.id || "")
+    const nome = String(rota?.nome || "")
+    const url = String(rota?.url || "")
+    const rotulo = nome || url
+    const nivel = Math.max(0, Number(rota?.nivel || 0))
+    const rotaFinal = `${String(rota?.rota_ascendentes || "")}${url}`
+
+    if (!id || !rotulo) {
+        return null
+    }
+
+    const idCheckbox = `rota_atribuicao_${id.replace(/[^A-Za-z0-9_-]/g, "_")}`
+    const item = $("<div>").addClass("item-atribuicao-rota")
+    const controle = $("<div>")
+        .addClass("custom-control custom-checkbox mb-2")
+        .css("padding-left", `${1.5 + (nivel * 1.25)}rem`)
+        .appendTo(item)
+
+    $("<input>", {
+        type: "checkbox",
+        class: "custom-control-input checkbox-rota-atribuicao",
+        id: idCheckbox,
+        name: "rotas[]",
+        value: id
+    })
+        .attr("data-id", id)
+        .prop("checked", estadoAtual.get(id) === true)
+        .appendTo(controle)
+
+    const label = $("<label>", {
+        class: "custom-control-label",
+        for: idCheckbox
+    }).appendTo(controle)
+
+    $("<span>").addClass("d-block").text(rotulo).appendTo(label)
+
+    if (rotaFinal.trim()) {
+        $("<small>").addClass("d-block text-muted").text(rotaFinal).appendTo(label)
+    }
+
+    return item
+}
+
+function atualizarListaAtribuicaoRotas() {
+    const lista = $(".lista-atribuicao-rotas")
+
+    if (!lista.length) {
+        return
+    }
+
+    const estadoAtual = obterEstadoAtualAtribuicaoRotas()
+    const idPortal = $("#id_portal").val() || ""
+
+    requestAjax({
+        objeto: "Rotas",
+        metodo: "getRotas",
+        hierarquico: 1
+    }, function (rotas) {
+        lista.empty()
+
+        ;(Array.isArray(rotas) ? rotas : []).forEach(function (rota) {
+            const item = criarItemAtribuicaoRota(rota, estadoAtual)
+
+            if (item) {
+                lista.append(item)
+            }
+        })
+
+        if (idPortal) {
+            $("#id_portal").trigger("change")
+            return
+        }
+
+        $("#rota_atribuicao_todos").prop("checked", false)
+    }, false)
+}
+
 function renderizarTabelaRotas(pagina = 1) {
     if (!$.fn.DataTable.isDataTable("#tabelaRotas")) {
         tabelaRotas = $("#tabelaRotas").DataTable({
             serverSide: true,
             responsive: true,
             autoWidth: false,
-            pageLength: 20,
+            pageLength: 50,
             lengthChange: false,
-            order: [[0, "asc"]],
-            displayStart: (pagina - 1) * 20,
+            order: [],
+            displayStart: (pagina - 1) * 50,
             ajax: {
                 url: "/adminlte-painel/controle/controle_default.php",
                 type: "POST",
@@ -124,17 +431,27 @@ function renderizarTabelaRotas(pagina = 1) {
             },
             columns: [
                 {
+                    name: "r.id",
+                    data: "id",
+                    visible: false,
+                },
+                {
                     name: "r.nome",
                     data: "nome",
+                    orderable: false,
                     render: function (data, type, row) {
-                        return `${'--'.repeat(row.nivel)}${data}`;
+                        const nivel = Math.max(0, Number(row?.nivel || 0))
+                        const nome = escaparHtmlRota(data)
+                        const icone = nivel > 0 ? '<i class="fas fa-level-up-alt fa-rotate-90 text-muted mr-1"></i>' : ''
+
+                        return `<span class="d-inline-block" style="padding-left: ${nivel * 20}px;">${icone}${nome}</span>`
                     }
                 },
                 {
                     name: "r.url",
                     data: "url",
-                    render: function (data) {
-                        return renderizarUrlRota(data)
+                    render: function (data, type, row) {
+                        return renderizarUrlRota(data, row)
                     }
                 },
                 {
@@ -170,9 +487,23 @@ function renderizarTabelaRotas(pagina = 1) {
 $(function () {
     iniciarSelectRotaPai()
     renderizarTabelaRotas()
+    atualizarPreviewRotaFinal()
+
+    $("#rotaUrl").on("input", atualizarPreviewRotaFinal)
+    $("#rotaUrl").on("blur", aplicarLimpezaCampoRota)
+
+    $("#rotaPai").on("change", function () {
+        carregarPreviewRotaPai($(this).val())
+    })
 
     $("#formRotas").on("submit", function (e) {
         e.preventDefault()
+
+        aplicarLimpezaCampoRota()
+
+        if (!validarFormularioRota()) {
+            return
+        }
 
         const form = this
         const formData = new FormData(form)
@@ -183,6 +514,8 @@ $(function () {
                 $("#rotaPai").val("").trigger("change")
                 definirModoFormularioRota()
                 tabelaRotas.ajax.reload(null, false)
+                atualizarSelectRotaPai("")
+                atualizarListaAtribuicaoRotas()
             }
         })
     })
@@ -217,7 +550,7 @@ $(function () {
     })
 
     $(document).on("click", ".btn-remover-rota", function () {
-        exibirMensagemBootstrap("Remocao ainda nao implementada no backend.", "warning")
+        exibirMensagemBootstrap("Remoção ainda não implementada no backend.", "warning")
     })
 
     $("#rota_atribuicao_todos").on("change", function () {

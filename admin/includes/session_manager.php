@@ -23,7 +23,7 @@ if (!defined('ESTADO_CONSELHO')) {
     define('ESTADO_CONSELHO', $_SESSION['estado_conselho']);
 }
 
-$_SESSION['nome'] = $_SESSION['nome'] ?? ($_SESSION['usuario_nome'] ?? 'Usuario');
+$_SESSION['nome'] = $_SESSION['nome'] ?? ($_SESSION['usuario_nome'] ?? 'Usuário');
 $_SESSION['usuario_nome'] = $_SESSION['usuario_nome'] ?? $_SESSION['nome'];
 /* $_SESSION['is_admin'] = $_SESSION['is_admin'] ?? true; */
 

@@ -164,7 +164,7 @@ $(function () {
 
     renderizarTabelaPermissoes()
 
-    iniciarSelect2(campoUsuario, "Selecione um usuario")
+    iniciarSelect2(campoUsuario, "Selecione um usuário")
     campoUsuario.val((campoUsuario.val() || []).filter(Boolean)).trigger("change")
 
     $("#formUsuarioPermissao").on("submit", function (e) {

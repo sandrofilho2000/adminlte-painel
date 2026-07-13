@@ -760,7 +760,7 @@ class ClasseBase implements \JsonSerializable
         }
 
         if (strtoupper($tipo) !== 'EXPLICITO' && !self::campoSqlSeguro($campo)) {
-            throw new Exception("Campo de filtro nao permitido!");
+            throw new Exception("Campo de filtro não permitido!");
         }
 
         switch ($tipo) {

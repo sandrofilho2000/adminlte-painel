@@ -96,13 +96,13 @@ function definirModoFormularioPortal(idPortal = null) {
         botaoSalvar
             .removeClass("btn-primary")
             .addClass("btn-warning")
-            .html('<i class="fas fa-save mr-1"></i> Salvar alteracoes')
-        botaoLimpar.text("Cancelar edicao")
+            .html('<i class="fas fa-save mr-1"></i> Salvar alterações')
+        botaoLimpar.text("Cancelar edição")
         return
     }
 
     titulo.text("Cadastrar portal")
-    indicador.html('<i class="fas fa-plus-circle mr-1"></i> Modo de criacao')
+    indicador.html('<i class="fas fa-plus-circle mr-1"></i> Modo de criação')
     botaoSalvar
         .removeClass("btn-warning")
         .addClass("btn-primary")
@@ -146,7 +146,7 @@ function carregarPortalNoFormulario(portal) {
 
 function atualizarPreviewLogoPortal(arquivo) {
     if (!arquivo || !arquivo.type || !arquivo.type.startsWith("image/")) {
-        exibirMensagemBootstrap("Selecione uma imagem valida.", "danger")
+        exibirMensagemBootstrap("Selecione uma imagem válida.", "danger")
         return
     }
 
@@ -394,6 +394,6 @@ $(function () {
     })
 
     $(document).on("click", ".btn-remover-portal", function () {
-        exibirMensagemBootstrap("Remocao ainda nao implementada no backend.", "warning")
+        exibirMensagemBootstrap("Remoção ainda não implementada no backend.", "warning")
     })
 })

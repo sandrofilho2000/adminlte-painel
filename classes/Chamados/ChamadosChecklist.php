@@ -78,7 +78,7 @@ class ChamadosChecklist extends ClasseBase
         $atributos_editaveis = $Chamados->getAtributosEditaveis($id_chamado);
 
         if (empty($atributos_editaveis) || empty($atributos_editaveis['gerenciar_checklist'])) {
-            throw new \Exception('Voce nao possui permissao para editar este checklist.');
+            throw new \Exception('Você não possui permissão para editar este checklist.');
         }
 
         return $atributos_editaveis;
@@ -161,14 +161,14 @@ class ChamadosChecklist extends ClasseBase
         $item = self::instanciarPorId($this->id);
 
         if (empty($item)) {
-            throw new \Exception('Item do checklist nao encontrado.');
+            throw new \Exception('Item do checklist não encontrado.');
         }
 
         $this->validarPermissaoDoChamado($item->id_chamado);
 
         $exclusao = Dao::excluir($item);
         if ($exclusao <= 0) {
-            throw new \Exception('Nao foi possivel excluir o item do checklist.');
+            throw new \Exception('Não foi possível excluir o item do checklist.');
         }
 
         return array(
@@ -183,7 +183,7 @@ class ChamadosChecklist extends ClasseBase
         $item = self::instanciarPorId($this->id);
 
         if (empty($item)) {
-            throw new \Exception('Item do checklist nao encontrado.');
+            throw new \Exception('Item do checklist não encontrado.');
         }
 
         $this->validarPermissaoDoChamado($item->id_chamado);
