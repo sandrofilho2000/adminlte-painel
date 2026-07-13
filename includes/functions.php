@@ -75,7 +75,7 @@ function logAction2($table, $action, $data) {
     $stmt->bindParam(':descricao', $description);
     $stmt->execute();
   }*/
-
+$v = time();
 
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -179,7 +179,7 @@ function temPermissao($rotina, $acao)
   }
 
   foreach ($permissoes as $permissao) {
-    if ($permissao['Rotina'] === $rotina && $permissao[$acao] == 1) {
+    if ($permissao['rotina'] === $rotina && $permissao[$acao] == 1) {
       return true;
     }
   }
@@ -231,7 +231,7 @@ function verificaPermissao($codigoRotina, $tipo_operacao = "Consulta")
     return false;
   }
 
-  $indiceRotina = search($permissoes, $codigoRotina, 'Rotina');
+  $indiceRotina = search($permissoes, $codigoRotina, 'rotina');
   if ($indiceRotina === -1) return false;
 
   $temPermissao = search($permissoes[$indiceRotina], '1', $tipo_operacao) != -1;

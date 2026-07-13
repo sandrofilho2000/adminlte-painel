@@ -10,6 +10,7 @@ class Rotas extends ClasseBase
 {
     public $id;
     public $nome;
+    public $rotina;
     public $url;
     public $ativo;
     public $id_pai;
@@ -24,6 +25,7 @@ class Rotas extends ClasseBase
         'colunas' => [
             'id',
             'nome',
+            'rotina',
             'url',
             'ativo',
             'id_pai',
@@ -45,6 +47,7 @@ class Rotas extends ClasseBase
                         SELECT
                             id,
                             nome,
+                            rotina,
                             url,
                             ativo,
                             id_pai,
@@ -59,6 +62,7 @@ class Rotas extends ClasseBase
                         SELECT
                             r.id,
                             r.nome,
+                            r.rotina,
                             r.url,
                             r.ativo,
                             r.id_pai,
@@ -72,6 +76,7 @@ class Rotas extends ClasseBase
                     SELECT
                         id,
                         nome,
+                        rotina,
                         url,
                         ativo,
                         id_pai,
@@ -86,6 +91,7 @@ class Rotas extends ClasseBase
                 SELECT
                     r.id,
                     r.nome,
+                    r.rotina,
                     r.url,
                     r.ativo,
                     r.id_pai

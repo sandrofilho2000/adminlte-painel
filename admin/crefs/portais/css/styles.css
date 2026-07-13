@@ -1,0 +1,29 @@
+    html body div #areaLogoPortal {
+        background-image:
+            linear-gradient(45deg, #d9dee3 25%, transparent 25%),
+            linear-gradient(-45deg, #d9dee3 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #d9dee3 75%),
+            linear-gradient(-45deg, transparent 75%, #d9dee3 75%);
+        background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+        background-size: 16px 16px;
+        background-color: #c3c3c3 !important;
+    }
+
+    #conteudoLogoPortal {
+        background: rgba(0, 0, 0, 0.72);
+        border-radius: 6px;
+        color: #fff;
+        max-width: 100%;
+        padding: 14px 18px;
+    }
+
+    #conteudoLogoPortal .text-muted {
+        color: rgba(255, 255, 255, 0.78) !important;
+    }
+
+    .logo-portal-tabela {
+        display: block;
+        max-height: 70px;
+        max-width: 96px;
+        object-fit: contain;
+    }

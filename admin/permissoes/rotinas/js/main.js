@@ -162,8 +162,8 @@ function renderizarTabelaRotinas(pagina = 1) {
             },
             columns: [
                 { name: "r.id", data: "id" },
-                { name: "r.Rotina", data: "Rotina" },
-                { name: "r.Descricao", data: "Descricao" },
+                { name: "r.rotina", data: "rotina" },
+                { name: "r.descricao", data: "descricao" },
                 { name: "r.rota", data: "rota" },
                 {
                     name: "r.icon",
@@ -241,7 +241,7 @@ $(function () {
                     definirModoFormulario(rotina.id)
                     ocultarRotinaAtualDoCampoPai(rotina.id)
                     selecionarIconeRotina(rotina.icon)
-                    $("#rotinaCodigo").attr("placeholder", rotina.Rotina)
+                    $("#rotinaCodigo").attr("placeholder", rotina.rotina)
                 })
             }
         )

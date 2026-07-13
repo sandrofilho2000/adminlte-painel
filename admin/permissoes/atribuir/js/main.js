@@ -93,10 +93,10 @@ function renderizarTabelaPermissoes(pagina = 1) {
                 { name: "u.apresentacao", data: "apresentacao" },
                 { name: "u.estado_conselho", data: "estado_conselho" },
                 {
-                    name: "r.Rotina",
-                    data: "Rotina",
+                    name: "r.rotina",
+                    data: "rotina",
                     render: function (dados, tipo, permissao) {
-                        return `(${permissao.Rotina || ""}) ${permissao.Descricao || ""}`
+                        return `(${permissao.rotina || ""}) ${permissao.descricao || ""}`
                     }
                 },
                 {

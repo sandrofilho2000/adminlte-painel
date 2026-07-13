@@ -75,7 +75,7 @@ if (!function_exists('renderizarItensMenu')) {
             $possuiFilhas = count($filhas) > 0;
             $ativo = itemMenuEstaAtivo($item, $caminhoAtual);
             $url = $possuiFilhas ? '#' : normalizarUrlItemMenu($item['url'] ?? null);
-            $descricao = trim((string) ($item['Descricao'] ?? $item['Rotina'] ?? 'Item'));
+            $descricao = trim((string) ($item['descricao'] ?? $item['rotina'] ?? 'Item'));
             $classesIcone = classesIconeItemMenu($item['icon'] ?? null);
             $classeItem = 'nav-item' . ($possuiFilhas ? ' has-treeview' : '') . ($possuiFilhas && $ativo ? ' menu-open' : '');
             $classeLink = 'nav-link' . ($nivel > 0 ? ' nav-link-submenu' : '') . ($ativo ? ' active' : '');

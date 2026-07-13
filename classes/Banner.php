@@ -14,7 +14,7 @@ class Banner extends ClasseBase
     public $link;
     public $active;
     public $dt_inclusao;
-    public $Descricao;
+    public $descricao;
     public $estado_conselho;
 
 

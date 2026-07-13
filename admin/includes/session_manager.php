@@ -29,7 +29,7 @@ $_SESSION['usuario_nome'] = $_SESSION['usuario_nome'] ?? $_SESSION['nome'];
 
 if (!isset($_SESSION['Permissoes']) || !is_array($_SESSION['Permissoes'])) {
     $_SESSION['Permissoes'] = [
-        ['Rotina' => '00072', 'Consulta' => '1', 'Incluir' => '1', 'Excluir' => '1', 'Alterar' => '1'],
-        ['Rotina' => '00108', 'Consulta' => '1', 'Incluir' => '1', 'Excluir' => '1', 'Alterar' => '1'],
+        ['rotina' => '00072', 'Consulta' => '1', 'Incluir' => '1', 'Excluir' => '1', 'Alterar' => '1'],
+        ['rotina' => '00108', 'Consulta' => '1', 'Incluir' => '1', 'Excluir' => '1', 'Alterar' => '1'],
     ];
 }

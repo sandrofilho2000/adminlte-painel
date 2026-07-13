@@ -34,7 +34,7 @@ $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT
         <div class="col-md-5">
           <div class="form-group">
             <label for="rotinaDescricao">Descrição</label>
-            <input type="text" class="form-control" id="rotinaDescricao" name="Descricao" placeholder="Ex.: Gestão de chamados">
+            <input type="text" class="form-control" id="rotinadescricao" name="descricao" placeholder="Ex.: Gestão de chamados">
           </div>
         </div>
         <div class="col-md-5">
@@ -44,8 +44,8 @@ $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT
               <option value="">Nenhuma</option>
               <?php foreach ($rotinas as $rotina): ?>
                 <option value="<?= (int) $rotina['id'] ?>">
-                  (<?= htmlspecialchars((string) $rotina['Rotina'], ENT_QUOTES, 'UTF-8') ?>)
-                  <?= htmlspecialchars((string) ($rotina['Descricao'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                  (<?= htmlspecialchars((string) $rotina['rotina'], ENT_QUOTES, 'UTF-8') ?>)
+                  <?= htmlspecialchars((string) ($rotina['descricao'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
                 </option>
               <?php endforeach; ?>
             </select>

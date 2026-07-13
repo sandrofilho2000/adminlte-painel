@@ -11,7 +11,7 @@ use Exception;
 class Persistemas extends ClasseBase
 {
     public $Sistema;
-    public $Rotina;
+    public $rotina;
     public $Usuario;
     public $Usuarios;
     public $Consulta;
@@ -28,7 +28,7 @@ class Persistemas extends ClasseBase
         'chave_primaria' => array('id'),
         'colunas' => array(
             "Sistema",
-            "Rotina",
+            "rotina",
             "Usuario",
             "Consulta",
             "Incluir",
@@ -87,13 +87,13 @@ class Persistemas extends ClasseBase
 
     public function criaPersistemas()
     {
-        $this->Rotina = trim((string) ($this->Rotina ?? ''));
+        $this->rotina = trim((string) ($this->rotina ?? ''));
         $this->Consulta = (int) ($this->Consulta ?? 0) === 1 ? 1 : 0;
         $this->Incluir = (int) ($this->Incluir ?? 0) === 1 ? 1 : 0;
         $this->Excluir = (int) ($this->Excluir ?? 0) === 1 ? 1 : 0;
         $this->Alterar = (int) ($this->Alterar ?? 0) === 1 ? 1 : 0;
 
-        if ($this->Rotina === '') {
+        if ($this->rotina === '') {
             throw new Exception("Informe a rotina da permissão.");
         }
 
@@ -131,7 +131,7 @@ class Persistemas extends ClasseBase
                     }
                 }
 
-                $permissao_existe = self::getPermissoesUsuario($UsuarioId, $this->Rotina);
+                $permissao_existe = self::getPermissoesUsuario($UsuarioId, $this->rotina);
 
                 if (!empty($permissao_existe)) {
                     $this->editPersistemas($permissao_existe);
@@ -178,7 +178,7 @@ class Persistemas extends ClasseBase
 
         try {
             $Persistemas = new Persistemas();
-            $Persistemas->queryCorrente = $Persistemas->getQuerybase('Rotina, Consulta, Incluir, Excluir, Alterar');
+            $Persistemas->queryCorrente = $Persistemas->getQuerybase('rotina, Consulta, Incluir, Excluir, Alterar');
             $Persistemas->filtrar("Usuario", $idUsuario);
             $permissoes = $Persistemas->buscar(true) ?: [];
             $_SESSION['Permissoes'] = $permissoes;
@@ -201,7 +201,7 @@ class Persistemas extends ClasseBase
         $Persistemas = new Persistemas();
         $Persistemas->queryCorrente = $Persistemas->getQuerybase('id');
         $Persistemas->filtrar("Usuario", $id_usuario);
-        $Persistemas->filtrar("Rotina", $rotina);
+        $Persistemas->filtrar("rotina", $rotina);
 
         $permissao = $Persistemas->buscar(true) ?: [];
         $permissao = $permissao[0] ?? null;
@@ -213,15 +213,15 @@ class Persistemas extends ClasseBase
         $tabela = $this->getNomeTabela();
         $this->queryCorrente = "SELECT
         p.id,
-        r.Descricao,
-        r.Rotina,
+        r.descricao,
+        r.rotina,
         u.apresentacao,
         u.estado_conselho,
         p.Consulta,
         p.Incluir,
         p.Excluir,
         p.Alterar
-        FROM $tabela p LEFT JOIN portal.TBLRotinas r ON p.Rotina = r.Rotina LEFT JOIN  confef1.TBLUsuarios u ON p.Usuario = u.id WHERE 1=1 ";
+        FROM $tabela p LEFT JOIN portal.TBLRotinas r ON p.rotina = r.rotina LEFT JOIN  confef1.TBLUsuarios u ON p.Usuario = u.id WHERE 1=1 ";
         $result = $this->buscar(true);
         return $result;
     }

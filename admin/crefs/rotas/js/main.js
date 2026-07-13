@@ -302,6 +302,7 @@ function carregarRotaNoFormulario(rota) {
     $("#rotaPai").val(rota.id_pai || "").trigger("change")
     atualizarPreviewRotaFinal()
     $("#rotaAtivo").prop("checked", Number(rota.ativo) === 1)
+    $("#rotinaCodigo").attr("placeholder", rota.rotina || "")
     definirModoFormularioRota(rota.id)
     document.getElementById("cartaoFormularioRota")?.scrollIntoView({ behavior: "smooth", block: "start" })
 }
@@ -440,6 +441,7 @@ function renderizarTabelaRotas(pagina = 1) {
                     data: "nome",
                     orderable: false,
                     render: function (data, type, row) {
+                        console.log("🚀 ~ renderizarTabelaRotas ~ row:", row)
                         const nivel = Math.max(0, Number(row?.nivel || 0))
                         const nome = escaparHtmlRota(data)
                         const icone = nivel > 0 ? '<i class="fas fa-level-up-alt fa-rotate-90 text-muted mr-1"></i>' : ''
@@ -453,6 +455,10 @@ function renderizarTabelaRotas(pagina = 1) {
                     render: function (data, type, row) {
                         return renderizarUrlRota(data, row)
                     }
+                },
+                {
+                    name: "r.rotina",
+                    data: "rotina",
                 },
                 {
                     name: "r.ativo",
@@ -521,6 +527,9 @@ $(function () {
     })
 
     $("#formRotas").on("reset", function () {
+        const placeholderOriginal = $("#rotinaCodigo").attr("placeholder_original")
+
+        $("#rotinaCodigo").attr("placeholder", placeholderOriginal)
         window.setTimeout(() => $("#rotaPai").val("").trigger("change"), 0)
         window.setTimeout(definirModoFormularioRota, 0)
     })

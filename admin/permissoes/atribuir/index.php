@@ -34,11 +34,11 @@ Controller::setFileJavascript("/admin/permissoes/atribuir/js/main.js?v=$v");
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="id_permissao">Permissão</label>
-                        <select class="form-control" id="id_permissao" name="Rotina" data-placeholder="Selecione uma permissão">
+                        <select class="form-control" id="id_permissao" name="rotina" data-placeholder="Selecione uma permissão">
                             <option value="" selected disabled>Selecione...</option>
                             <?php foreach ($rotinas as $rotina): ?>
-                                <option value="<?= $rotina['Rotina'] ?>">
-                                    <?= htmlspecialchars((string) $rotina['Descricao'], ENT_QUOTES, 'UTF-8') ?> - <?= $rotina['Rotina'] ?>
+                                <option value="<?= $rotina['rotina'] ?>">
+                                    <?= htmlspecialchars((string) $rotina['descricao'], ENT_QUOTES, 'UTF-8') ?> - <?= $rotina['rotina'] ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

@@ -9,7 +9,7 @@ use Classes\Chamados;
 use Classes\Persistemas;
 
 //Check if the user is logged in, if not then redirect him to login page
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || (search($_SESSION["Permissoes"][search($_SESSION["Permissoes"], '00072', 'Rotina')], '1', 'Consulta') == -1)) {
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || (search($_SESSION["Permissoes"][search($_SESSION["Permissoes"], '00072', 'rotina')], '1', 'Consulta') == -1)) {
     header("location: /adminlte-painel/admin/");
     exit;
 }
@@ -298,7 +298,7 @@ $sou_de_informatica = trim((string) ($_SESSION['setor'] ?? '')) === 'Coordenador
                             <select class="form-control" id="editCardDesenvolvimentoClassificacao" name="modulo" <?= !$atributos_editaveis['modulo'] ? 'disabled' : '' ?> required>
                                 <option value="">Selecione</option>
                                 <?php foreach ($meus_modulos as $modulo) { ?>
-                                    <option value="<?= $modulo['Sistema'] ?>/<?= $modulo['Descricao'] ?>">(<?= $modulo['Sistema'] ?>) <?= $modulo['Descricao'] ?></option>
+                                    <option value="<?= $modulo['Sistema'] ?>/<?= $modulo['descricao'] ?>">(<?= $modulo['Sistema'] ?>) <?= $modulo['descricao'] ?></option>
                                 <?php } ?>
                                 <option value="Outro">Outro</option>
                             </select>

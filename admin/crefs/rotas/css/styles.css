@@ -1,0 +1,51 @@
+    #formRotas .linha-campos-rota {
+        align-items: flex-start;
+    }
+
+    #formRotas .controle-ativo-rota {
+        padding-top: 31px;
+    }
+
+    #abasRotasSite .nav-link {
+        color: rgba(255, 255, 255, 0.88);
+    }
+
+    #abasRotasSite .nav-link.active {
+        color: #495057;
+    }
+
+    .lista-atribuicao-rotas {
+        column-count: 3;
+        column-gap: 2rem;
+    }
+
+    .item-atribuicao-rota {
+        break-inside: avoid-column;
+        page-break-inside: avoid;
+        display: inline-block;
+        width: 100%;
+        margin-bottom: .5rem;
+    }
+
+    .item-atribuicao-rota .custom-control-label {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .item-atribuicao-rota small {
+        white-space: normal;
+        line-height: 1.25;
+    }
+
+    @media (max-width: 991.98px) {
+        .lista-atribuicao-rotas {
+            column-count: 2;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .lista-atribuicao-rotas {
+            column-count: 1;
+        }
+    }

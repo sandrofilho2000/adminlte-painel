@@ -7,8 +7,8 @@ require_once BASE_PATH . '/includes/functions.php';
 class Rotinas extends ClasseBase
 {
     public $id;
-    public $Rotina;
-    public $Descricao;
+    public $rotina;
+    public $descricao;
     public $icon;
     public $rota;
     public $link;
@@ -26,8 +26,8 @@ class Rotinas extends ClasseBase
         'chave_primaria' => array('id'),
         'colunas' => array(
             "id",
-            "Rotina",
-            "Descricao",
+            "rotina",
+            "descricao",
             "icon",
             "rota",
             "link",
@@ -52,7 +52,7 @@ class Rotinas extends ClasseBase
             $rotina = $this->editRotina();
             return $rotina;
         }
-        $this->Descricao = $this->normalizarTexto($this->Descricao);
+        $this->descricao = $this->normalizarTexto($this->descricao);
         $this->status = (int) ($this->status ?? 0) === 1 ? 1 : 0;
         $this->em_manutencao = (int) ($this->em_manutencao ?? 0) === 1 ? 1 : 0;
         $this->exibir_menu = (int) ($this->exibir_menu ?? 0) === 1 ? 1 : 0;
@@ -63,7 +63,7 @@ class Rotinas extends ClasseBase
         }
 
         $ultima_rotina = RotinasConfig::obterUltimoCodigo(true);
-        $this->Rotina = sprintf('%05d', $ultima_rotina);
+        $this->rotina = sprintf('%05d', $ultima_rotina);
 
         $resultado = $this->incluir();
         $resultado['tipo'] = 'success';
@@ -75,15 +75,15 @@ class Rotinas extends ClasseBase
     {
         $this->queryCorrente = "SELECT
             r.id,
-            r.Rotina,
-            r.Descricao,
+            r.rotina,
+            r.descricao,
             r.icon,
             r.rota,
             r.status,
             r.id_pai,
             r.em_manutencao,
             r.exibir_menu,
-            pai.Rotina AS rotina_pai
+            pai.rotina AS rotina_pai
         FROM {$this->getNomeTabela()} r
         LEFT JOIN {$this->getNomeTabela()} pai ON pai.id = r.id_pai
         WHERE 1=1 ";
@@ -95,7 +95,7 @@ class Rotinas extends ClasseBase
     public function editRotina() {
         $rotina_existente = $this->instanciarPorId($this->id);
 
-        $rotina_existente->Descricao = $this->normalizarTexto($this->Descricao) ?? $rotina_existente->Descricao;
+        $rotina_existente->descricao = $this->normalizarTexto($this->descricao) ?? $rotina_existente->descricao;
         $rotina_existente->icon = $this->normalizarTexto($this->icon) ?? $rotina_existente->icon;
         $rotina_existente->id_pai = $this->id_pai;
         $rotina_existente->rota = $this->normalizarTexto($this->rota) ?? $rotina_existente->rota;
@@ -118,8 +118,8 @@ class Rotinas extends ClasseBase
         $this->queryCorrente = "
             SELECT
                 r.id,
-                r.Rotina,
-                r.Descricao,
+                r.rotina,
+                r.descricao,
                 r.icon,
                 r.rota,
                 r.link,
@@ -130,14 +130,14 @@ class Rotinas extends ClasseBase
                 r.exibir_menu,
                 COALESCE(NULLIF(TRIM(r.rota), ''), NULLIF(TRIM(r.link), '')) AS url
             FROM {$this->getNomeTabela()} r
-            RIGHT JOIN portal.TBLPersistemas p ON r.Rotina = p.Rotina
+            RIGHT JOIN portal.TBLPersistemas p ON r.rotina = p.rotina
             WHERE COALESCE(NULLIF(TRIM(r.rota), ''), NULLIF(TRIM(r.link), '')) IS NOT NULL
         ";
 
         $this->filtrar("p.Usuario", ID_USER);
         $this->filtrar("r.status", 1);
         $this->filtrar("r.exibir_menu", 1);
-        $this->ordenar("r.Descricao");
+        $this->ordenar("r.descricao");
         
         $registros = $this->buscar(true);
         $arvore_registros =  self::montarArvoreRotinas($registros);

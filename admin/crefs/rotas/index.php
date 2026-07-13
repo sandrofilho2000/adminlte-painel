@@ -3,73 +3,22 @@
 use Classes\Rotas;
 use Classes\Portais;
 use Classes\ConselhosRegionais;
+use Classes\RotinasConfig;
 
 Controller::setPermissao("00008");
 Controller::setPageTitle("Rotas do Site");
 Controller::setApenasConfef(true);
 Controller::setFileJavascript("/admin/crefs/rotas/js/main.js?v=$v");
-
+Controller::setFileStyle("/admin/crefs/rotas/css/styles.css?v=$v");
 $rotas = new Rotas();
 $rotas = $rotas->getRotas(true);
 
 $portais = new Portais();
 $portais = $portais->getPortais();
 
+$ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT); ?>
 ?>
 
-<style>
-    #formRotas .linha-campos-rota {
-        align-items: flex-start;
-    }
-
-    #formRotas .controle-ativo-rota {
-        padding-top: 31px;
-    }
-
-    #abasRotasSite .nav-link {
-        color: rgba(255, 255, 255, 0.88);
-    }
-
-    #abasRotasSite .nav-link.active {
-        color: #495057;
-    }
-
-    .lista-atribuicao-rotas {
-        column-count: 3;
-        column-gap: 2rem;
-    }
-
-    .item-atribuicao-rota {
-        break-inside: avoid-column;
-        page-break-inside: avoid;
-        display: inline-block;
-        width: 100%;
-        margin-bottom: .5rem;
-    }
-
-    .item-atribuicao-rota .custom-control-label {
-        max-width: 100%;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-
-    .item-atribuicao-rota small {
-        white-space: normal;
-        line-height: 1.25;
-    }
-
-    @media (max-width: 991.98px) {
-        .lista-atribuicao-rotas {
-            column-count: 2;
-        }
-    }
-
-    @media (max-width: 767.98px) {
-        .lista-atribuicao-rotas {
-            column-count: 1;
-        }
-    }
-</style>
 
 <div class="card card-primary card-outline card-outline-tabs">
     <div class="card-header p-0 border-bottom-0 bg-primary">
@@ -118,9 +67,16 @@ $portais = $portais->getPortais();
                                         </small>
                                     </div>
                                 </div>
-
-
                                 <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="rotinaCodigo">Código</label>
+                                        <input type="text" class="form-control" id="rotinaCodigo" name="codigo" maxlength="45" placeholder="<?php echo $ultimoCodigo; ?>" placeholder_original="<?php echo $ultimoCodigo; ?>" readonly disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-1">
                                     <div class="form-group controle-ativo-rota mb-md-3 w-100">
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input" id="rotaAtivo" name="ativo" value="1" checked>
@@ -128,9 +84,8 @@ $portais = $portais->getPortais();
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
+
+                                <div class="col-md-11">
                                     <div class="form-group">
                                         <label for="rotaPai">Rota pai</label>
                                         <select class="form-control" id="rotaPai" name="id_pai">
@@ -144,7 +99,7 @@ $portais = $portais->getPortais();
                                                 $nivelRotaPai = (int) ($rotaPai['nivel'] ?? 0);
                                                 $rotaFinalPai = (string) ($rotaPai['rota_ascendentes'] ?? '') . $urlRotaPai;
                                                 $rotuloRotaPai = trim($nomeRotaPai) !== '' ? $nomeRotaPai : $urlRotaPai;
-    
+
                                                 if ($idRotaPai === '' || $rotuloRotaPai === '') {
                                                     continue;
                                                 }
@@ -183,6 +138,7 @@ $portais = $portais->getPortais();
                                     <th>Id</th>
                                     <th>Nome</th>
                                     <th>Url</th>
+                                    <th>Código</th>
                                     <th>Ativa</th>
                                     <th>Acoes</th>
                                 </tr>
