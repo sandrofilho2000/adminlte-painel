@@ -131,7 +131,6 @@ if ($apenasConfef && ESTADO_CONSELHO !== "BR") {
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-  <link rel="stylesheet" href="/adminlte-painel/src/css/style.css">
 
 
   <?php Controller::getFilesStyles(); ?>
