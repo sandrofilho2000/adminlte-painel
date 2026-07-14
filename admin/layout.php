@@ -112,7 +112,7 @@ if ($apenasConfef && ESTADO_CONSELHO !== "BR") {
   </script>
 
   <!-- SEO Metatags -->
-  <title>Aurora Tech | <?php echo htmlspecialchars($pageTitle); ?></title>
+  <title>CONFEF | <?php echo htmlspecialchars($pageTitle); ?></title>
   <meta name="description" content="<?php echo htmlspecialchars($pageDescription); ?>">
 
   <meta name="keywords" content="futebol, esportes, cursos de educação fisica, regulamentação, saude esportiva, basquete, cursos de volei, cursos de natação, musculação, cursos de condicionamento fisico, treinamento esportivo, cursos de corrida, atletismo, ginastica, cursos de ciclismo, handebol, cursos de tenis, cursos de artes marciais, judo, karate, jiu-jitsu, cursos de boxe, MMA, levantamento de peso, crossfit, yoga, pilates, cursos de esporte profissional, esporte amador, cursos de esportes olimpicos, esportes coletivos, esportes individuais, esportes aquaticos, esportes de inverno, futebol de salao, futsal, futebol americano, rugby, beisebol, cursos de softball, skate, surfe, cursos de esportes radicais, esportes de aventura, escalada, parkour, fitness, alongamento, flexibilidade, resistencia física, coordenação motora, cursos de esportes recreativos, esportes paraolimpicos, treinamento funcional, preparacao f�sica, fisioterapia esportiva, cursos de reabilitação, cursos de nutrição esportiva, hidratação, suplementação, bem-estar, qualidade de vida, lesoes esportivas, cursos de fisiologia do exercicio, biologia esportiva, biomecanica, psicologia esportiva, motivação esportiva, performance esportiva, competição esportivas, campeonatos de futebol, ligas esportivas, Copa do Mundo, Olimpiadas, formacao de atletas, pratica esportiva, cursos de vida ativa, estilo de vida saudavel">
