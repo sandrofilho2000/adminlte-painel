@@ -30,6 +30,28 @@ function escaparHtmlPortal(valor) {
     return $("<div>").text(valor ?? "").html()
 }
 
+function formatarCnpjPortal(valor) {
+    return String(valor || "").replace(/\D/g, "").slice(0, 14)
+        .replace(/^(\d{2})(\d)/, "$1.$2")
+        .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+        .replace(/\.(\d{3})(\d)/, ".$1/$2")
+        .replace(/(\d{4})(\d)/, "$1-$2")
+}
+
+function formatarCepPortal(valor) {
+    return String(valor || "").replace(/\D/g, "").slice(0, 8).replace(/^(\d{5})(\d)/, "$1-$2")
+}
+
+function formatarTelefonePortal(valor) {
+    const digitos = String(valor || "").replace(/\D/g, "").slice(0, 11)
+
+    if (digitos.length <= 10) {
+        return digitos.replace(/^(\d{2})(\d)/, "($1) $2").replace(/(\d{4})(\d)/, "$1-$2")
+    }
+
+    return digitos.replace(/^(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2")
+}
+
 function normalizarUrlLogoPortal(valor) {
     let urlLogo = String(valor || "").trim().replace(/\\/g, "/")
 
@@ -138,6 +160,13 @@ function carregarPortalNoFormulario(portal) {
 
     $("#formPortais input[name='id']").val(portal.id || "")
     $("#estado_conselho").val(portal.estado_conselho || "").trigger("change")
+    ;[
+        "cnpj", "endereco", "numero", "complemento", "bairro", "cidade", "estado",
+        "cep", "email", "telefone", "transparencia", "facebook", "instagram", "linkedin", "youtube",
+        "spotify", "twitter"
+    ].forEach(function (campo) {
+        $(`#${campo}`).val(portal[campo] || "")
+    })
     $("#ativo").prop("checked", Number(portal.ativo) === 1)
     carregarPreviewLogoPortalUrl(portal.logo)
     definirModoFormularioPortal(portal.id)
@@ -248,6 +277,18 @@ function renderizarTabelaPortais(pagina = 1) {
                         return renderizarConselhoRegionalPortal(data)
                     }
                 },
+                { name: "cnpj", data: "cnpj", defaultContent: "" },
+                {
+                    name: "cidade",
+                    data: null,
+                    render: function (data, type, row) {
+                        const cidade = escaparHtmlPortal(row?.cidade || "")
+                        const estado = escaparHtmlPortal(row?.estado || "")
+
+                        return cidade && estado ? `${cidade}/${estado}` : cidade || estado || "-"
+                    }
+                },
+                { name: "email", data: "email", defaultContent: "" },
                 {
                     name: "ativo",
                     data: "ativo",
@@ -277,7 +318,7 @@ function renderizarTabelaPortais(pagina = 1) {
             columnDefs: [
                 { responsivePriority: 1, targets: 2 },
                 { responsivePriority: 2, targets: 1 },
-                { responsivePriority: 3, targets: 4 },
+                { responsivePriority: 3, targets: 3 },
             ],
             language: { url: urlIdioma }
         })
@@ -290,6 +331,46 @@ function renderizarTabelaPortais(pagina = 1) {
 
 $(function () {
     renderizarTabelaPortais()
+    let processandoPrimeiroCampoInvalido = false
+
+    document.getElementById("formPortais")?.addEventListener("invalid", function (evento) {
+        if (processandoPrimeiroCampoInvalido) {
+            return
+        }
+
+        const aba = $(evento.target).closest(".tab-pane")
+
+        if (aba.length) {
+            processandoPrimeiroCampoInvalido = true
+
+            $("#conteudoAbasFormularioPortal > .tab-pane").removeClass("active show")
+            $("#abasFormularioPortal .nav-link").removeClass("active").attr("aria-selected", "false")
+            aba.addClass("active show")
+            $(`#abasFormularioPortal a[href="#${aba.attr("id")}"]`)
+                .addClass("active")
+                .attr("aria-selected", "true")
+
+            window.setTimeout(function () {
+                processandoPrimeiroCampoInvalido = false
+            }, 0)
+        }
+    }, true)
+
+    $("#cnpj").on("input", function () {
+        this.value = formatarCnpjPortal(this.value)
+    })
+
+    $("#cep").on("input", function () {
+        this.value = formatarCepPortal(this.value)
+    })
+
+    $("#telefone").on("input", function () {
+        this.value = formatarTelefonePortal(this.value)
+    })
+
+    $("#estado").on("input", function () {
+        this.value = String(this.value || "").replace(/[^A-Za-z]/g, "").slice(0, 2).toUpperCase()
+    })
 
     $("#areaLogoPortal").on("click keydown", function (e) {
         if (e.type === "click" || e.key === "Enter" || e.key === " ") {
@@ -383,6 +464,7 @@ $(function () {
 
     $("#formPortais").on("reset", function () {
         definirModoFormularioPortal()
+        $("#abaPortalTab").tab("show")
         window.setTimeout(limparPreviewLogoPortal, 0)
     })
 

@@ -233,9 +233,6 @@ class Rotas extends ClasseBase
         $this->ativo = (int) ($this->ativo ?? 0) === 1 ? 1 : 0;
         $this->id_pai = $this->normalizarIdPai($this->id_pai);
 
-        $ultimoCodigo = str_pad(RotinasConfig::obterUltimoCodigo(true), 5, '0', STR_PAD_LEFT);
-        $this->rotina = $ultimoCodigo;
-
         if ($this->nome === null) {
             throw new Exception('Informe o nome da rota.');
         }
@@ -272,9 +269,11 @@ class Rotas extends ClasseBase
             return $resultado;
         }
 
+        $this->rotina = str_pad(RotinasConfig::obterUltimoCodigo(true), 5, '0', STR_PAD_LEFT);
         $resultado = $this->incluir();
         $resultado['tipo'] = 'success';
         $resultado['message'] = 'Rota cadastrada com sucesso.';
+        $resultado['proximo_codigo'] = str_pad(RotinasConfig::obterUltimoCodigo(), 5, '0', STR_PAD_LEFT);
 
         return $resultado;
     }

@@ -4,15 +4,6 @@
     $usuario_avatar = 'https://adminlte.io/themes/v3/dist/img/user2-160x160.jpg';
 ?>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <a href="/adminlte-painel/admin/" class="brand-link aurora-brand">
-        <span class="aurora-brand-icon">
-            <img
-                src="/adminlte-painel/public/images/logo-icon.png"
-                alt="CONFEF"
-                class="brand-image" />
-        </span>
-        <span class="brand-text"><strong>CONFEF</strong></span>
-     </a>
     <ul class="navbar-nav">
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button">
@@ -22,26 +13,101 @@
     </ul>
 
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-            <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                <i class="fas fa-search"></i>
-            </a>
-            <div class="navbar-search-block">
-                <form class="form-inline">
-                    <div class="input-group input-group-sm">
-                        <input class="form-control form-control-navbar" type="search" placeholder="Pesquisar" aria-label="Pesquisar">
-                        <div class="input-group-append">
-                            <button class="btn btn-navbar" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
+        <li class="nav-item seletor-cor-navbar">
+            <button
+                type="button"
+                class="nav-link btn btn-link"
+                id="botaoPaletaCores"
+                aria-label="Escolher cor do painel"
+                aria-controls="painelPaletaCores"
+                aria-expanded="false"
+                title="Escolher cor do painel">
+                <i class="fas fa-palette"></i>
+            </button>
+            <div class="painel-paleta-cores d-none" id="painelPaletaCores" role="dialog" aria-label="Cores do painel">
+                <div class="painel-paleta-cabecalho">Cor do painel</div>
+                <div class="painel-paleta-opcoes">
+                    <button type="button" class="opcao-cor-painel" data-cor-painel="oceano" aria-label="Usar cor Oceano">
+                        <span class="amostra-cor amostra-cor-oceano"></span><span>Oceano</span>
+                    </button>
+                    <button type="button" class="opcao-cor-painel" data-cor-painel="petroleo" aria-label="Usar cor Petróleo">
+                        <span class="amostra-cor amostra-cor-petroleo"></span><span>Petróleo</span>
+                    </button>
+                    <button type="button" class="opcao-cor-painel" data-cor-painel="floresta" aria-label="Usar cor Floresta">
+                        <span class="amostra-cor amostra-cor-floresta"></span><span>Floresta</span>
+                    </button>
+                    <button type="button" class="opcao-cor-painel" data-cor-painel="rubi" aria-label="Usar cor Rubi">
+                        <span class="amostra-cor amostra-cor-rubi"></span><span>Rubi</span>
+                    </button>
+                    <button type="button" class="opcao-cor-painel" data-cor-painel="dourado" aria-label="Usar cor Dourado">
+                        <span class="amostra-cor amostra-cor-dourado"></span><span>Dourado</span>
+                    </button>
+                </div>
             </div>
         </li>
+
+        <script>
+            (function () {
+                const chaveCorPainel = "adminlte-painel-cor"
+                const coresPainel = ["oceano", "petroleo", "floresta", "rubi", "dourado"]
+
+                function aplicarCorPainel(cor) {
+                    const corValida = coresPainel.includes(cor) ? cor : "oceano"
+
+                    document.body.classList.remove(...coresPainel)
+                    document.body.classList.add(corValida)
+                    localStorage.setItem(chaveCorPainel, corValida)
+
+                    document.querySelectorAll("[data-cor-painel]").forEach(function (botao) {
+                        const selecionado = botao.dataset.corPainel === corValida
+                        botao.classList.toggle("active", selecionado)
+                        botao.setAttribute("aria-pressed", selecionado ? "true" : "false")
+                    })
+                }
+
+                function fecharPaletaCores() {
+                    const painel = document.getElementById("painelPaletaCores")
+                    const botao = document.getElementById("botaoPaletaCores")
+
+                    painel?.classList.add("d-none")
+                    botao?.setAttribute("aria-expanded", "false")
+                }
+
+                function iniciarPaletaCores() {
+                    const painel = document.getElementById("painelPaletaCores")
+                    const botao = document.getElementById("botaoPaletaCores")
+
+                    aplicarCorPainel(localStorage.getItem(chaveCorPainel) || "oceano")
+
+                    botao?.addEventListener("click", function (evento) {
+                        evento.stopPropagation()
+                        const abrir = painel.classList.contains("d-none")
+
+                        painel.classList.toggle("d-none", !abrir)
+                        botao.setAttribute("aria-expanded", abrir ? "true" : "false")
+                    })
+
+                    painel?.addEventListener("click", function (evento) {
+                        evento.stopPropagation()
+                        const opcao = evento.target.closest("[data-cor-painel]")
+
+                        if (opcao) {
+                            aplicarCorPainel(opcao.dataset.corPainel)
+                        }
+                    })
+
+                    document.addEventListener("click", fecharPaletaCores)
+                    document.addEventListener("keydown", function (evento) {
+                        if (evento.key === "Escape") {
+                            fecharPaletaCores()
+                            botao?.focus()
+                        }
+                    })
+                }
+
+                iniciarPaletaCores()
+            })()
+        </script>
 
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
@@ -135,9 +201,9 @@
         </li>
 
         <li class="nav-item dropdown user-menu">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                <img src="<?= htmlspecialchars($usuario_avatar) ?>" class="user-image img-circle elevation-2" alt="User Image">
-                <span class="d-none d-md-inline"><?= htmlspecialchars($usuario_nome) ?></span>
+            <a href="#" class="nav-link dropdown-toggle marca-usuario-confef" data-toggle="dropdown" aria-label="Abrir menu do usuário">
+                <img src="/adminlte-painel/public/images/logo-icon.png" class="logo-usuario-confef" alt="CONFEF">
+                <span class="d-none d-md-inline font-weight-bold">CONFEF</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <li class="user-header bg-primary">

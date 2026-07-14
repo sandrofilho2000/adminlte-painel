@@ -556,10 +556,18 @@ $(function () {
 
         const form = this
         const formData = new FormData(form)
+        const criandoRota = !String(formData.get("id") || "").trim()
 
         requestAjax(formData, function (resultado) {
             if (resultado === true || resultado?.tipo === "success" || resultado?.success) {
                 form.reset()
+
+                if (criandoRota && resultado?.proximo_codigo) {
+                    $("#rotinaCodigo")
+                        .attr("placeholder", resultado.proximo_codigo)
+                        .attr("placeholder_original", resultado.proximo_codigo)
+                }
+
                 $("#rotaPai").val("").trigger("change")
                 definirModoFormularioRota()
                 tabelaRotas.ajax.reload(null, false)

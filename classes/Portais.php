@@ -16,6 +16,23 @@ class Portais extends ClasseBase
     public $ativo;
     public $logo_portal;
     public $logo;
+    public $cnpj;
+    public $endereco;
+    public $numero;
+    public $complemento;
+    public $bairro;
+    public $cidade;
+    public $estado;
+    public $cep;
+    public $email;
+    public $telefone;
+    public $transparencia;
+    public $facebook;
+    public $instagram;
+    public $linkedin;
+    public $youtube;
+    public $spotify;
+    public $twitter;
 
     protected $_tabela = array(
         'nome' => 'TBLPortais',
@@ -26,6 +43,23 @@ class Portais extends ClasseBase
             "estado_conselho",
             "dt_inclusao",
             "logo",
+            "cnpj",
+            "endereco",
+            "numero",
+            "complemento",
+            "bairro",
+            "cidade",
+            "estado",
+            "cep",
+            "email",
+            "telefone",
+            "transparencia",
+            "facebook",
+            "instagram",
+            "linkedin",
+            "youtube",
+            "spotify",
+            "twitter",
             "ativo",
         ),
         'permissao' => '00014'
@@ -41,6 +75,7 @@ class Portais extends ClasseBase
         $this->estado_conselho = strtoupper(trim((string) ($this->estado_conselho ?? '')));
         $this->ativo = (int) ($this->ativo ?? 0) === 1 ? 1 : 0;
         $this->dt_inclusao = trim((string) ($this->dt_inclusao ?? ''));
+        $this->normalizarDadosCadastrais();
 
         if ($this->estado_conselho === '') {
             throw new Exception("Informe o estado conselho.");
@@ -62,8 +97,57 @@ class Portais extends ClasseBase
             $portal->estado_conselho = $this->estado_conselho;
             $portal->dt_inclusao = $this->dt_inclusao;
             $portal->ativo = $this->ativo;
+            $portal->cnpj = $this->cnpj;
+            $portal->endereco = $this->endereco;
+            $portal->numero = $this->numero;
+            $portal->complemento = $this->complemento;
+            $portal->bairro = $this->bairro;
+            $portal->cidade = $this->cidade;
+            $portal->estado = $this->estado;
+            $portal->cep = $this->cep;
+            $portal->email = $this->email;
+            $portal->telefone = $this->telefone;
+            $portal->transparencia = $this->transparencia;
+            $portal->facebook = $this->facebook;
+            $portal->instagram = $this->instagram;
+            $portal->linkedin = $this->linkedin;
+            $portal->youtube = $this->youtube;
+            $portal->spotify = $this->spotify;
+            $portal->twitter = $this->twitter;
 
-            return $portal->salvar();
+            if ($this->possuiUploadLogoPortal()) {
+                $portal->logo = $this->salvarLogoPortal('Alterar');
+            }
+
+            $resultado = $portal->salvar();
+            $resultado['tipo'] = 'success';
+            $resultado['message'] = 'Portal atualizado com sucesso.';
+
+            return $resultado;
+        }
+
+        $this->logo = $this->salvarLogoPortal('Incluir');
+        $this->dt_inclusao = date("Y-m-d");
+        $resultado = $this->incluir();
+        $resultado['tipo'] = 'success';
+        $resultado['message'] = 'Portal salvo com sucesso.';
+
+        return $resultado;
+    }
+
+    private function possuiUploadLogoPortal(): bool
+    {
+        $upload = $_FILES['logo_portal'] ?? null;
+
+        return is_array($upload) && (int) ($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE;
+    }
+
+    private function salvarLogoPortal(string $operacao): string
+    {
+        $upload = $_FILES['logo_portal'] ?? null;
+
+        if (!is_array($upload)) {
+            throw new Exception('Selecione a logo do portal.');
         }
 
         $armazenamentoImagens = new ArmazenamentoArquivoDisco(
@@ -79,25 +163,123 @@ class Portais extends ClasseBase
             ]
         );
 
-        try {
-            $capa = $armazenamentoImagens->salvarUpload(
-                $_FILES['logo_portal'],
-                'portais/logos/',
-                [
-                    'operacao' => 'Incluir',
-                    'prefixo' => 'logo'
-                ]
-            );
+        $logo = $armazenamentoImagens->salvarUpload(
+            $upload,
+            'portais/logos/',
+            [
+                'operacao' => $operacao,
+                'prefixo' => 'logo'
+            ]
+        );
 
-            $this->logo = '/webconfef_storage/' . ltrim(str_replace('\\', '/', $capa['caminho_relativo']), '/');
-            $this->dt_inclusao = date("Y-m-d");
-            $resultado = $this->incluir();
-            $resultado['tipo'] = 'success';
-            $resultado['message'] = 'Portal salvo com sucesso.';
-            return $resultado;
-        } catch (\Throwable $excecao) {
-            throw $excecao;
+        return '/webconfef_storage/' . ltrim(str_replace('\\', '/', $logo['caminho_relativo']), '/');
+    }
+
+    private function normalizarDadosCadastrais(): void
+    {
+        $this->cnpj = $this->normalizarCnpj($this->cnpj);
+        $this->endereco = $this->normalizarTextoObrigatorio($this->endereco, 'endereço', 255);
+        $this->numero = $this->normalizarTextoOpcional($this->numero, 20);
+        $this->complemento = $this->normalizarTextoOpcional($this->complemento, 100);
+        $this->bairro = $this->normalizarTextoOpcional($this->bairro, 100);
+        $this->cidade = $this->normalizarTextoObrigatorio($this->cidade, 'cidade', 100);
+        $this->estado = strtoupper($this->normalizarTextoObrigatorio($this->estado, 'estado', 2));
+        $this->cep = $this->normalizarCep($this->cep);
+        $this->email = strtolower($this->normalizarTextoObrigatorio($this->email, 'e-mail', 255));
+        $this->telefone = $this->normalizarTelefone($this->telefone);
+        $this->transparencia = $this->normalizarUrlOpcional($this->transparencia, 'Portal da Transparência');
+        $this->facebook = $this->normalizarUrlOpcional($this->facebook, 'Facebook');
+        $this->instagram = $this->normalizarUrlOpcional($this->instagram, 'Instagram');
+        $this->linkedin = $this->normalizarUrlOpcional($this->linkedin, 'LinkedIn');
+        $this->youtube = $this->normalizarUrlOpcional($this->youtube, 'YouTube');
+        $this->spotify = $this->normalizarUrlOpcional($this->spotify, 'Spotify');
+        $this->twitter = $this->normalizarUrlOpcional($this->twitter, 'Twitter/X');
+
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception('Informe um e-mail válido.');
         }
+
+        if (!preg_match('/^[A-Z]{2}$/', $this->estado)) {
+            throw new Exception('Informe a UF com duas letras.');
+        }
+    }
+
+    private function normalizarTextoObrigatorio($valor, string $campo, int $tamanhoMaximo): string
+    {
+        $valor = trim((string) $valor);
+
+        if ($valor === '') {
+            throw new Exception("Informe o {$campo}.");
+        }
+
+        if (mb_strlen($valor) > $tamanhoMaximo) {
+            throw new Exception("O campo {$campo} deve possuir no máximo {$tamanhoMaximo} caracteres.");
+        }
+
+        return $valor;
+    }
+
+    private function normalizarTextoOpcional($valor, int $tamanhoMaximo): ?string
+    {
+        $valor = trim((string) $valor);
+
+        if ($valor === '') {
+            return null;
+        }
+
+        return mb_substr($valor, 0, $tamanhoMaximo);
+    }
+
+    private function normalizarCnpj($valor): string
+    {
+        $digitos = preg_replace('/\D+/', '', (string) $valor);
+
+        if (strlen($digitos) !== 14) {
+            throw new Exception('Informe um CNPJ com 14 dígitos.');
+        }
+
+        return preg_replace('/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/', '$1.$2.$3/$4-$5', $digitos);
+    }
+
+    private function normalizarCep($valor): string
+    {
+        $digitos = preg_replace('/\D+/', '', (string) $valor);
+
+        if (strlen($digitos) !== 8) {
+            throw new Exception('Informe um CEP com 8 dígitos.');
+        }
+
+        return substr($digitos, 0, 5) . '-' . substr($digitos, 5);
+    }
+
+    private function normalizarTelefone($valor): string
+    {
+        $digitos = preg_replace('/\D+/', '', (string) $valor);
+
+        if (!in_array(strlen($digitos), [10, 11], true)) {
+            throw new Exception('Informe um telefone com DDD.');
+        }
+
+        $tamanhoPrefixo = strlen($digitos) === 11 ? 5 : 4;
+
+        return '(' . substr($digitos, 0, 2) . ') '
+            . substr($digitos, 2, $tamanhoPrefixo) . '-'
+            . substr($digitos, 2 + $tamanhoPrefixo);
+    }
+
+    private function normalizarUrlOpcional($valor, string $campo): ?string
+    {
+        $valor = trim((string) $valor);
+
+        if ($valor === '') {
+            return null;
+        }
+
+        if (mb_strlen($valor) > 255 || !filter_var($valor, FILTER_VALIDATE_URL)) {
+            throw new Exception("Informe uma URL válida para {$campo}, incluindo http:// ou https://.");
+        }
+
+        return $valor;
     }
 
     public function removerFundoLogoPortal()
