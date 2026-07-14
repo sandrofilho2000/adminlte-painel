@@ -137,7 +137,7 @@ function carregarPortalNoFormulario(portal) {
     }
 
     $("#formPortais input[name='id']").val(portal.id || "")
-    $("#estado_conselho").prop("disabled", false).val(portal.estado_conselho || "").trigger("change")
+    $("#estado_conselho").val(portal.estado_conselho || "").trigger("change")
     $("#ativo").prop("checked", Number(portal.ativo) === 1)
     carregarPreviewLogoPortalUrl(portal.logo)
     definirModoFormularioPortal(portal.id)
@@ -268,9 +268,6 @@ function renderizarTabelaPortais(pagina = 1) {
                             <div class="d-flex justify-content-center">
                                 <button type="button" class="btn btn-primary mr-1 btn-editar-portal" data-id="${id}" title="Editar portal">
                                     <i class="fas fa-edit"></i>
-                                </button>
-                                <button type="button" class="btn btn-danger btn-remover-portal" data-id="${id}" title="Remover portal">
-                                    <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         `

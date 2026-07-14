@@ -106,7 +106,7 @@ $conselhosRegionais = ConselhosRegionais::listar();
                     <th>CREF</th>
                     <th>Ativo</th>
                     <th>Data de cadastro</th>
-                    <th>Acoes</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody></tbody>
