@@ -367,6 +367,13 @@ class Dao
         }
         self::$gerar_log_query = $obj->gerar_log_query;
         $query = "UPDATE {$obj->getNomeTabela()} SET " . join(", ", $_campos) . " WHERE " . join(" AND ", $_chaves_primarias);
+        
+        if (ESTADO_CONSELHO !== '' && ESTADO_CONSELHO !== 'BR') {
+            if (self::tabelaTemColuna($obj->getNomeTabela(), 'estado_conselho')) {
+                $query .= " AND estado_conselho = '" . ESTADO_CONSELHO . "'";
+            }
+        }
+
         try {
             return self::update($query, $_values);
         } catch (Exception $ex) {
@@ -385,6 +392,13 @@ class Dao
             array_push($_chaves_primarias, "$chave = ?");
         }
         $query = "DELETE FROM $nomeTabela WHERE " . join(', ', $_chaves_primarias);
+
+        if (ESTADO_CONSELHO !== '' && ESTADO_CONSELHO !== 'BR') {
+            if (self::tabelaTemColuna($nomeTabela, 'estado_conselho')) {
+                $query .= " AND estado_conselho = '" . ESTADO_CONSELHO . "'";
+            }
+        }
+
         self::$gerar_log_query = $obj->gerar_log_query;
         try {
             return self::delete($query, $_values);

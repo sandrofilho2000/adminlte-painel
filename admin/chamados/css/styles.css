@@ -34,7 +34,7 @@
 }
 
 .bg-primary {
-    background: #007bff;
+    background: var(--aurora-primary);
 }
 
 .text-white {
@@ -935,7 +935,7 @@ td.control:before {
 
 .kanban-attachment-dropzone.is-active,
 #modalEditarCard.is-dragover .kanban-attachment-dropzone {
-    border-color: #007bff;
+    border-color: var(--aurora-primary);
     background: #eef6ff;
     box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.08);
 }
@@ -947,7 +947,7 @@ td.control:before {
 
 .kanban-attachment-dropzone-icon {
     font-size: 26px;
-    color: #007bff;
+    color: var(--aurora-primary);
     margin-bottom: 6px;
 }
 

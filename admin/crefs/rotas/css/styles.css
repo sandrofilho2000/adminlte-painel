@@ -39,7 +39,7 @@
     }
 
     .codigo-atribuicao-rota {
-        color: #007bff;
+        color: var(--aurora-primary);
         font-family: monospace;
         font-weight: 700;
     }

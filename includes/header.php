@@ -52,7 +52,7 @@
                 const coresPainel = ["oceano", "petroleo", "floresta", "rubi", "dourado"]
 
                 function aplicarCorPainel(cor) {
-                    const corValida = coresPainel.includes(cor) ? cor : "oceano"
+                    const corValida = coresPainel.includes(cor) ? cor : "floresta"
 
                     document.body.classList.remove(...coresPainel)
                     document.body.classList.add(corValida)
@@ -77,7 +77,7 @@
                     const painel = document.getElementById("painelPaletaCores")
                     const botao = document.getElementById("botaoPaletaCores")
 
-                    aplicarCorPainel(localStorage.getItem(chaveCorPainel) || "oceano")
+                    aplicarCorPainel(localStorage.getItem(chaveCorPainel) || "floresta")
 
                     botao?.addEventListener("click", function (evento) {
                         evento.stopPropagation()
