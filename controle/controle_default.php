@@ -166,6 +166,7 @@ try {
         'getChecklistPorChamado',
         'getUltimaAtualizacao',
         'executarComIgnorados',
+        'autenticar',
     ];
 
     $metodo = $_POST['metodo'] ?? null;

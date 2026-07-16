@@ -57,7 +57,7 @@ class Chamados extends ClasseBase
             "criado_em",
             "ultima_atualizacao",
         ),
-        'permissao' => '00072'
+        'permissao' => '90072'
     );
 
     public function __construct() {}

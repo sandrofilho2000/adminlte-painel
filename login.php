@@ -40,25 +40,111 @@
 
   function obterTentativasLogin(string $chave): array
   {
-    if (function_exists('apcu_fetch')) {
-      $encontrado = false;
-      $tentativas = apcu_fetch($chave, $encontrado);
-      return $encontrado && is_array($tentativas) ? $tentativas : [];
+    global $pdo;
+
+    $consulta = $pdo->prepare("
+      SELECT data_json, expires_at
+      FROM confef1.app_rate_limits
+      WHERE rate_key = :chave
+      LIMIT 1
+    ");
+    $consulta->execute(['chave' => $chave]);
+    $registro = $consulta->fetch(PDO::FETCH_ASSOC);
+
+    if (!$registro) {
+      return [];
     }
 
-    return is_array($_SESSION['_tentativas_login'][$chave] ?? null)
-      ? $_SESSION['_tentativas_login'][$chave]
-      : [];
+    if (strtotime((string) ($registro['expires_at'] ?? '')) <= time()) {
+      limparFalhasLogin($chave);
+      return [];
+    }
+
+    $tentativas = json_decode((string) ($registro['data_json'] ?? ''), true);
+    return is_array($tentativas) ? $tentativas : [];
   }
 
-  function salvarTentativasLogin(string $chave, array $tentativas): void
+  function registrarFalhaLogin(string $chave): void
   {
-    if (function_exists('apcu_store')) {
-      apcu_store($chave, $tentativas, 1800);
-      return;
-    }
+    global $pdo;
 
-    $_SESSION['_tentativas_login'][$chave] = $tentativas;
+    $iniciouTransacao = !$pdo->inTransaction();
+
+    try {
+      if ($iniciouTransacao) {
+        $pdo->beginTransaction();
+      }
+
+      $agora = time();
+      $expiraEm = date('Y-m-d H:i:s', $agora + 1800);
+      $dadosIniciais = json_encode([
+        'inicio' => $agora,
+        'falhas' => 0,
+        'bloqueado_ate' => 0,
+      ], JSON_UNESCAPED_UNICODE);
+
+      $inserir = $pdo->prepare("
+        INSERT INTO confef1.app_rate_limits (rate_key, data_json, expires_at)
+        VALUES (:chave, :dados, :expira_em)
+        ON DUPLICATE KEY UPDATE rate_key = VALUES(rate_key)
+      ");
+      $inserir->execute([
+        'chave' => $chave,
+        'dados' => $dadosIniciais,
+        'expira_em' => $expiraEm,
+      ]);
+
+      $consultar = $pdo->prepare("
+        SELECT data_json, expires_at
+        FROM confef1.app_rate_limits
+        WHERE rate_key = :chave
+        FOR UPDATE
+      ");
+      $consultar->execute(['chave' => $chave]);
+      $registro = $consultar->fetch(PDO::FETCH_ASSOC) ?: [];
+      $tentativas = json_decode((string) ($registro['data_json'] ?? ''), true);
+      $tentativas = is_array($tentativas) ? $tentativas : [];
+
+      $inicio = (int) ($tentativas['inicio'] ?? 0);
+      $falhas = (int) ($tentativas['falhas'] ?? 0);
+
+      if ($inicio === 0 || $agora - $inicio > 900) {
+        $inicio = $agora;
+        $falhas = 0;
+      }
+
+      $falhas++;
+      $atraso = $falhas >= 5 ? min(60 * (2 ** ($falhas - 5)), 900) : 0;
+      $dados = json_encode([
+        'inicio' => $inicio,
+        'falhas' => $falhas,
+        'bloqueado_ate' => $agora + $atraso,
+      ], JSON_UNESCAPED_UNICODE);
+
+      $atualizar = $pdo->prepare("
+        UPDATE confef1.app_rate_limits
+        SET data_json = :dados,
+            expires_at = :expira_em,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE rate_key = :chave
+      ");
+      $atualizar->execute([
+        'dados' => $dados,
+        'expira_em' => $expiraEm,
+        'chave' => $chave,
+      ]);
+
+      if ($iniciouTransacao) {
+        $pdo->commit();
+      }
+    } catch (Throwable $erro) {
+      if ($iniciouTransacao && $pdo->inTransaction()) {
+        $pdo->rollBack();
+      }
+
+      error_log('[login][rate_limit] ' . $erro->getMessage());
+      throw new RuntimeException('Não foi possível validar a segurança do login. Tente novamente.');
+    }
   }
 
   function segundosBloqueioLogin(string $chave): int
@@ -66,34 +152,15 @@
     return max(0, (int) (obterTentativasLogin($chave)['bloqueado_ate'] ?? 0) - time());
   }
 
-  function registrarFalhaLogin(string $chave): void
-  {
-    $agora = time();
-    $tentativas = obterTentativasLogin($chave);
-    $inicio = (int) ($tentativas['inicio'] ?? 0);
-    $falhas = (int) ($tentativas['falhas'] ?? 0);
-
-    if ($inicio === 0 || $agora - $inicio > 900) {
-      $inicio = $agora;
-      $falhas = 0;
-    }
-
-    $falhas++;
-    $atraso = $falhas >= 5 ? min(60 * (2 ** ($falhas - 5)), 900) : 0;
-    salvarTentativasLogin($chave, [
-      'inicio' => $inicio,
-      'falhas' => $falhas,
-      'bloqueado_ate' => $agora + $atraso,
-    ]);
-  }
-
   function limparFalhasLogin(string $chave): void
   {
-    if (function_exists('apcu_delete')) {
-      apcu_delete($chave);
-    }
+    global $pdo;
 
-    unset($_SESSION['_tentativas_login'][$chave]);
+    $excluir = $pdo->prepare("
+      DELETE FROM confef1.app_rate_limits
+      WHERE rate_key = :chave
+    ");
+    $excluir->execute(['chave' => $chave]);
   }
 
   if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {

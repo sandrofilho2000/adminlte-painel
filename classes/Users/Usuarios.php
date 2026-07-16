@@ -212,51 +212,7 @@ class Usuarios extends ClasseBase
 
         return $result;
     }
-
-    public function getPrimeirosUsuarios()
-    {
-        if ($_SESSION['estado_conselho'] != "BR") {
-            return [];
-        }
-        $this->queryCorrente = "
-            SELECT 
-                u.id, 
-                u.apresentacao, 
-                c.nome_cargo, 
-                s.nome_setor
-            FROM TBLUsuarios u
-            LEFT JOIN TBLUsuarios_Cargos uc ON u.id = uc.id_usuario
-            LEFT JOIN TBLCargos c ON uc.id_cargo = c.id
-            LEFT JOIN TBLSetores s ON c.id_setor = s.id
-            WHERE 1=1
-        ";
-
-        $this->filtrar("s.nome_setor", "NOT NULL", "IS");
-        $this->filtrar("s.nome_setor", "Plenário", "DIFERENTE");
-        $this->filtrar("u.estado_conselho", "BR");
-        $this->filtrar("u.status", 1);
-        $this->ordenar("u.apresentacao");
-        $this->limitar(100);
-        $result =  $this->buscar(true);
-        return $result;
-    }
-
-    public function getUsuarioAtual()
-    {
-        $this->queryCorrente = " SELECT * FROM TBLUsuarios WHERE 1=1 ";
-        $this->filtrar("id", $_SESSION['id']);
-        $this->limitar("1");
-
-        self::habilitarIgnorarPermissao();
-        try {
-            $result = $this->buscar(true) ?? null;
-        } finally {
-            self::desabilitarIgnorarPermissao();
-        }
-
-        return $result[0] ?? null;
-    }
-
+    
     public function getColegasdeSetor($idUsuario = null)
     {
         $idUsuario = (int)($idUsuario ?? ($_SESSION['id'] ?? 0));

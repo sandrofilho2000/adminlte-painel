@@ -291,8 +291,8 @@ class ClasseBase implements \JsonSerializable
     public function buscar($retornarComoArray = false)
     {
         try {
-            $estado_conselho = env('ESTADO_CONSELHO', $_ENV['ESTADO_CONSELHO'] ?? null);
-
+            $estado_conselho = ESTADO_CONSELHO;
+            
             if (!empty($estado_conselho)) {
                 $alias = $this->extrairAliasTabelaPrincipal();
 
