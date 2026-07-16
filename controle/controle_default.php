@@ -2,10 +2,6 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/config.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 $headers = function_exists('getallheaders') ? getallheaders() : [];
 $headers = array_change_key_case($headers, CASE_LOWER);
 
@@ -105,11 +101,11 @@ try {
     ];
 
     if (!$className) {
-        throw new Exception("Parâmetros inválidos");
+        throw new Exception("Não foi possível processar a solicitação.");
     }
 
     if (!in_array($className, $permitidas)) {
-        throw new Exception("Classe não permitida.");
+        throw new Exception("Não foi possível processar a solicitação.");
     }
 
 
@@ -175,11 +171,11 @@ try {
     $metodo = $_POST['metodo'] ?? null;
 
     if (in_array($metodo, $metodos_nao_permitidos)) {
-        throw new Exception("Método não permitido.");
+        throw new Exception("Não foi possível processar a solicitação.");
     }
 
     if (!$metodo || !method_exists($obj, $metodo) || !(new ReflectionMethod($obj, $metodo))->isPublic()) {
-        throw new Exception("Método inválido ou não existe.");
+        throw new Exception("Não foi possível processar a solicitação.");
     }
 
     $obj->aplicarFiltros();

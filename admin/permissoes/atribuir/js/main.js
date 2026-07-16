@@ -214,14 +214,14 @@ $(function () {
     botaoSalvarAlteracoes.on("click", function () {
         const alteracoes = Array.from(permissoesAlteradas.values())
         const permissoes = coletarPermissoesVisiveis()
-
+        if(!alteracoes.length){ return }
         requestAjax(
             {
                 'objeto': "Persistemas",
                 'metodo': "editPersistemaseMassa",
-                'permissoes': permissoes
+                'permissoes': alteracoes
             }, function(result){
-                console.log("🚀 ~ result:", result)
+                tabelaPermissoes.ajax.reload(null, false)
             }
         )
 

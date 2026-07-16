@@ -367,7 +367,7 @@ class Dao
         }
         self::$gerar_log_query = $obj->gerar_log_query;
         $query = "UPDATE {$obj->getNomeTabela()} SET " . join(", ", $_campos) . " WHERE " . join(" AND ", $_chaves_primarias);
-        
+
         if (ESTADO_CONSELHO !== '' && ESTADO_CONSELHO !== 'BR') {
             if (self::tabelaTemColuna($obj->getNomeTabela(), 'estado_conselho')) {
                 $query .= " AND estado_conselho = '" . ESTADO_CONSELHO . "'";
@@ -556,7 +556,6 @@ class Dao
             }
             self::resetarPropriedades();
             return $result;
-            
         } catch (PDOException $ex) {
             throw new Exception($ex->getMessage());
         } catch (Exception $ex) {
@@ -573,12 +572,33 @@ class Dao
         return $pdo;
     }
 
-    public static function tabelaTemColuna($tabela, $coluna)
+    public static function tabelaTemColuna($tabela, $coluna): bool
     {
         $pdo = self::getPDO();
-        $stmt = $pdo->prepare("SHOW COLUMNS FROM $tabela LIKE ?");
-        $stmt->execute([$coluna]);
-        return ($stmt->fetch() !== false);
+
+        $partesTabela = explode('.', (string) $tabela, 2);
+        $nomeTabela = array_pop($partesTabela);
+        $nomeEsquema = $partesTabela[0] ?? null;
+
+        if (
+            preg_match('/^[A-Za-z0-9_]+$/', $nomeTabela) !== 1
+            || ($nomeEsquema !== null && preg_match('/^[A-Za-z0-9_]+$/', $nomeEsquema) !== 1)
+        ) {
+            throw new \InvalidArgumentException('Nome de tabela ou esquema inválido.');
+        }
+
+        $sql = 'SELECT 1
+              FROM information_schema.COLUMNS
+             WHERE TABLE_SCHEMA = COALESCE(?, DATABASE())
+               AND TABLE_NAME = ?
+               AND COLUMN_NAME = ?
+             LIMIT 1';
+
+        $parametros = [$nomeEsquema, $nomeTabela, (string) $coluna];
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($parametros);
+        $tem_coluna = $stmt->fetchColumn() !== false;
+        return $tem_coluna;
     }
 
     private static function debugSQL($sql, $_params = null)

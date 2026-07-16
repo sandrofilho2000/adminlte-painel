@@ -8,9 +8,7 @@ if (!defined('ADMIN_PATH')) {
     define('ADMIN_PATH', BASE_PATH . '/admin');
 }
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/session.php';
 
 if (empty($_SESSION['csrf_token']) || !is_string($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));

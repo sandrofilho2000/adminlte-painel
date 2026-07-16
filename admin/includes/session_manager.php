@@ -1,8 +1,6 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once dirname(__DIR__, 2) . '/includes/session.php';
 
 $isLoggedIn = isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
 
@@ -26,10 +24,3 @@ if (!defined('ESTADO_CONSELHO')) {
 $_SESSION['nome'] = $_SESSION['nome'] ?? ($_SESSION['usuario_nome'] ?? 'Usuário');
 $_SESSION['usuario_nome'] = $_SESSION['usuario_nome'] ?? $_SESSION['nome'];
 /* $_SESSION['is_admin'] = $_SESSION['is_admin'] ?? true; */
-
-if (!isset($_SESSION['Permissoes']) || !is_array($_SESSION['Permissoes'])) {
-    $_SESSION['Permissoes'] = [
-        ['rotina' => '00072', 'Consulta' => '1', 'Incluir' => '1', 'Excluir' => '1', 'Alterar' => '1'],
-        ['rotina' => '00108', 'Consulta' => '1', 'Incluir' => '1', 'Excluir' => '1', 'Alterar' => '1'],
-    ];
-}

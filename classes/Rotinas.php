@@ -37,7 +37,7 @@ class Rotinas extends ClasseBase
             "em_manutencao",
             "exibir_menu",
         ),
-        'permissao' => ''
+        'permissao' => '00006'
     );
 
     public function __construct()
@@ -94,7 +94,6 @@ class Rotinas extends ClasseBase
 
     public function editRotina() {
         $rotina_existente = $this->instanciarPorId($this->id);
-
         $rotina_existente->descricao = $this->normalizarTexto($this->descricao) ?? $rotina_existente->descricao;
         $rotina_existente->icon = $this->normalizarTexto($this->icon) ?? $rotina_existente->icon;
         $rotina_existente->id_pai = $this->id_pai;

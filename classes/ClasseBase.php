@@ -314,13 +314,8 @@ class ClasseBase implements \JsonSerializable
                 }
             }
 
-            if (!self::ignorarPermissaoAtiva() && !empty($this->_tabela['permissao']) && !verificaPermissao($this->_tabela['permissao'])) {
-                $ignorar_permissao = self::ignorarPermissaoAtiva();
-                if ($ignorar_permissao != true) {
-                    if (!empty($this->_tabela['permissao'])) {
-                        throw new Exception("Você não possui privilégios para acessar esses dados.");
-                    }
-                }
+            if (!self::ignorarPermissaoAtiva() && !verificaPermissao($this->getPermissao())) {
+                throw new Exception("Você não possui privilégios para acessar esses dados.");
             }
 
             $this->retornarComoArray = $retornarComoArray;
@@ -584,15 +579,8 @@ class ClasseBase implements \JsonSerializable
             $this->validarCamposObrigatorios();
             $this->setPropriedadesVaziasParaNull();
 
-            if (!self::ignorarPermissaoAtiva() && !empty($this->_tabela['permissao']) && !verificaPermissao($this->getPermissao(), "Incluir")) {
-                if (!empty($this->_tabela['permissao'])) {
-                    $ignorar_permissao = self::ignorarPermissaoAtiva();
-                    if ($ignorar_permissao != true) {
-                        if (!empty($this->_tabela['permissao'])) {
-                            throw new Exception("Você não possui permissão para realizar esta operação!");
-                        }
-                    }
-                }
+            if (!self::ignorarPermissaoAtiva() && !verificaPermissao($this->getPermissao(), "Incluir")) {
+                throw new Exception("Você não possui permissão para realizar esta operação!");
             }
 
             Dao::incluir($this);
@@ -899,10 +887,8 @@ class ClasseBase implements \JsonSerializable
             $this->validarChavePrimaria();
             $this->setPropriedadesVaziasParaNull();
 
-            if (!self::ignorarPermissaoAtiva() && !empty($this->_tabela['permissao']) && !verificaPermissao($this->getPermissao(), "Alterar")) {
-                if (!empty($this->_tabela['permissao'])) {
-                    throw new Exception("Você não possui permissão para realizar esta operação");
-                }
+            if (!self::ignorarPermissaoAtiva() && !verificaPermissao($this->getPermissao(), "Alterar")) {
+                throw new Exception("Você não possui permissão para realizar esta operação");
             }
 
             $row_count = Dao::salvar($this);
@@ -923,10 +909,8 @@ class ClasseBase implements \JsonSerializable
     {
         try {
             $this->validarChavePrimaria();
-            if (!self::ignorarPermissaoAtiva() && !empty($this->_tabela['permissao']) && !verificaPermissao($this->getPermissao(), "Excluir")) {
-                if (!empty($this->_tabela['permissao'])) {
-                    throw new Exception("Você não possui permissão para realizar esta operação!");
-                }
+            if (!self::ignorarPermissaoAtiva() && !verificaPermissao($this->getPermissao(), "Excluir")) {
+                throw new Exception("Você não possui permissão para realizar esta operação!");
             }
             $exclusao = Dao::excluir($this);
             if ($exclusao > 0) {

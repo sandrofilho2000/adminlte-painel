@@ -1,0 +1,13 @@
+Options -Indexes
+
+# Bloqueia metadados de repositórios, inclusive arquivos internos que não
+# começam com ponto, como .git/HEAD, .git/index e .git/config.
+RedirectMatch 404 "(?i)(^|/)\.(git|svn|hg)(/|$)"
+
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "(?i)^(composer\.(json|lock)|package(-lock)?\.json|db\.sqlite|.*\.(sql|sqlite|log|ini|conf|bak|env))$">
+    Require all denied
+</FilesMatch>

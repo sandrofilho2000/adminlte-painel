@@ -56,6 +56,19 @@ class Persistemas extends ClasseBase
 
         $permissao = self::instanciarPorId($id_permissao);
 
+        if (ESTADO_CONSELHO != "BR") {
+            $Usuarios = new Usuarios();
+            $Usuarios->habilitarIgnorarPermissao();
+            $usuario = $Usuarios::instanciarPorId($permissao->Usuario);
+            $Usuarios->desabilitarIgnorarPermissao();
+            if ($usuario->estado_conselho != ESTADO_CONSELHO) {
+                return 0;
+            }
+            if ($usuario->id == ID_USER) {
+                return 0;
+            }
+        }
+
         if (empty($permissao) || (int) ($permissao->id ?? 0) !== $id_permissao) {
             throw new Exception("Permissão não encontrada.");
         }
@@ -67,21 +80,59 @@ class Persistemas extends ClasseBase
 
         $salvar = $permissao->salvar();
         self::carregarPermissoes(true);
-        return $salvar;
+        return $salvar['row_count'];
     }
 
     public function editPersistemaseMassa()
     {
-        $permissoes = $this->permissoes;
-        foreach ($permissoes as $permissao) {
-            $this->Consulta = (int) ($permissao['Consulta'] ?? 0) === 1 ? 1 : 0;
-            $this->Incluir = (int) ($permissao['Incluir'] ?? 0) === 1 ? 1 : 0;
-            $this->Excluir = (int) ($permissao['Excluir'] ?? 0) === 1 ? 1 : 0;
-            $this->Alterar = (int) ($permissao['Alterar'] ?? 0) === 1 ? 1 : 0;
-            $this->editPersistemas($permissao['id']);
+        if (!verificaPermissao("00013", "Alterar")) {
+            throw new Exception("Você não possui permissão para realizar esta operação.");
         }
+
+        $permissoes = $this->permissoes ?? [];
+
+        if (!is_array($permissoes) || empty($permissoes)) {
+            throw new Exception("Informe ao menos uma permissão para atualizar.");
+        }
+
+        $permissoesAtualizadas = 0;
+
+        foreach ($permissoes as $permissao) {
+            if (!is_array($permissao) || empty($permissao['id'])) {
+                throw new Exception("Uma das permissões informadas é inválida.");
+            }
+
+            $permissaoAtual = self::instanciarPorId((int) $permissao['id']);
+
+            if (empty($permissaoAtual)) {
+                throw new Exception("Uma das permissões informadas não foi encontrada.");
+            }
+
+            foreach (['Consulta', 'Incluir', 'Excluir', 'Alterar'] as $acao) {
+                $valor = array_key_exists($acao, $permissao)
+                    ? $permissao[$acao]
+                    : ($permissaoAtual->$acao ?? 0);
+                $this->$acao = (int) $valor === 1 ? 1 : 0;
+            }
+
+            $permissoesAtualizadas += (int) $this->editPersistemas($permissao['id']);
+        }
+
+        if ($permissoesAtualizadas === 0) {
+            throw new Exception("Nenhuma permissão foi atualizada.");
+        }
+
         self::carregarPermissoes(true);
-        return true;
+
+        $mensagem = $permissoesAtualizadas === 1
+            ? '1 permissão atualizada com sucesso.'
+            : "{$permissoesAtualizadas} permissões atualizadas com sucesso.";
+
+        return [
+            'tipo' => 'success',
+            'message' => $mensagem,
+            'total_atualizadas' => $permissoesAtualizadas,
+        ];
     }
 
 
@@ -94,7 +145,10 @@ class Persistemas extends ClasseBase
         $this->Alterar = (int) ($this->Alterar ?? 0) === 1 ? 1 : 0;
 
         if ($this->rotina === '') {
-            throw new Exception("Informe a rotina da permissão.");
+            return [
+                'tipo' => 'error',
+                'message' => 'Informe a rotina da permissão.',
+            ];
         }
 
         if (
@@ -103,65 +157,121 @@ class Persistemas extends ClasseBase
             && $this->Excluir !== 1
             && $this->Alterar !== 1
         ) {
-            throw new Exception("Informe ao menos uma ação de permissão.");
+            return [
+                'tipo' => 'error',
+                'message' => 'Informe ao menos uma ação de permissão.',
+            ];
         }
 
         $usuariosInformados = $this->Usuarios ?? $this->Usuario ?? '';
-        $Usuarios = is_array($usuariosInformados)
+        $usuarios = is_array($usuariosInformados)
             ? $usuariosInformados
-            : explode(",", (string) $usuariosInformados);
+            : explode(',', (string) $usuariosInformados);
+        $usuarios = array_values(array_unique(array_filter(
+            array_map(static fn($idUsuario) => trim((string) $idUsuario), $usuarios),
+            static fn($idUsuario) => $idUsuario !== ''
+        )));
 
-        if (empty(array_filter($Usuarios, static fn($UsuarioId) => trim((string) $UsuarioId) !== ''))) {
-            throw new Exception("Informe ao menos um usuário.");
+        if (empty($usuarios)) {
+            return [
+                'tipo' => 'error',
+                'message' => 'Informe ao menos um usuário.',
+            ];
         }
 
-        foreach ($Usuarios as $UsuarioId) {
-            $UsuarioId = trim((string) $UsuarioId);
+        $totalIncluidas = 0;
+        $totalAtualizadas = 0;
+        $erros = [];
 
-            if ($UsuarioId === '') {
-                continue;
-            }
-
+        foreach ($usuarios as $idUsuario) {
             try {
-                $Usuario = Usuarios::instanciarPorId($UsuarioId);
+                $usuario = Usuarios::instanciarPorId($idUsuario);
 
-                if (ESTADO_CONSELHO !== "BR") {
-                    if (empty($Usuario) || $Usuario->estado_conselho !== ESTADO_CONSELHO) {
+                if (empty($usuario)) {
+                    $erros[] = "Usuário não encontrado.";
+                    continue;
+                }
+
+                if (ESTADO_CONSELHO !== 'BR' && $usuario->estado_conselho !== ESTADO_CONSELHO) {
+                    $erros[] = "O usuário não pertence ao seu conselho.";
+                    continue;
+                }
+
+                if (ESTADO_CONSELHO !== 'BR') {
+                    if ($usuario->id == ID_USER) {
+                        $erros[] = "Não é possível dar permissão a sí próprio.";
                         continue;
                     }
                 }
 
-                $permissao_existe = self::getPermissoesUsuario($UsuarioId, $this->rotina);
+                $idPermissaoExistente = self::getPermissoesUsuario($idUsuario, $this->rotina);
 
-                if (!empty($permissao_existe)) {
-                    $this->editPersistemas($permissao_existe);
+                if (!empty($idPermissaoExistente)) {
+                    $this->editPersistemas($idPermissaoExistente);
+                    $totalAtualizadas++;
                     continue;
                 }
 
                 $this->id = null;
-                $this->Usuario = $UsuarioId;
+                $this->Usuario = $idUsuario;
                 $this->incluir();
-                self::carregarPermissoes(true);
+                $totalIncluidas++;
             } catch (\Throwable $e) {
                 $mensagem = $e->getMessage();
                 $codigo = (string) $e->getCode();
 
                 if ($codigo === '23000' || str_contains($mensagem, '1062 Duplicate entry')) {
+                    $erros[] = 'Uma das permissões informadas já existe.';
                     continue;
                 }
 
-                continue;
+                error_log('[Persistemas::criaPersistemas] ' . $mensagem);
+                $erros[] = 'Não foi possível processar uma das permissões informadas.';
             }
         }
 
-        return true;
+        $totalProcessadas = $totalIncluidas + $totalAtualizadas;
+
+        if ($totalProcessadas === 0) {
+            return [
+                'tipo' => 'error',
+                'message' => $erros
+                    ? implode(' ', $erros)
+                    : 'Nenhuma permissão foi cadastrada ou atualizada.',
+            ];
+        }
+
+        self::carregarPermissoes(true);
+
+        $partesMensagem = [];
+
+        if ($totalIncluidas > 0) {
+            $partesMensagem[] = $totalIncluidas === 1
+                ? '1 permissão cadastrada'
+                : "{$totalIncluidas} permissões cadastradas";
+        }
+
+        if ($totalAtualizadas > 0) {
+            $partesMensagem[] = $totalAtualizadas === 1
+                ? '1 permissão atualizada'
+                : "{$totalAtualizadas} permissões atualizadas";
+        }
+
+        $mensagem = ucfirst(implode(' e ', $partesMensagem)) . ' com sucesso.';
+
+        if ($erros) {
+            $mensagem .= ' Não processados: ' . implode(' ', array_unique($erros));
+        }
+
+        return [
+            'tipo' => 'success',
+            'message' => $mensagem,
+        ];
     }
 
     public static function carregarPermissoes(bool $forcarRecarregamento = false)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        require_once dirname(__DIR__) . '/includes/session.php';
 
         if (!$forcarRecarregamento && isset($_SESSION['Permissoes']) && is_array($_SESSION['Permissoes'])) {
             return $_SESSION['Permissoes'];
@@ -222,6 +332,9 @@ class Persistemas extends ClasseBase
         p.Excluir,
         p.Alterar
         FROM $tabela p LEFT JOIN portal.TBLRotinas r ON p.rotina = r.rotina LEFT JOIN  confef1.TBLUsuarios u ON p.Usuario = u.id WHERE 1=1 ";
+        if(ESTADO_CONSELHO !== "BR"){
+            $this->filtrar("u.estado_conselho", ESTADO_CONSELHO);
+        }
         $result = $this->buscar(true);
         return $result;
     }
@@ -233,13 +346,14 @@ class Persistemas extends ClasseBase
         $id = (int) $id ?? $this->id;
         $permissao = self::instanciarPorId($id);
         if (!empty($permissao)) {
-            if (ESTADO_CONSELHO !== "BRRRR") {
+            if (ESTADO_CONSELHO !== "BR") {
                 $usuario = Usuarios::instanciarPorId($permissao->Usuario);
                 if (empty($usuario)) {
                     throw new Exception("Usuário não encontrado.");
-                }
-                else if ($usuario->estado_conselho !== ESTADO_CONSELHO) {
+                } else if ($usuario->estado_conselho !== ESTADO_CONSELHO) {
                     throw new Exception("Não é possível excluir permissões de outras pessoas.");
+                } else if ($usuario->id !== ID_USER) {
+                    throw new Exception("Não é possível excluir permissões de sí mesmo.");
                 }
             }
 

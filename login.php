@@ -1,9 +1,7 @@
 <?php
   use Classes\Persistemas;
 
-  if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-  }
+  require_once __DIR__ . '/includes/session.php';
 
   if (!defined('BASE_PATH')) {
     define('BASE_PATH', __DIR__);

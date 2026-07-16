@@ -78,9 +78,7 @@ function logAction2($table, $action, $data) {
 $v = time();
 
 
-if (session_status() === PHP_SESSION_NONE) {
-  session_start();
-}
+require_once __DIR__ . '/session.php';
 
 /**
  * Define @usuario_atual no MySQL de forma segura (sem interpolação de string).
@@ -221,7 +219,7 @@ function verificaPermissao($codigoRotina, $tipo_operacao = "Consulta")
     return true;
   } */
 
-  if($codigoRotina == "00000"){
+  if ($codigoRotina === "00000") {
     return true;
   }
 

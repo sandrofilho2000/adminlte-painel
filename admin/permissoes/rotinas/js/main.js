@@ -219,6 +219,7 @@ formularioRotinas.on("submit", function (evento) {
 formularioRotinas.on("reset", function () {
     restaurarOpcoesRotinaPai()
     definirModoFormulario()
+    formularioRotinas.find("[name=id]").val("")
     const $placeholder_original = $("#rotinaCodigo").attr("placeholder_original")
     $("#rotinaCodigo").attr("placeholder", $placeholder_original)
     window.setTimeout(() => $("#rotinaIcone").val(null).trigger("change"), 0)

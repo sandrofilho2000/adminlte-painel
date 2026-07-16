@@ -19,7 +19,7 @@ class Controller
     ];
 
     private $_files_javascript = [
-        "https://cdn.jsdelivr.net/npm/swiper@11.1.0/swiper-bundle.min.js",
+        "https://cdn.jsdelivr.net/npm/swiper@12.1.2/swiper-bundle.min.js",
         "https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js",
         "https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js",
         "https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js",

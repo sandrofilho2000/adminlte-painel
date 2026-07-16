@@ -23,7 +23,8 @@ class Usuarios extends ClasseBase
     public $termo;
     private $buscar_crefs;
 
-    private $tipo_login;
+    private $cpf_hmac;
+    private $cpf_encrypted ;
     private $login;
     private $senha;
     private $primeiro_acesso;
@@ -203,41 +204,6 @@ class Usuarios extends ClasseBase
 
         $this->filtrar("u.apresentacao", $termo, 'LIKE');
         $this->filtrar("u.id", ID_USER, 'DIFERENTE');
-        $this->ordenar("u.apresentacao");
-        $this->limitar(100);
-        self::habilitarIgnorarPermissao();
-        $result =  $this->buscar(true);
-        self::desabilitarIgnorarPermissao();
-
-        return $result;
-    }
-
-    public function getUsuarioPorStringSala($termo = null)
-    {
-        $termo = $termo ?? $this->termo;
-        $this->queryCorrente = "
-            SELECT 
-                u.id, 
-                u.apresentacao, 
-                c.nome_cargo, 
-                s.nome_setor
-            FROM TBLUsuarios u
-            LEFT JOIN TBLUsuarios_Cargos uc ON u.id = uc.id_usuario
-            LEFT JOIN TBLCargos c ON uc.id_cargo = c.id
-            LEFT JOIN TBLSetores s ON c.id_setor = s.id
-            WHERE 1=1
-            AND u.apresentacao IS NOT NULL
-            AND u.status = 1
-        ";
-
-        $this->filtrar("u.apresentacao", $termo, 'LIKE');
-        $this->filtrar("u.id", ID_USER, 'DIFERENTE');
-        $this->filtrar("s.nome_setor", "NOT NULL", "IS");
-        $this->filtrar("s.nome_setor", "Plenário", "DIFERENTE");
-        $this->filtrar("u.estado_conselho", "BR");
-        $this->filtrar("u.status", 1);
-
-
         $this->ordenar("u.apresentacao");
         $this->limitar(100);
         self::habilitarIgnorarPermissao();
