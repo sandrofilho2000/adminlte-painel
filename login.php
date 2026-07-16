@@ -16,17 +16,20 @@
 
   function destinoRedirecionamentoLogin(): string
   {
-    $redirecionamento = $_POST['redirect'] ?? $_GET['redirect'] ?? '/adminlte-painel/admin/';
-    $redirecionamento = is_string($redirecionamento) ? $redirecionamento : '/adminlte-painel/admin/';
+    $redirecionamento = $_POST['redirect'] ?? $_GET['redirect'] ?? '/admin/';
+    $redirecionamento = is_string($redirecionamento) ? $redirecionamento : '/admin/';
 
     if (
       $redirecionamento === ''
-      || !str_starts_with($redirecionamento, '/')
-      || str_starts_with($redirecionamento, '//')
+      || str_contains($redirecionamento, "\\")
       || str_contains($redirecionamento, "\r")
       || str_contains($redirecionamento, "\n")
+      || (
+        $redirecionamento !== '/admin/'
+        && !str_starts_with($redirecionamento, '/admin/')
+      )
     ) {
-      return '/adminlte-painel/admin/';
+      return '/admin/';
     }
 
     return $redirecionamento;
@@ -234,9 +237,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-  <link rel="stylesheet" href="src/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha384-nRgPTkuX86pH8yjPJUAFuASXQSSl2/bBUiNV47vSYpKFxHJhbcrGnmlYpYJMeD7a" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" integrity="sha384-qrt37eUXKQgF1p6OlpdB29OTyKryxbxdJHkvfVN4suujWnn6PibIvbnygcK4uJfA" crossorigin="anonymous">
+  <link rel="stylesheet" href="/adminlte-painel/src/styles.css">
   <title>Entrar</title>
   <style>
     .login-theme-toggle {
@@ -256,7 +259,7 @@
   <div class="login-box">
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
-        <a href="/adminlte-painel/login.php" class="h1"><b>Admin</b>LTE</a>
+        <a href="/" class="h1"><b>Admin</b>LTE</a>
       </div>
 
       <div class="card-body login-card-body">
@@ -268,7 +271,7 @@
           </div>
         <?php endif; ?>
 
-        <form action="/adminlte-painel/login.php" method="post" autocomplete="on">
+        <form action="/" method="post" autocomplete="on">
           <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
           <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirecionamento, ENT_QUOTES, 'UTF-8') ?>">
 
@@ -314,10 +317,10 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-  <script src="src/theme-toggle.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js" integrity="sha384-GzAyPc+9MeNdsDGfpe/gNkeDXXSbdZdY0yKEFBGFxqmq/97NJ92k5oyF1YPOOhm5" crossorigin="anonymous"></script>
+  <script src="/adminlte-painel/src/theme-toggle.js"></script>
 </body>
 
 </html>

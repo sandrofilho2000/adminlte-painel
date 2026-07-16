@@ -49,17 +49,12 @@ class Usuarios extends ClasseBase
             'status',
             'criado_em'
         ),
-        'permissao' => false
+        'permissao' => "00000"
     );
 
     public function __construct()
     {
         parent::__construct();
-    }
-
-    public function setPermissao($valor)
-    {
-        $this->_tabela['permissao'] = $valor;
     }
 
     public function autenticar(string $credencial, string $senha): array
@@ -175,113 +170,113 @@ class Usuarios extends ClasseBase
         ];
     }
 
-    public function getUsuarioPorString($termo = null, $buscar_crefs = false)
-    {
-        $termo = $termo ?? $this->termo;
-        $buscar_crefs = $buscar_crefs ?? $this->buscar_crefs;
-        $this->queryCorrente = "
-            SELECT 
-                u.id, 
-                u.apresentacao, 
-                c.nome_cargo, 
-                s.nome_setor
-            FROM TBLUsuarios u
-            LEFT JOIN TBLUsuarios_Cargos uc ON u.id = uc.id_usuario
-            LEFT JOIN TBLCargos c ON uc.id_cargo = c.id
-            LEFT JOIN TBLSetores s ON c.id_setor = s.id
-            WHERE 1=1
-            AND u.apresentacao IS NOT NULL
-            AND u.status = 1
-        ";
+    // public function getUsuarioPorString($termo = null, $buscar_crefs = false)
+    // {
+    //     $termo = $termo ?? $this->termo;
+    //     $buscar_crefs = $buscar_crefs ?? $this->buscar_crefs;
+    //     $this->queryCorrente = "
+    //         SELECT 
+    //             u.id, 
+    //             u.apresentacao, 
+    //             c.nome_cargo, 
+    //             s.nome_setor
+    //         FROM TBLUsuarios u
+    //         LEFT JOIN TBLUsuarios_Cargos uc ON u.id = uc.id_usuario
+    //         LEFT JOIN TBLCargos c ON uc.id_cargo = c.id
+    //         LEFT JOIN TBLSetores s ON c.id_setor = s.id
+    //         WHERE 1=1
+    //         AND u.apresentacao IS NOT NULL
+    //         AND u.status = 1
+    //     ";
 
-        if ($buscar_crefs) {
-            $this->filtrar("s.nome_setor", "Plenário", "DIFERENTE");
-        }
+    //     if ($buscar_crefs) {
+    //         $this->filtrar("s.nome_setor", "Plenário", "DIFERENTE");
+    //     }
 
-        if ($_SESSION['estado_conselho'] != "BR") {
-            $this->filtrar("u.estado_conselho", $_SESSION['estado_conselho']);
-        }
+    //     if ($_SESSION['estado_conselho'] != "BR") {
+    //         $this->filtrar("u.estado_conselho", $_SESSION['estado_conselho']);
+    //     }
 
-        $this->filtrar("u.apresentacao", $termo, 'LIKE');
-        $this->filtrar("u.id", ID_USER, 'DIFERENTE');
-        $this->ordenar("u.apresentacao");
-        $this->limitar(100);
-        self::habilitarIgnorarPermissao();
-        $result =  $this->buscar(true);
-        self::desabilitarIgnorarPermissao();
+    //     $this->filtrar("u.apresentacao", $termo, 'LIKE');
+    //     $this->filtrar("u.id", ID_USER, 'DIFERENTE');
+    //     $this->ordenar("u.apresentacao");
+    //     $this->limitar(100);
+    //     self::habilitarIgnorarPermissao();
+    //     $result =  $this->buscar(true);
+    //     self::desabilitarIgnorarPermissao();
 
-        return $result;
-    }
+    //     return $result;
+    // }
     
-    public function getColegasdeSetor($idUsuario = null)
-    {
-        $idUsuario = (int)($idUsuario ?? ($_SESSION['id'] ?? 0));
-        if ($idUsuario <= 0) {
-            return [];
-        }
+    // public function getColegasdeSetor($idUsuario = null)
+    // {
+    //     $idUsuario = (int)($idUsuario ?? ($_SESSION['id'] ?? 0));
+    //     if ($idUsuario <= 0) {
+    //         return [];
+    //     }
 
-        if (defined('ESTADO_CONSELHO') && ESTADO_CONSELHO != "BR") {
-            $this->queryCorrente = "SELECT id, apresentacao FROM TBLUsuarios u WHERE 1=1 ";
-            $this->filtrar("estado_conselho", ESTADO_CONSELHO);
-        } else {
-            $this->queryCorrente = "
-                    SELECT DISTINCT u.id, u.apresentacao
-                    FROM TBLUsuarios u
-                    INNER JOIN TBLUsuarios_Cargos uc ON uc.id_usuario = u.id
-                    INNER JOIN TBLCargos c ON c.id = uc.id_cargo
-                    WHERE c.id_setor IN (
-                        SELECT DISTINCT c2.id_setor
-                        FROM TBLUsuarios_Cargos uc2
-                        INNER JOIN TBLCargos c2 ON c2.id = uc2.id_cargo
-                        WHERE uc2.id_usuario = {$idUsuario}
-                    )
-                ";
-        }
+    //     if (defined('ESTADO_CONSELHO') && ESTADO_CONSELHO != "BR") {
+    //         $this->queryCorrente = "SELECT id, apresentacao FROM TBLUsuarios u WHERE 1=1 ";
+    //         $this->filtrar("estado_conselho", ESTADO_CONSELHO);
+    //     } else {
+    //         $this->queryCorrente = "
+    //                 SELECT DISTINCT u.id, u.apresentacao
+    //                 FROM TBLUsuarios u
+    //                 INNER JOIN TBLUsuarios_Cargos uc ON uc.id_usuario = u.id
+    //                 INNER JOIN TBLCargos c ON c.id = uc.id_cargo
+    //                 WHERE c.id_setor IN (
+    //                     SELECT DISTINCT c2.id_setor
+    //                     FROM TBLUsuarios_Cargos uc2
+    //                     INNER JOIN TBLCargos c2 ON c2.id = uc2.id_cargo
+    //                     WHERE uc2.id_usuario = {$idUsuario}
+    //                 )
+    //             ";
+    //     }
 
-        $this->filtrar("u.id", $idUsuario, "DIFERENTE");
-        $this->filtrar("status", 1);
-        $this->ordenar("apresentacao");
-        $result = $this->buscar(true) ?? [];
-        return $result;
-    }
+    //     $this->filtrar("u.id", $idUsuario, "DIFERENTE");
+    //     $this->filtrar("status", 1);
+    //     $this->ordenar("apresentacao");
+    //     $result = $this->buscar(true) ?? [];
+    //     return $result;
+    // }
 
-    public function getUsuariosPorSetor($idSetor = null)
-    {
-        $idSetor = (int)$idSetor;
+    // public function getUsuariosPorSetor($idSetor = null)
+    // {
+    //     $idSetor = (int)$idSetor;
 
-        if ($idSetor <= 0) {
-            return [];
-        }
+    //     if ($idSetor <= 0) {
+    //         return [];
+    //     }
 
-        $estadoConselhoUsuario = strtoupper(trim((string) ($_SESSION['estado_conselho'] ?? '')));
-        $ignorarFiltroCref = $estadoConselhoUsuario !== '' && $estadoConselhoUsuario !== 'BR';
+    //     $estadoConselhoUsuario = strtoupper(trim((string) ($_SESSION['estado_conselho'] ?? '')));
+    //     $ignorarFiltroCref = $estadoConselhoUsuario !== '' && $estadoConselhoUsuario !== 'BR';
 
-        $this->queryCorrente = "
-            SELECT DISTINCT u.id, u.apresentacao
-                , c.nome_cargo
-                , s.nome_setor
-            FROM TBLUsuarios u
-            INNER JOIN TBLUsuarios_Cargos uc ON uc.id_usuario = u.id
-            INNER JOIN TBLCargos c ON c.id = uc.id_cargo
-            LEFT JOIN TBLSetores s ON s.id = c.id_setor
-            WHERE 1=1
-        ";
+    //     $this->queryCorrente = "
+    //         SELECT DISTINCT u.id, u.apresentacao
+    //             , c.nome_cargo
+    //             , s.nome_setor
+    //         FROM TBLUsuarios u
+    //         INNER JOIN TBLUsuarios_Cargos uc ON uc.id_usuario = u.id
+    //         INNER JOIN TBLCargos c ON c.id = uc.id_cargo
+    //         LEFT JOIN TBLSetores s ON s.id = c.id_setor
+    //         WHERE 1=1
+    //     ";
 
-        $this->filtrar("c.id_setor", $idSetor);
+    //     $this->filtrar("c.id_setor", $idSetor);
 
-        if ($ignorarFiltroCref) {
-            $this->filtrar("u.estado_conselho", 'BR');
-        }
+    //     if ($ignorarFiltroCref) {
+    //         $this->filtrar("u.estado_conselho", 'BR');
+    //     }
 
-        $this->filtrar("u.status", 1);
-        $this->ordenar("u.apresentacao");
+    //     $this->filtrar("u.status", 1);
+    //     $this->ordenar("u.apresentacao");
 
-        if ($ignorarFiltroCref) {
-            return $this->buscarIgnorandoFiltroEstadoConselho(true) ?? [];
-        }
+    //     if ($ignorarFiltroCref) {
+    //         return $this->buscarIgnorandoFiltroEstadoConselho(true) ?? [];
+    //     }
 
-        return $this->buscar(true) ?? [];
-    }
+    //     return $this->buscar(true) ?? [];
+    // }
 
     private function validarApresentacaoPerfil(?string $nome): string
     {

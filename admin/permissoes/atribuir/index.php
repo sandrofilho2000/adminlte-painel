@@ -3,12 +3,20 @@
 use Classes\Usuarios;
 use Classes\Rotinas;
 
-$usuarios = (new Usuarios())->getUsuarios();
-$rotinas = (new Rotinas())->getRotinas();
-
 Controller::setPermissao("00013");
 Controller::setPageTitle("Atribuir Rotinas");
 Controller::setFileJavascript("/admin/permissoes/atribuir/js/main.js?v=$v");
+
+if (!verificaPermissao("00013")) {
+    header('Location: /');
+    exit;
+}
+
+$Usuarios = new Usuarios();
+$usuarios = $Usuarios->getUsuarios();
+
+
+$rotinas = (new Rotinas())->getRotinas();
 
 ?>
 

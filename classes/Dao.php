@@ -28,6 +28,23 @@ class Dao
         'data' => []
     ];
 
+    private static function validarPermissaoOperacao(ClasseBase $obj, string $operacao, bool $escrita): void
+    {
+        if (ClasseBase::permissaoSeraIgnorada()) {
+            return;
+        }
+
+        $codigoPermissao = $obj->getPermissao();
+
+        if ($escrita && $codigoPermissao === '00000') {
+            throw new ExcecaoPermissao('A permissão 00000 permite somente operações de leitura.');
+        }
+
+        if (!verificaPermissao($codigoPermissao, $operacao)) {
+            throw new ExcecaoPermissao('Você não possui permissão para realizar esta operação.');
+        }
+    }
+
     private static function capturarEstado(): array
     {
         return [
@@ -312,6 +329,8 @@ class Dao
 
     public static function buscar(ClasseBase $obj)
     {
+        self::validarPermissaoOperacao($obj, 'Consulta', false);
+
         //var_dump($obj); die();
         try {
             $query = $obj->getQueryCorrente();
@@ -350,6 +369,8 @@ class Dao
 
     public static function salvar(ClasseBase $obj)
     {
+        self::validarPermissaoOperacao($obj, 'Alterar', true);
+
         $_nm_campos = $obj->getColunas();
         $_values = array();
         $_campos = array();
@@ -383,6 +404,8 @@ class Dao
 
     public static function excluir(ClasseBase $obj)
     {
+        self::validarPermissaoOperacao($obj, 'Excluir', true);
+
         $_values = array();
         $_chaves_primarias = array();
         $nomeTabela = $obj->getNomeTabela();
@@ -409,6 +432,8 @@ class Dao
 
     public static function incluir(ClasseBase $obj)
     {
+        self::validarPermissaoOperacao($obj, 'Incluir', true);
+
         $_campos = $obj->getColunas();
         $_values = array();
         foreach ($_campos as $campo) {

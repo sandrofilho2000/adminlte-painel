@@ -113,34 +113,41 @@ class Rotinas extends ClasseBase
     }
 
     public function getItensMenu()
-     {
-        $this->queryCorrente = "
-            SELECT
-                r.id,
-                r.rotina,
-                r.descricao,
-                r.icon,
-                r.rota,
-                r.link,
-                r.url_tutorial,
-                r.status,
-                r.id_pai,
-                r.em_manutencao,
-                r.exibir_menu,
-                COALESCE(NULLIF(TRIM(r.rota), ''), NULLIF(TRIM(r.link), '')) AS url
-            FROM {$this->getNomeTabela()} r
-            RIGHT JOIN portal.TBLPersistemas p ON r.rotina = p.rotina
-            WHERE COALESCE(NULLIF(TRIM(r.rota), ''), NULLIF(TRIM(r.link), '')) IS NOT NULL
-        ";
+    {
+        $permissaoOriginal = $this->_tabela['permissao'] ?? null;
+        $this->_tabela['permissao'] = '00000';
 
-        $this->filtrar("p.Usuario", ID_USER);
-        $this->filtrar("r.status", 1);
-        $this->filtrar("r.exibir_menu", 1);
-        $this->ordenar("r.descricao");
-        
-        $registros = $this->buscar(true);
-        $arvore_registros =  self::montarArvoreRotinas($registros);
-        return $arvore_registros;
+        try {
+            $this->queryCorrente = "
+                SELECT
+                    r.id,
+                    r.rotina,
+                    r.descricao,
+                    r.icon,
+                    r.rota,
+                    r.link,
+                    r.url_tutorial,
+                    r.status,
+                    r.id_pai,
+                    r.em_manutencao,
+                    r.exibir_menu,
+                    COALESCE(NULLIF(TRIM(r.rota), ''), NULLIF(TRIM(r.link), '')) AS url
+                FROM {$this->getNomeTabela()} r
+                RIGHT JOIN portal.TBLPersistemas p ON r.rotina = p.rotina
+                WHERE COALESCE(NULLIF(TRIM(r.rota), ''), NULLIF(TRIM(r.link), '')) IS NOT NULL
+            ";
+
+            $this->filtrar("p.Usuario", ID_USER);
+            $this->filtrar("p.Consulta", 1);
+            $this->filtrar("r.status", 1);
+            $this->filtrar("r.exibir_menu", 1);
+            $this->ordenar("r.descricao");
+
+            $registros = $this->buscar(true);
+            return self::montarArvoreRotinas($registros);
+        } finally {
+            $this->_tabela['permissao'] = $permissaoOriginal;
+        }
     }
 
     private static function montarArvoreRotinas(array $registros): array

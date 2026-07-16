@@ -2,6 +2,20 @@
 
 require_once __DIR__ . '/includes/session.php';
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    header('Allow: POST');
+    exit('Método não permitido.');
+}
+
+$tokenRecebido = (string) ($_POST['csrf_token'] ?? '');
+$tokenSessao = (string) ($_SESSION['csrf_token'] ?? '');
+
+if ($tokenSessao === '' || $tokenRecebido === '' || !hash_equals($tokenSessao, $tokenRecebido)) {
+    http_response_code(403);
+    exit('Token CSRF inválido.');
+}
+
 $_SESSION = [];
 
 if (ini_get('session.use_cookies')) {
@@ -18,5 +32,5 @@ if (ini_get('session.use_cookies')) {
 
 session_destroy();
 
-header('Location: /adminlte-painel/login.php');
+header('Location: /');
 exit;

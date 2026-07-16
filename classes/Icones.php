@@ -22,7 +22,7 @@ class Icones extends ClasseBase
             "nome",
             "classes",
         ),
-        'permissao' => false
+        'permissao' => "00000"
     );
 
     public function __construct()

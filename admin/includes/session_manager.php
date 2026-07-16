@@ -5,8 +5,8 @@ require_once dirname(__DIR__, 2) . '/includes/session.php';
 $isLoggedIn = isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
 
 if (!$isLoggedIn) {
-    $requestUri = $_SERVER['REQUEST_URI'] ?? '/adminlte-painel/admin/';
-    $loginUrl = '/adminlte-painel/login.php?redirect=' . rawurlencode($requestUri);
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '/admin/';
+    $loginUrl = '/?redirect=' . rawurlencode($requestUri);
     header('Location: ' . $loginUrl);
     exit;
 }

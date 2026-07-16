@@ -1,5 +1,7 @@
 <?php
 
+header_remove('X-Powered-By');
+
 if (!function_exists('iniciarSessaoSegura')) {
     function iniciarSessaoSegura(): void
     {

@@ -245,6 +245,11 @@ class ClasseBase implements \JsonSerializable
         return self::$ignorar_permissao;
     }
 
+    public static function permissaoSeraIgnorada(): bool
+    {
+        return self::ignorarPermissaoAtiva();
+    }
+
     protected static function habilitarIgnorarFiltroEstadoConselho()
     {
         self::$ignorar_filtro_estado_conselho = true;
@@ -315,12 +320,14 @@ class ClasseBase implements \JsonSerializable
             }
 
             if (!self::ignorarPermissaoAtiva() && !verificaPermissao($this->getPermissao())) {
-                throw new Exception("Você não possui privilégios para acessar esses dados.");
+                throw new ExcecaoPermissao("Você não possui privilégios para acessar esses dados.");
             }
 
             $this->retornarComoArray = $retornarComoArray;
             $_result = Dao::buscar($this);
             return $_result;
+        } catch (ExcecaoPermissao $ex) {
+            throw $ex;
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
         }
@@ -348,6 +355,8 @@ class ClasseBase implements \JsonSerializable
                 }
             }
             return $obj;
+        } catch (ExcecaoPermissao $ex) {
+            throw $ex;
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
         }
@@ -380,6 +389,8 @@ class ClasseBase implements \JsonSerializable
                 }
             }
             return $obj;
+        } catch (ExcecaoPermissao $ex) {
+            throw $ex;
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
         }
@@ -454,6 +465,8 @@ class ClasseBase implements \JsonSerializable
                     }
                 }
             }
+        } catch (ExcecaoPermissao $ex) {
+            throw $ex;
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
         }
@@ -579,14 +592,19 @@ class ClasseBase implements \JsonSerializable
             $this->validarCamposObrigatorios();
             $this->setPropriedadesVaziasParaNull();
 
-            if (!self::ignorarPermissaoAtiva() && !verificaPermissao($this->getPermissao(), "Incluir")) {
-                throw new Exception("Você não possui permissão para realizar esta operação!");
+            if (
+                !self::ignorarPermissaoAtiva()
+                && ($this->getPermissao() === '00000' || !verificaPermissao($this->getPermissao(), "Incluir"))
+            ) {
+                throw new ExcecaoPermissao("Você não possui permissão para realizar esta operação!");
             }
 
             Dao::incluir($this);
 
             $_result = $this->converterArray();
             return $_result;
+        } catch (ExcecaoPermissao $ex) {
+            throw $ex;
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
         }
@@ -887,8 +905,11 @@ class ClasseBase implements \JsonSerializable
             $this->validarChavePrimaria();
             $this->setPropriedadesVaziasParaNull();
 
-            if (!self::ignorarPermissaoAtiva() && !verificaPermissao($this->getPermissao(), "Alterar")) {
-                throw new Exception("Você não possui permissão para realizar esta operação");
+            if (
+                !self::ignorarPermissaoAtiva()
+                && ($this->getPermissao() === '00000' || !verificaPermissao($this->getPermissao(), "Alterar"))
+            ) {
+                throw new ExcecaoPermissao("Você não possui permissão para realizar esta operação");
             }
 
             $row_count = Dao::salvar($this);
@@ -899,7 +920,9 @@ class ClasseBase implements \JsonSerializable
             $message = $row_count > 0 ? "Dados atualizados com sucesso." : false;
 
             return ['tipo' => 'success', 'row_count' => $row_count, 'message'=> $message];
-            
+
+        } catch (ExcecaoPermissao $ex) {
+            throw $ex;
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
         }
@@ -909,14 +932,19 @@ class ClasseBase implements \JsonSerializable
     {
         try {
             $this->validarChavePrimaria();
-            if (!self::ignorarPermissaoAtiva() && !verificaPermissao($this->getPermissao(), "Excluir")) {
-                throw new Exception("Você não possui permissão para realizar esta operação!");
+            if (
+                !self::ignorarPermissaoAtiva()
+                && ($this->getPermissao() === '00000' || !verificaPermissao($this->getPermissao(), "Excluir"))
+            ) {
+                throw new ExcecaoPermissao("Você não possui permissão para realizar esta operação!");
             }
             $exclusao = Dao::excluir($this);
             if ($exclusao > 0) {
                 return ['message' => 'Dados removidos com sucesso.', 'status' => 'success', 'result' => $exclusao];
             }
             return ['message' => 'Não foi possível remover o item solicitado.', 'status' => 'fail'];
+        } catch (ExcecaoPermissao $ex) {
+            throw $ex;
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
         }

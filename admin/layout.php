@@ -21,18 +21,20 @@ function obterPaginaSolicitadaPeloCaminho(): string
 {
   $caminho = parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
   $caminho = rawurldecode(is_string($caminho) ? $caminho : '');
-  $baseAdministracao = '/adminlte-painel/admin';
+  $basesAdministracao = ['/admin', '/adminlte-painel/admin'];
 
-  if ($caminho === $baseAdministracao || $caminho === $baseAdministracao . '/') {
-    return 'home/index.php';
+  foreach ($basesAdministracao as $baseAdministracao) {
+    if ($caminho === $baseAdministracao || $caminho === $baseAdministracao . '/') {
+      return 'home/index.php';
+    }
+
+    $prefixo = $baseAdministracao . '/';
+    if (str_starts_with($caminho, $prefixo)) {
+      return trim(substr($caminho, strlen($prefixo)), '/');
+    }
   }
 
-  $prefixo = $baseAdministracao . '/';
-  if (!str_starts_with($caminho, $prefixo)) {
-    return '';
-  }
-
-  return trim(substr($caminho, strlen($prefixo)), '/');
+  return '';
 }
 
 $paginaSolicitada = obterPaginaSolicitadaPeloCaminho();
@@ -68,8 +70,14 @@ if (
 }
 
 ob_start();
-require $conteudoPaginaPath;
-$pageContent = ob_get_clean();
+try {
+  require $conteudoPaginaPath;
+  $pageContent = ob_get_clean();
+} catch (\Classes\ExcecaoPermissao $erro) {
+  ob_end_clean();
+  header('Location: /');
+  exit;
+}
 
 $renderizarIndex = $renderizarIndex ?? true;
 
@@ -90,12 +98,13 @@ if (empty($permissao)) {
   http_response_code(404);
   exit('Permissão não configurada.');
 } else if (!verificaPermissao($permissao) && $permissao != 00000) {
-  header('Location: /adminlte-painel/admin/');
+  header('Location: /');
   exit;
 }
 
 if ($apenasConfef && ESTADO_CONSELHO !== "BR") {
-  header('Location: /adminlte-painel/admin/');
+  header('Location: /');
+  exit;
 }
 ?>
 
@@ -129,8 +138,8 @@ if ($apenasConfef && ESTADO_CONSELHO !== "BR") {
   <meta name="twitter:title" content="<?php echo htmlspecialchars($pageTitle); ?>">
   <meta name="twitter:description" content="<?php echo htmlspecialchars($pageDescription); ?>">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha384-nRgPTkuX86pH8yjPJUAFuASXQSSl2/bBUiNV47vSYpKFxHJhbcrGnmlYpYJMeD7a" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" integrity="sha384-qrt37eUXKQgF1p6OlpdB29OTyKryxbxdJHkvfVN4suujWnn6PibIvbnygcK4uJfA" crossorigin="anonymous" referrerpolicy="no-referrer">
 
 
   <?php Controller::getFilesStyles(); ?>

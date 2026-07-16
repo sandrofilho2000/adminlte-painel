@@ -21,7 +21,7 @@ class RotinasConfig extends ClasseBase
             "atualizado_em",
             "ultimo_codigo",
         ),
-        'permissao' => ''
+        'permissao' => '00000'
     );
 
     public function __construct()

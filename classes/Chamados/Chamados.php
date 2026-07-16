@@ -922,15 +922,15 @@ class Chamados extends ClasseBase
         return $atributos;
     }
 
-    public function getObservadoresPadrao()
-    {
-        $Usuarios = new Usuarios();
-        $Usuarios::habilitarIgnorarPermissao();
-        $colegas_de_setor = $Usuarios->getColegasDeSetor(ID_USER);
-        $Usuarios::desabilitarIgnorarPermissao();
+    // public function getObservadoresPadrao()
+    // {
+    //     $Usuarios = new Usuarios();
+    //     $Usuarios::habilitarIgnorarPermissao();
+    //     $colegas_de_setor = $Usuarios->getColegasDeSetor(ID_USER);
+    //     $Usuarios::desabilitarIgnorarPermissao();
 
-        return $colegas_de_setor;
-    }
+    //     return $colegas_de_setor;
+    // }
 
     public function moverChamado()
     {
@@ -971,18 +971,18 @@ class Chamados extends ClasseBase
         return $salvar;
     }
 
-    public function pesquisarUsuariosObservadores()
-    {
-        $sou_de_informatica = $_SESSION['setor'] == 'Coordenadoria de Informática e Tecnologia';
-        $result = [];
-        $Usuarios = new Usuarios();
-        if ($sou_de_informatica) {
-            $Usuarios->termo = $this->termo;
-            $result = $Usuarios->getUsuarioPorString();
-        } else {
-            $result = $Usuarios->getColegasdeSetor(ID_USER);
-        }
+    // public function pesquisarUsuariosObservadores()
+    // {
+    //     $sou_de_informatica = $_SESSION['setor'] == 'Coordenadoria de Informática e Tecnologia';
+    //     $result = [];
+    //     $Usuarios = new Usuarios();
+    //     if ($sou_de_informatica) {
+    //         $Usuarios->termo = $this->termo;
+    //         $result = $Usuarios->getUsuarioPorString();
+    //     } else {
+    //         $result = $Usuarios->getColegasdeSetor(ID_USER);
+    //     }
 
-        return $result;
-    }
+    //     return $result;
+    // }
 }
